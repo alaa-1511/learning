@@ -1,0 +1,332 @@
+{
+    "NAVBAR": {
+        "HOME": "Home",
+        "COURSES": "Courses",
+        "ARTICLES": "Articles",
+        "QUESTIONS": "Questions",
+        "WHO_WE_ARE": "Who We Are",
+        "SIGNUP": "Sign Up",
+        "LOGIN": "Login",
+        "LOGOUT": "Logout",
+        "DASHBOARD": "Dashboard",
+        "OVERVIEW": "Overview",
+        "MY_DOWNLOADS": "My Downloads",
+        "BILLING": "Billing",
+        "REWARDS": "Rewards",
+        "EARNINGS": "Earnings",
+        "MARQUEE_TEXT": "CIA courses (Parts 1, 2, and 3) and CAT certification with a comprehensive question bank for exam practice",
+        "SELECT_COURSES": "Select Courses",
+        "Our Services": "Our Services",
+        "Exams": "Exams",
+        "IMPORTANT_BLOGS": "Important Blogs",
+        "Exam Practice": "Exam Practice",
+        "Exam Course Enrollment": "Exam Course Enrollment",
+        "Overview of the Questions": "Overview of the Questions",
+        "LANG_EN": "EN",
+        "LANG_AR": "AR"
+    },
+    "COURSES": {
+        "TITLE": "Explore Top Professional Courses",
+        "SUBTITLE": "Advance your career with our expert-led courses designed for professionals at every stage of their journey.",
+        "FREE_TRIAL": "Free Trial",
+        "STUDENTS": "students",
+        "VIEW_DETAILS": "View Details",
+        "PREVIOUS": "Previous",
+        "NEXT": "Next",
+        "LIST": {
+             "COURSE1_TITLE": "CIA Part 1: Essentials of Internal Auditing",
+             "COURSE1_DESC": "Comprehensive coverage of internal audit basics, including governance, risk management, and control.",
+             "COURSE2_TITLE": "CMA Part 1: Financial Planning & Analysis",
+             "COURSE2_DESC": "Master financial planning, performance, and analytics. Essential for management accountants.",
+             "COURSE3_TITLE": "IFRS Certificate Course",
+             "COURSE3_DESC": "Understand International Financial Reporting Standards (IFRS) and their practical application globally.",
+             "COURSE4_TITLE": "CPA: Auditing and Attestation (AUD)",
+             "COURSE4_DESC": "Deep dive into auditing standards, professional ethics, and reporting for the CPA exam.",
+             "COURSE5_TITLE": "Taxation Fundamentals",
+             "COURSE5_DESC": "Learn the core principles of taxation, including corporate tax, income tax, and compliance.",
+             "COURSE6_TITLE": "Financial Modeling & Valuation",
+             "COURSE6_DESC": "Build robust financial models in Excel and master valuation techniques for investment analysis."
+        },
+        "CATEGORIES": {
+             "ACCOUNTING": "Accounting",
+             "TAXATION": "Taxation",
+             "FINANCE": "Finance"
+        },
+        "LEVELS": {
+            "BEGINNER": "Beginner",
+            "INTERMEDIATE": "Intermediate",
+            "ADVANCED": "Advanced"
+        }
+    },
+    "FOOTER": {
+        "DESCRIPTION": "Empowering professionals with world-class education. Join our community and take your career to the next level.",
+        "QUICK_LINKS": "Quick Links",
+        "HOME": "Home",
+        "COURSES": "Courses",
+        "ABOUT_US": "About Us",
+        "INSTRUCTORS": "Instructors",
+        "SUCCESS_STORIES": "Success Stories",
+        "RESOURCES": "Resources",
+        "HELP_CENTER": "Help Center",
+        "TERMS_OF_SERVICE": "Terms of Service",
+        "PRIVACY_POLICY": "Privacy Policy",
+        "COOKIE_SETTINGS": "Cookie Settings",
+        "BECOME_INSTRUCTOR": "Become an Instructor",
+        "CONTACT_US": "Contact Us",
+        "ADDRESS": "123 Education Street, Learning City, ED 12345",
+        "COPYRIGHT": "© {{year}} E-Learning Inc. All rights reserved.",
+        "PRIVACY": "Privacy",
+        "TERMS": "Terms",
+        "COOKIES": "Cookies"
+    },
+    "LANDING": {
+        "HERO_TITLE_PREFIX": "Become a Certified CIA Professional",
+        "HERO_TITLE_SUFFIX": "Elevate Your Career Today",
+        "HERO_SUBTITLE": "Join the elite ranks of the CIA designation. Our professional training equips you with the global expertise in governance, risk, and control that defines industry leaders.",
+        "START_LEARNING": "Start Learning Now",
+        "COURSE_DETAILS": "Course Details",
+        "PREMIER_TRAINING": "Premier CIA Training",
+        "TOP_RATED": "Top Rated Program",
+        "EXPERT_INSTRUCTORS": "Expert Instructors",
+        "ABOUT_LABEL": "ABOUT CIA",
+        "ABOUT_TITLE": "Certified Internal Auditor (CIA)",
+        "ABOUT_DESC_1": "The Certified Internal Auditor (CIA) is the only globally recognized certification for internal auditors. It demonstrates professional competence in internal auditing, risk management, governance, and internal control.",
+        "ABOUT_DESC_2": "The CIA certification equips professionals with the knowledge and practical skills required to evaluate organizational processes, enhance operational efficiency, and support strategic decision-making across all industries.",
+        "ABOUT_POINT_1": "Globally recognized professional certification",
+        "ABOUT_POINT_2": "Enhances career growth and credibility",
+        "ABOUT_POINT_3": "Applicable across public and private sectors",
+        "ABOUT_POINT_4": "Designed for accounting and business professionals",
+        "LEARN_MORE": "Learn More",
+        "WHY_CHOOSE_TITLE": "Why Choose CIA?",
+        "WHY_CHOOSE_DESC": "Our program allows you to study at your own pace, with access to expert instructors and a supportive community.",
+        "IMAGE_ALT": "CIA Professional Training",
+        "STATS": {
+             "LABEL_EXAMS": "3",
+             "LABEL_GLOBAL": "Global",
+             "LABEL_INDUSTRIES": "All",
+             "LABEL_CAREER": "Career"
+        },
+        "STAT_EXAM": "Parts Exam",
+        "STAT_GLOBAL": "Recognition",
+        "STAT_INDUSTRIES": "Industries",
+        "STAT_CAREER": "Advancement",
+        "PROGRAM_TITLE": "CIA Certification Program",
+        "PROGRAM_SUBTITLE": "A comprehensive 3-part journey to becoming a Certified Internal Auditor.",
+        "PART_1_TITLE": "Part 1: Essentials",
+        "PART_1_SUBTITLE": "Foundations of Internal Auditing",
+        "PART_1_DESC": "Covers the IPPF, independence, objectivity, and due professional care.",
+        "PART_1_POINTS": {
+             "POINT_1": "Internal audit fundamentals",
+             "POINT_2": "Corporate governance",
+             "POINT_3": "Risk management",
+             "POINT_4": "Professional ethics"
+        },
+        "PART_2_TITLE": "Part 2: Practice",
+        "PART_2_SUBTITLE": "Practice of Internal Auditing",
+        "PART_2_DESC": "Focuses on managing the internal audit function and individual engagements.",
+        "PART_2_POINTS": {
+             "POINT_1": "Audit planning",
+             "POINT_2": "Audit execution",
+             "POINT_3": "Evidence collection",
+             "POINT_4": "Fraud risks"
+        },
+        "PART_3_TITLE": "Part 3: Business Knowledge",
+        "PART_3_SUBTITLE": "Business Knowledge for Internal Auditing",
+        "PART_3_DESC": "Provides business, financial, and IT knowledge essential for effective internal auditing.",
+        "PART_3_POINTS": {
+             "POINT_1": "Financial analysis",
+             "POINT_2": "Business management",
+             "POINT_3": "Information technology (IT)",
+             "POINT_4": "Decision-making skills"
+        },
+        "REVIEWS_TITLE": "What Our Students Say",
+        "REVIEWS_SUBTITLE": "Join hundreds of successful professionals who have advanced their careers with our CIA certification program.",
+        "REVIEWS_LIST": {
+            "REVIEW1": {
+                "NAME": "Sarah Johnson",
+                "ROLE": "Senior Internal Auditor",
+                "TEXT": "This CIA program was pivotal in my career. The comprehensive coverage of Part 3 gave me the business acumen I needed to excel in my role."
+            },
+            "REVIEW2": {
+                "NAME": "Michael Ross",
+                "ROLE": "Risk Manager",
+                "TEXT": "Practical, real-world scenarios. The instructors really know their stuff. Highly recommended for any serious auditor looking to advance."
+            },
+            "REVIEW3": {
+                "NAME": "Emily Williams",
+                "ROLE": "Finance Director",
+                "TEXT": "I passed all three parts on my first try thanks to the structured learning path. A top-tier investment for my professional growth."
+            },
+            "REVIEW4": {
+                "NAME": "David Kim",
+                "ROLE": "Compliance Officer",
+                "TEXT": "The flexibility of the online modules allowed me to study while working full-time. The support team was excellent throughout the journey."
+            },
+            "REVIEW5": {
+                "NAME": "Jessica Lee",
+                "ROLE": "Audit Supervisor",
+                "TEXT": "Clear explanations of complex governance topics. It really bridges the gap between theory and practice in a very digestible way."
+            }
+        }
+    },
+    "AUTH": {
+        "LOGIN_TITLE": "Welcome Back",
+        "LOGIN_SUBTITLE": "Enter your credentials to access your account",
+        "REGISTER_TITLE": "Create Account",
+        "REGISTER_SUBTITLE": "Join us and start learning today",
+        "EMAIL": "Email Address",
+        "FIRST_NAME": "First Name",
+        "LAST_NAME": "Last Name",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "FULL_NAME": "Full Name",
+        "SUBMIT": "Submit",
+        "ALREADY_HAVE_ACCOUNT": "Already have an account? Login",
+        "DONT_HAVE_ACCOUNT": "Don't have an account? Sign up",
+        "FORGOT_PASSWORD": "Forgot Password?",
+        "LOGIN_BUTTON": "Login",
+        "REGISTER_BUTTON": "Sign Up"
+    },
+    "COMMON": {
+        "LOADING": "Loading...",
+        "ERROR": "Something went wrong",
+        "SUCCESS": "Success",
+        "ERROR_LABEL": "Error!",
+        "SUCCESS_LABEL": "Success!",
+        "REQUIRED": "{{label}} is required.",
+        "INVALID_EMAIL": "Invalid email format.",
+        "MIN_LENGTH": "{{label}} must be at least {{length}} characters.",
+        "PASSWORD_PATTERN": "Password must contain at least 1 number and 1 special char."
+    },
+    "QUESTIONS": {
+        "TITLE": "Exam Practice",
+        "SUBTITLE": "Test your knowledge with our comprehensive question bank.",
+        "QUESTIONS_COUNT": "Questions",
+        "DURATION": "120 Mins",
+        "START_PRACTICE": "Start Practice",
+        "QUESTION_OF": "Question {{current}} of {{total}}",
+        "PREVIOUS": "Previous",
+        "NEXT_QUESTION": "Next Question",
+        "SUBMIT_EXAM": "Submit Exam",
+        "EXAM_PASSED": "Exam Passed!",
+        "EXAM_FAILED": "Exam Failed",
+        "SCORE_MESSAGE": "You scored {{score}}% in {{exam}}",
+        "CORRECT": "Correct",
+        "TOTAL": "Total",
+        "TRY_ANOTHER": "Try Another Exam",
+        "RETAKE": "Retake Exam",
+        "EXAMS": {
+            "EXAM1": {
+                "TITLE": "CIA Part 1 Practice",
+                "CATEGORY": "CIA",
+                "DESC": "Practice questions for CIA Part 1: Essentials of Internal Auditing.",
+                "Q1": "Which of the following best describes the internal audit activity?",
+                "Q1_OPT": ["Consulting activity", "Assurance and consulting activity", "Assurance activity", "Management activity"],
+                "Q2": "Who is responsible for the internal audit function?",
+                "Q2_OPT": ["The CEO", "The Board", "The CAE", "The Audit Committee"],
+                "Q3": "What is the primary purpose of the internal audit charter?",
+                "Q3_OPT": ["To define the scope of internal audit", "To define the purpose, authority, and responsibility", "To list the audit staff", "To budget for the audit department"]
+            },
+            "EXAM2": {
+                "TITLE": "CIA Part 2 Practice",
+                "CATEGORY": "CIA",
+                "DESC": "Practice questions for CIA Part 2: Practice of Internal Auditing.",
+                "Q1": "What is the first step in the budgeting process?",
+                "Q1_OPT": ["Sales budget", "Production budget", "Cash budget", "Administrative budget"],
+                "Q2": "Which variance measures the difference between actual and standard price?",
+                "Q2_OPT": ["Efficiency variance", "Price variance", "Volume variance", "Mix variance"],
+                "Q3": "What does NPV stand for?",
+                "Q3_OPT": ["Net Profit Value", "New Profit Value", "Net Present Value", "No Present Value"]
+            },
+            "EXAM3": {
+                 "TITLE": "CIA Part 3 Practice",
+                 "CATEGORY": "CIA",
+                 "DESC": "Practice questions for CIA Part 3: Business Knowledge for Internal Auditing.",
+                 "Q1": "IFRS is issued by which body?",
+                 "Q1_OPT": ["FASB", "IASB", "SEC", "AICPA"],
+                 "Q2": "Which standard covers Revenue from Contracts with Customers?",
+                 "Q2_OPT": ["IFRS 9", "IFRS 15", "IFRS 16", "IAS 1"]
+            }
+        }
+    },
+    "SIDEBAR": {
+        "DASHBOARD": "Dashboard",
+        "CIA_PART_1": "CIA Part 1",
+        "CIA_PART_2": "CIA Part 2",
+        "CIA_PART_3": "CIA Part 3",
+        "QUESTION_BANK": "Question Bank",
+        "STUDENTS": "Students",
+        "COURSES": "Courses",
+        "SETTINGS": "Settings",
+        "LOGOUT": "Logout"
+    },
+    "MANAGE_QUESTIONS": {
+        "TITLE": "Question Bank",
+        "SUBTITLE": "Manage exam questions for CIA Parts 1, 2, and 3",
+        "ADD_NEW": "Add New Question",
+        "SEARCH_PLACEHOLDER": "Search questions...",
+        "ALL_PARTS": "All Parts",
+        "ALL_DIFFICULTIES": "All Difficulties",
+        "TABLE": {
+            "QUESTION": "Question",
+            "CIA_PART": "CIA Part",
+            "TOPIC": "Topic",
+            "DIFFICULTY": "Difficulty",
+            "STATUS": "Status",
+            "ACTION": "Action"
+        },
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "MODAL": {
+            "ADD_TITLE": "Add New Question",
+            "EDIT_TITLE": "Edit Question",
+            "QUESTION_TEXT": "Question Text",
+            "ENTER_QUESTION": "Enter your question here...",
+            "QUESTION_REQUIRED": "Question text is required.",
+            "CIA_PART": "CIA Part",
+            "TOPIC": "Topic",
+            "TOPIC_PLACEHOLDER": "e.g. Internal Audit",
+            "DIFFICULTY": "Difficulty",
+            "STATUS": "Status",
+            "ANSWER_OPTIONS": "Answer Options",
+            "OPTION_PLACEHOLDER": "Option {{index}}",
+            "ADD_OPTION": "Add Another Option",
+            "SAVE": "Save",
+            "CANCEL": "Cancel",
+            "DELETE_TITLE": "Are you sure you want to delete this question?",
+            "CONFIRM_DELETE": "Yes, I'm sure",
+            "CANCEL_DELETE": "No, cancel"
+        }
+    },
+    "MANAGE_COURSES": {
+        "TITLE": "Courses Management",
+        "SUBTITLE": "Manage your courses, pricing, and content.",
+        "ADD_NEW": "Add New Course",
+        "SEARCH_PLACEHOLDER": "Search courses...",
+        "TABLE": {
+            "IMAGE": "Image",
+            "TITLE": "Title",
+            "CATEGORY": "Category",
+            "PRICE": "Price",
+            "LEVEL": "Level",
+            "ACTION": "Action"
+        },
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "MODAL": {
+            "ADD_TITLE": "Add New Course",
+            "EDIT_TITLE": "Edit Course",
+            "TITLE": "Course Title",
+            "PRICE": "Price",
+            "CATEGORY": "Category",
+            "LEVEL": "Level",
+            "DESCRIPTION": "Description",
+            "IMAGE_URL": "Image URL",
+            "SAVE": "Save",
+            "CANCEL": "Cancel",
+            "DELETE_TITLE": "Are you sure you want to delete this course?",
+            "CONFIRM_DELETE": "Yes, delete it",
+            "CANCEL_DELETE": "No, keep it"
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.custom-pagination ::ng-deep .ngx-pagination {
+    padding-left: 0;
+    margin-bottom: 0; 
+}
+
+.custom-pagination ::ng-deep .ngx-pagination li {
+    display: inline-block;
+}
+
+.custom-pagination ::ng-deep .ngx-pagination .current {
+    background: #1d4ed8;
+    color: white !important;
+    border-radius: 4px;
+}

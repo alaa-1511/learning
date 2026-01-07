@@ -1,0 +1,184 @@
+<div class="p-8 bg-white border-0 ring-1 ring-gray-100 rounded-2xl shadow-xl">
+    
+    <!-- Header & Actions -->
+    <div class="mb-8">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+             <div class="text-center md:text-start">
+                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">{{ 'MANAGE_COURSES.TITLE' | translate }}</h1>
+                <p class="text-base text-gray-500 font-medium">{{ 'MANAGE_COURSES.SUBTITLE' | translate }}</p>
+             </div>
+             <button type="button" (click)="openNew()" class="text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-3 shadow-lg shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
+                <i class="pi pi-plus text-lg"></i> 
+                <span>{{ 'MANAGE_COURSES.ADD_NEW' | translate }}</span>
+            </button>
+        </div>
+
+        <!-- Search -->
+        <div class="bg-gray-50/50 p-4 rounded-xl border border-dashed border-gray-200">
+             <div class="relative w-full md:w-1/3 group">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="text" class="block w-full p-3 ps-11 text-sm text-gray-900 border-0 ring-1 ring-gray-200 rounded-full bg-white focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm" [placeholder]="'MANAGE_COURSES.SEARCH_PLACEHOLDER' | translate" (input)="onSearch($event)">
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="relative overflow-hidden rounded-xl border border-gray-100 shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-500 uppercase bg-gray-50/80 tracking-wider">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.IMAGE' | translate }}</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.TITLE' | translate }}</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.CATEGORY' | translate }}</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.PRICE' | translate }}</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.LEVEL' | translate }}</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_COURSES.TABLE.ACTION' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr *ngFor="let course of filteredCourses | paginate: { itemsPerPage: 5, currentPage: p }" class="bg-white hover:bg-gray-50/80 transition-colors duration-150">
+                        <td class="p-4">
+                            <div class="relative w-16 h-16 md:w-20 md:h-16 rounded-lg overflow-hidden border border-gray-100 shadow-sm group">
+                                <img [src]="course.image" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300" alt="Course Image">
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-gray-900">
+                            {{ course.title | translate }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium ring-1 ring-inset ring-blue-700/10">
+                                {{ course.category | translate }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-bold text-gray-900">
+                            ${{ course.price }}
+                        </td>
+                        <td class="px-6 py-4">
+                             <span [ngClass]="{
+                                'bg-green-50 text-green-700 ring-green-600/20': course.level === 'COURSES.LEVELS.BEGINNER',
+                                'bg-yellow-50 text-yellow-700 ring-yellow-600/20': course.level === 'COURSES.LEVELS.INTERMEDIATE',
+                                'bg-purple-50 text-purple-700 ring-purple-600/20': course.level === 'COURSES.LEVELS.ADVANCED'
+                            }" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ring-1 ring-inset">
+                                {{ course.level | translate }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <button (click)="editCourse(course)" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" [title]="'MANAGE_COURSES.EDIT' | translate">
+                                    <i class="pi pi-pencil"></i>
+                                </button>
+                                <button (click)="deleteCourse(course)" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" [title]="'MANAGE_COURSES.DELETE' | translate">
+                                    <i class="pi pi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="p-4 border-t border-gray-100 bg-gray-50/30 flex justify-center">
+             <pagination-controls (pageChange)="p = $event" class="custom-pagination"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div *ngIf="courseDialog" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm transition-opacity">
+    <div class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl transform transition-all scale-100">
+        <div class="relative">
+            <div class="flex items-center justify-between p-6 border-b border-gray-100">
+                 <div class="flex items-center gap-3">
+                    <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                         <i class="pi" [ngClass]="isEditMode ? 'pi-file-edit' : 'pi-plus-circle'" style="font-size: 1.5rem"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900">
+                        {{ isEditMode ? ('MANAGE_COURSES.MODAL.EDIT_TITLE' | translate) : ('MANAGE_COURSES.MODAL.ADD_TITLE' | translate) }}
+                    </h3>
+                </div>
+                <button type="button" (click)="hideDialog()" class="text-gray-400 bg-transparent hover:bg-gray-100 hover:text-gray-900 rounded-xl text-sm w-9 h-9 ms-auto inline-flex justify-center items-center transition-colors">
+                    <i class="pi pi-times"></i>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <form [formGroup]="courseForm">
+                    <div class="grid gap-6 mb-6 grid-cols-2">
+                        <div class="col-span-2">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.TITLE' | translate }}</label>
+                            <input type="text" formControlName="title" class="bg-gray-50/50 border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 block w-full p-3 transition-shadow" required>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.PRICE' | translate }}</label>
+                            <input type="number" formControlName="price" class="bg-gray-50/50 border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 block w-full p-3 transition-shadow" required>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.CATEGORY' | translate }}</label>
+                            <select formControlName="category" class="bg-gray-50/50 border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 block w-full p-3 transition-shadow">
+                                <option value="COURSES.CATEGORIES.ACCOUNTING">Accounting</option>
+                                <option value="COURSES.CATEGORIES.TAXATION">Taxation</option>
+                                <option value="COURSES.CATEGORIES.FINANCE">Finance</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.LEVEL' | translate }}</label>
+                            <select formControlName="level" class="bg-gray-50/50 border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 block w-full p-3 transition-shadow">
+                                <option value="COURSES.LEVELS.BEGINNER">Beginner</option>
+                                <option value="COURSES.LEVELS.INTERMEDIATE">Intermediate</option>
+                                <option value="COURSES.LEVELS.ADVANCED">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.DESCRIPTION' | translate }}</label>
+                            <textarea formControlName="description" rows="4" class="block p-3 w-full text-sm text-gray-700 bg-gray-50/50 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-y"></textarea>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.IMAGE_URL' | translate }}</label>
+                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                </div>
+                                <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" />
+                            </label>
+                            
+                            <div *ngIf="imagePreview" class="mt-4 relative group w-full h-40 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                                <img [src]="imagePreview" class="w-full h-full object-cover" alt="Image Preview">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl">
+                <button (click)="hideDialog()" type="button" class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-colors">{{ 'MANAGE_COURSES.MODAL.CANCEL' | translate }}</button>
+                <button (click)="saveCourse()" type="button" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg shadow-lg shadow-blue-500/30 transition-all">{{ 'MANAGE_COURSES.MODAL.SAVE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="deleteDialog" tabindex="-1" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm transition-opacity">
+    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl transform transition-all">
+        <div class="p-6 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center text-red-500">
+                <i class="pi pi-exclamation-triangle text-2xl"></i>
+            </div>
+            <h3 class="mb-2 text-xl font-bold text-gray-900">{{ 'MANAGE_COURSES.MODAL.DELETE_TITLE' | translate }}</h3>
+             <p class="text-gray-500 mb-8 font-medium">Are you sure you want to delete this course? This action cannot be undone.</p>
+            
+            <div class="flex items-center justify-center gap-3">
+                 <button (click)="deleteDialog = false" type="button" class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 transition-colors">{{ 'MANAGE_COURSES.MODAL.CANCEL_DELETE' | translate }}</button>
+                <button (click)="confirmDelete()" type="button" class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg shadow-lg shadow-red-500/30 transition-all">{{ 'MANAGE_COURSES.MODAL.CONFIRM_DELETE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

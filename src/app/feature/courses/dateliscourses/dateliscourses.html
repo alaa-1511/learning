@@ -1,0 +1,179 @@
+<!-- Hero Section -->
+<div class="bg-primary text-white py-12 lg:py-20 relative overflow-hidden">
+  <div class="absolute inset-0 bg-black/20 z-0"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <!-- Left: Text Info -->
+    <div class="lg:col-span-2">
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-sm text-gray-300 mb-6 font-medium">
+        <a routerLink="/courses" class="hover:text-white transition">Courses</a>
+        <span class="text-gray-500">/</span>
+        <a href="#" class="hover:text-white transition">Accounting</a>
+        <span class="text-gray-500">/</span>
+        <span class="text-secondary">CIA Part 1</span>
+      </div>
+
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-6 leading-tight">
+        {{ course.title }}
+      </h1>
+      <p class="text-lg text-gray-200 mb-8 max-w-2xl leading-relaxed">
+        {{ course.subtitle }}
+      </p>
+
+      <div class="flex flex-wrap items-center gap-6 text-sm">
+        <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+          <span class="text-yellow-400 font-bold text-base">{{ course.rating }}</span>
+          <div class="flex text-yellow-400">
+            <i class="pi pi-star-fill"></i>
+            <i class="pi pi-star-fill"></i>
+            <i class="pi pi-star-fill"></i>
+            <i class="pi pi-star-fill"></i>
+            <i class="pi pi-star-fill"></i>
+          </div>
+          <span class="text-gray-300">({{ course.reviews }} reviews)</span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <i class="pi pi-users text-secondary"></i>
+            <span>{{ course.students }} students</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <i class="pi pi-calendar text-secondary"></i>
+            <span>Last updated {{ course.lastUpdated }}</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <i class="pi pi-globe text-secondary"></i>
+            <span>{{ course.language }}</span>
+        </div>
+      </div>
+      
+      <!-- Mobile Enroll Button (Visible only on small screens) -->
+      <div class="mt-8 lg:hidden">
+         <span class="text-3xl font-bold text-white block mb-4">${{ course.price }}</span>
+         <button class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-secondary/20">
+            Enroll Now
+         </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-6 py-12">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
+
+    <!-- Left Column: Details -->
+    <div class="lg:col-span-2 space-y-12">
+      
+      <!-- What you'll learn -->
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-primary mb-6">What you'll learn</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div *ngFor="let item of course.whatYouWillLearn" class="flex items-start gap-3">
+             <i class="pi pi-check text-secondary mt-1 font-bold"></i>
+             <span class="text-primary/80 text-sm leading-relaxed">{{ item }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Content / Curriculum -->
+      <div>
+        <h2 class="text-2xl font-bold text-primary mb-6">Course Content</h2>
+        <div class="space-y-4">
+           <!-- Syllabus Item -->
+           <div *ngFor="let section of course.curriculum; let i = index" 
+                class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+                <div class="bg-gray-50 p-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition">
+                    <div class="flex items-center gap-3 font-semibold text-primary">
+                        <i class="pi pi-chevron-down text-sm text-gray-500"></i>
+                         {{ section.title }}
+                    </div>
+                    <div class="text-xs text-gray-500 font-medium">
+                        {{ section.lectures }} lectures • {{ section.duration }}
+                    </div>
+                </div>
+           </div>
+        </div>
+      </div>
+
+      <!-- Instructor -->
+      <div>
+         <h2 class="text-2xl font-bold text-primary mb-6">Instructor</h2>
+         <div class="flex items-start gap-6">
+            <img [src]="course.instructor.image" alt="Instructor" class="w-24 h-24 rounded-full object-cover border-4 border-gray-50 shadow-sm">
+            <div>
+                <h3 class="text-xl font-bold text-secondary mb-1 underline decoration-secondary/30 underline-offset-4 cursor-pointer hover:text-secondary/80">
+                    {{ course.instructor.name }}
+                </h3>
+                <p class="text-primary/60 text-sm mb-4">{{ course.instructor.title }}</p>
+                <p class="text-primary/80 leading-relaxed text-sm">
+                    {{ course.instructor.bio }}
+                </p>
+            </div>
+         </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Sticky Sidebar -->
+    <div class="hidden lg:block relative">
+        <div class="sticky top-24 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden -mt-64 z-20">
+            <!-- Course Image Preview -->
+            <div class="relative h-48 overflow-hidden group">
+                <img [src]="course.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-backdrop-blur-sm cursor-pointer">
+                    <div class="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/50">
+                        <i class="pi pi-play-circle text-4xl text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-4xl font-extrabold text-primary">${{ course.price }}</span>
+                    <span class="text-lg text-gray-400 line-through">${{ course.originalPrice }}</span>
+                    <span class="text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded">{{ course.discount }}% OFF</span>
+                </div>
+
+                <div class="space-y-3 mb-8">
+                    <button class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-secondary/20 hover:-translate-y-1">
+                        Enroll Now
+                    </button>
+                    <button class="w-full py-4 bg-white hover:bg-gray-50 text-primary font-bold border border-gray-200 rounded-xl transition-all">
+                        Add to Cart
+                    </button>
+                </div>
+                
+                <p class="text-center text-xs text-gray-500 mb-6">30-Day Money-Back Guarantee</p>
+
+                <div class="space-y-4">
+                    <h4 class="font-bold text-primary text-sm">This course includes:</h4>
+                    <ul class="text-sm space-y-3 text-gray-600">
+                        <li class="flex items-center gap-3">
+                            <i class="pi pi-video text-secondary w-5"></i>
+                            <span>24 hours on-demand video</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="pi pi-file text-secondary w-5"></i>
+                            <span>15 downloadable resources</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="pi pi-mobile text-secondary w-5"></i>
+                            <span>Access on mobile and TV</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="pi pi-verified text-secondary w-5"></i>
+                            <span>Certificate of completion</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>

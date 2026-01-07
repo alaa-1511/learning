@@ -1,0 +1,433 @@
+<section class="relative py-16 lg:pt-28 overflow-hidden bg-gray-50">
+  <!-- Decorative/Background elements -->
+  <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-3xl -z-10"></div>
+  <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl -z-10"></div>
+
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+      
+      <!-- Left Column: Text Content -->
+      <div class="w-full lg:w-1/2 text-center lg:text-start">
+        <div class="inline-flex items-center gap-2 px-3 py-1 mb-3 mt-8 rounded-full bg-secondary/10 border border-secondary/20 text-secondary self-center lg:self-start mx-auto lg:mx-0">
+          <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          <span class="text-xs font-bold tracking-wide uppercase">{{ 'LANDING.PREMIER_TRAINING' | translate }}</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl lg:text-5xl font-extrabold text-primary leading-[1.15] mb-6">
+          {{ 'LANDING.HERO_TITLE_PREFIX' | translate }} <span class="text-secondary ">{{ 'LANDING.HERO_TITLE_SUFFIX' | translate }}</span>
+        </h1>
+        
+        <p class="text-lg text-primary/80 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+          {{ 'LANDING.HERO_SUBTITLE' | translate }}
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <a href="#" class="inline-flex justify-center items-center px-8 py-4 bg-secondary hover:bg-secondary/90 text-white font-semibold rounded-xl shadow-xl shadow-secondary/20 transition-all transform hover:-translate-y-1">
+              {{ 'LANDING.START_LEARNING' | translate }}
+            </a>
+            <a href="#details" class="inline-flex justify-center items-center px-8 py-4 bg-white hover:bg-slate-50 text-primary font-semibold border border-slate-200 rounded-xl shadow-sm transition-all hover:shadow-md hover:border-slate-300">
+              {{ 'LANDING.COURSE_DETAILS' | translate }}
+            </a>
+        </div>
+        
+        <!-- Trust badge/stats (Optional) -->
+        <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-center lg:justify-start gap-8 text-primary/70 text-sm font-medium">
+             <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-secondary" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <span>{{ 'LANDING.TOP_RATED' | translate }}</span>
+             </div>
+             <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <span>{{ 'LANDING.EXPERT_INSTRUCTORS' | translate }}</span>
+             </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Image -->
+      <div class="w-full lg:w-1/2 relative">
+        <div class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-secondary to-secondary/50 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-[1.01]">
+                 <div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent z-10"></div>
+                 <img src="/img/home.jpg" [alt]="'LANDING.IMAGE_ALT' | translate" class="w-full h-auto object-cover transform transition duration-700 ease-out group-hover:scale-105">
+            </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+<section class="bg-gray-50 py-10">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+
+    <!-- Text Content -->
+    <div>
+      <span class="inline-block text-sm font-semibold text-secondary mb-3">
+        {{ 'LANDING.ABOUT_LABEL' | translate }}
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6 leading-snug">
+        {{ 'LANDING.ABOUT_TITLE' | translate }}
+      </h2>
+
+      <p class="text-primary/80 mb-5 leading-relaxed">
+        {{ 'LANDING.ABOUT_DESC_1' | translate }}
+      </p>
+
+      <p class="text-primary/80 mb-6 leading-relaxed">
+        {{ 'LANDING.ABOUT_DESC_2' | translate }}
+      </p>
+
+      <ul class="space-y-4 text-primary/90 mb-8">
+        <li class="flex items-center gap-3">
+          <span class="pi pi-check text-secondary font-bold text-lg"></span>
+          <span>{{ 'LANDING.ABOUT_POINT_1' | translate }}</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="pi pi-check text-secondary font-bold text-xl"></span>
+          <span>{{ 'LANDING.ABOUT_POINT_2' | translate }}</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="pi pi-check text-secondary font-bold text-lg"></span>
+          <span>{{ 'LANDING.ABOUT_POINT_3' | translate }}</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="pi pi-check text-secondary font-bold text-lg"></span>
+          <span>{{ 'LANDING.ABOUT_POINT_4' | translate }}</span>
+        </li>
+      </ul>
+
+      <a
+        href="#"
+        class="inline-flex items-center gap-2 px-7 py-3 rounded-xl
+               bg-secondary text-white font-medium
+               hover:bg-secondary/90 transition">
+        {{ 'LANDING.LEARN_MORE' | translate }}
+      </a>
+    </div>
+
+    <!-- Visual Card -->
+    <div class="relative">
+      <div class="bg-secondary/5 rounded-3xl p-10 shadow-lg">
+        <h3 class="text-xl font-bold text-primary mb-4">
+          {{ 'LANDING.WHY_CHOOSE_TITLE' | translate }}
+        </h3>
+        <p class="text-primary/80 mb-6">
+          {{ 'LANDING.WHY_CHOOSE_DESC' | translate }}
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div class="bg-white rounded-xl p-4 shadow">
+            <span class="block text-secondary font-bold text-lg">{{ 'LANDING.STATS.LABEL_EXAMS' | translate }}</span>
+            {{ 'LANDING.STAT_EXAM' | translate }}
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow">
+            <span class="block text-secondary font-bold text-lg">{{ 'LANDING.STATS.LABEL_GLOBAL' | translate }}</span>
+            {{ 'LANDING.STAT_GLOBAL' | translate }}
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow">
+            <span class="block text-secondary font-bold text-lg">{{ 'LANDING.STATS.LABEL_INDUSTRIES' | translate }}</span>
+            {{ 'LANDING.STAT_INDUSTRIES' | translate }}
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow">
+            <span class="block text-secondary font-bold text-lg">{{ 'LANDING.STATS.LABEL_CAREER' | translate }}</span>
+            {{ 'LANDING.STAT_CAREER' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="bg-gray-50 py-10">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <!-- Title -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
+        {{ 'LANDING.PROGRAM_TITLE' | translate }}
+      </h2>
+      <p class="text-primary/70 text-lg max-w-2xl mx-auto">
+        {{ 'LANDING.PROGRAM_SUBTITLE' | translate }}
+      </p>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <!-- Card P1 -->
+      <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border-t-4 border-transparent hover:border-secondary hover:-translate-y-1 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+           <span class="text-6xl font-bold text-secondary">01</span>
+        </div>
+        
+        <h3 class="text-xl font-bold text-primary mb-2 relative z-10">
+          {{ 'LANDING.PART_1_TITLE' | translate }}
+        </h3>
+        <span class="text-sm font-semibold text-secondary uppercase tracking-wider block mb-6 relative z-10">
+          {{ 'LANDING.PART_1_SUBTITLE' | translate }}
+        </span>
+        <p class="text-primary/70 text-sm mb-6 leading-relaxed relative z-10">
+          {{ 'LANDING.PART_1_DESC' | translate }}
+        </p>
+        <ul class="space-y-3 text-sm text-primary/80 relative z-10">
+          <li class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{ 'LANDING.PART_1_POINTS.POINT_1' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_1_POINTS.POINT_2' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_1_POINTS.POINT_3' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_1_POINTS.POINT_4' | translate }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card P2 -->
+      <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border-t-4 border-transparent hover:border-secondary hover:-translate-y-1 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+           <span class="text-6xl font-bold text-secondary">02</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-primary mb-2 relative z-10">
+          {{ 'LANDING.PART_2_TITLE' | translate }}
+        </h3>
+        <span class="text-sm font-semibold text-secondary uppercase tracking-wider block mb-6 relative z-10">
+          {{ 'LANDING.PART_2_SUBTITLE' | translate }}
+        </span>
+        <p class="text-primary/70 text-sm mb-6 leading-relaxed relative z-10">
+          {{ 'LANDING.PART_2_DESC' | translate }}
+        </p>
+        <ul class="space-y-3 text-sm text-primary/80 relative z-10">
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_2_POINTS.POINT_1' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_2_POINTS.POINT_2' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_2_POINTS.POINT_3' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_2_POINTS.POINT_4' | translate }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card P3 -->
+      <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border-t-4 border-transparent hover:border-secondary hover:-translate-y-1 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+           <span class="text-6xl font-bold text-secondary">03</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-primary mb-2 relative z-10">
+          {{ 'LANDING.PART_3_TITLE' | translate }}
+        </h3>
+        <span class="text-sm font-semibold text-secondary uppercase tracking-wider block mb-6 relative z-10">
+          {{ 'LANDING.PART_3_SUBTITLE' | translate }}
+        </span>
+        <p class="text-primary/70 text-sm mb-6 leading-relaxed relative z-10">
+          {{ 'LANDING.PART_3_DESC' | translate }}
+        </p>
+        <ul class="space-y-3 text-sm text-primary/80 relative z-10">
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{ 'LANDING.PART_3_POINTS.POINT_1' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_3_POINTS.POINT_2' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_3_POINTS.POINT_3' | translate }}
+          </li>
+          <li class="flex items-start gap-3">
+             <svg class="w-5 h-5 text-secondary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+             {{ 'LANDING.PART_3_POINTS.POINT_4' | translate }}
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<app-courses></app-courses>
+<section class=" pt-0 pb-26 bg-gray-50">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
+        {{ 'LANDING.REVIEWS_TITLE' | translate }}
+      </h2>
+      <p class="text-primary/70 text-lg max-w-2xl mx-auto">
+        {{ 'LANDING.REVIEWS_SUBTITLE' | translate }}
+      </p>
+    </div>
+
+    <owl-carousel-o [options]="customOptions" class="reviews-carousel relative block">
+      <!-- Review 1 -->
+      <ng-template carouselSlide>
+        <div class="p-4 h-full pt-8">
+          <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <i class="pi pi-quote-right text-6xl text-secondary"></i>
+            </div>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
+              "{{ 'LANDING.REVIEWS_LIST.REVIEW1.TEXT' | translate }}"
+            </p>
+            <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
+              <div>
+                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW1.NAME' | translate }}</h4>
+                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW1.ROLE' | translate }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                 <div class="flex gap-1 text-yellow-400 text-sm mb-1">
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                 </div>
+                 <span class="text-gray-400 text-xs font-semibold">5.0/5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Review 2 -->
+      <ng-template carouselSlide>
+        <div class="p-4 h-full pt-8">
+          <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <i class="pi pi-quote-right text-6xl text-secondary"></i>
+            </div>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
+              "{{ 'LANDING.REVIEWS_LIST.REVIEW2.TEXT' | translate }}"
+            </p>
+            <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
+              <div>
+                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW2.NAME' | translate }}</h4>
+                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW2.ROLE' | translate }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                 <div class="flex gap-1 text-yellow-400 text-sm mb-1">
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                 </div>
+                 <span class="text-gray-400 text-xs font-semibold">5.0/5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Review 3 -->
+      <ng-template carouselSlide>
+        <div class="p-4 h-full pt-8">
+          <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <i class="pi pi-quote-right text-6xl text-secondary"></i>
+            </div>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
+              "{{ 'LANDING.REVIEWS_LIST.REVIEW3.TEXT' | translate }}"
+            </p>
+            <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
+              <div>
+                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW3.NAME' | translate }}</h4>
+                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW3.ROLE' | translate }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                 <div class="flex gap-1 text-yellow-400 text-sm mb-1">
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                 </div>
+                 <span class="text-gray-400 text-xs font-semibold">5.0/5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Review 4 -->
+      <ng-template carouselSlide>
+        <div class="p-4 h-full pt-8">
+          <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <i class="pi pi-quote-right text-6xl text-secondary"></i>
+            </div>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
+              "{{ 'LANDING.REVIEWS_LIST.REVIEW4.TEXT' | translate }}"
+            </p>
+            <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
+              <div>
+                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW4.NAME' | translate }}</h4>
+                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW4.ROLE' | translate }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                 <div class="flex gap-1 text-yellow-400 text-sm mb-1">
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                 </div>
+                 <span class="text-gray-400 text-xs font-semibold">5.0/5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Review 5 -->
+      <ng-template carouselSlide>
+        <div class="p-4 h-full pt-8">
+          <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <i class="pi pi-quote-right text-6xl text-secondary"></i>
+            </div>
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
+              "{{ 'LANDING.REVIEWS_LIST.REVIEW5.TEXT' | translate }}"
+            </p>
+            <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
+              <div>
+                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW5.NAME' | translate }}</h4>
+                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW5.ROLE' | translate }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                 <div class="flex gap-1 text-yellow-400 text-sm mb-1">
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                    <i class="pi pi-star-fill"></i>
+                 </div>
+                 <span class="text-gray-400 text-xs font-semibold">5.0/5.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </owl-carousel-o>
+  </div>
+</section>

@@ -1,0 +1,55 @@
+/* Marquee Styles */
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.marquee-content {
+    display: inline-block;
+    /* Speed: Adjust seconds to make it faster/slower */
+    animation: scroll-left-to-right 10s linear infinite;
+    /* Start position: Fully off-screen to the left */
+    transform: translateX(-100%);
+}
+
+@keyframes scroll-left-to-right {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        /* Move to the right edge of the container */
+        transform: translateX(100%);
+        /* Note: If the container is the full screen width, 100% moves it completely out to the right */
+    }
+}
+
+/* Custom PrimeNG TreeSelect Styling for Navbar */
+::ng-deep .p-treeselect {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+::ng-deep .p-treeselect:not(.p-disabled):hover {
+    border-color: transparent !important;
+}
+
+::ng-deep .p-treeselect:not(.p-disabled).p-focus {
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+::ng-deep .p-treeselect-label {
+    padding: 0.5rem 0.75rem !important;
+    color: #4b5563 !important; /* text-gray-600 */
+    font-weight: 500 !important;
+}
+
+::ng-deep .p-treeselect-trigger {
+    width: 2rem !important;
+}

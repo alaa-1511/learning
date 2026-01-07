@@ -1,0 +1,127 @@
+<header class="fixed w-full z-20 top-0 start-0">
+    <nav class="bg-gray-50 border-b border-default w-full">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-start mx-auto p-4">
+        <a routerLink="/landing" class="flex items-center gap-3 rtl:space-x-reverse me-6 group">
+            <div class="relative flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                <svg class="w-6 h-6 text-primary group-hover:text-white transition-colors duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.03v13m0-13c-2.819-.831-4.715-1.076-8.029-1.023A.99.99 0 0 0 3 6v11c0 .563.466 1.014 1.03 1.007 3.122-.043 5.018.212 7.97 1.023m0-13c2.819-.831 4.715-1.076 8.029-1.023A.99.99 0 0 1 21 6v11c0 .563-.466 1.014-1.03 1.007-3.122-.043-5.018.212-7.97 1.023"/>
+                </svg>
+            </div>
+            <span class="self-center text-2xl font-bold whitespace-nowrap text-primary group-hover:text-primary transition-colors duration-300">E-<span class="text-primary group-hover:text-gray-900 transition-colors duration-300">Learning</span></span>
+        </a>
+        
+        <div class="flex items-center gap-2 md:order-2 ms-auto  me-3 rtl:space-x-reverse">
+             <button (click)="switchLanguage('en')" class="text-sm font-medium text-primary hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_EN' | translate }}</button>
+            <span class="text-primary">|</span>
+            <button (click)="switchLanguage('ar')" class="text-sm font-medium text-primary hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_AR' | translate }}</button>
+        </div>
+    
+        <div class="flex items-center md:order-2 gap-3 rtl:space-x-reverse">
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex gap-3">
+            @if (isLoggedIn() === false) {
+             <button routerLink="/login" type="button"  class="text-white bg-primary hover:bg-white hover:text-primary box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium rounded-base leading-5 text-sm px-5 py-2 focus:outline-none transition-colors  ease-in-out duration-300 hover:scale-105   cursor-pointer "> {{ 'NAVBAR.LOGIN' | translate}}</button>
+             <button routerLink="/register"  type="button" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
+            } @else {
+             <button   type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
+            }
+          </div>
+          <!-- Mobile menu button -->
+          <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-base md:hidden hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-2 focus:ring-gray-200   cursor-pointer" aria-controls="navbar-user" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/></svg>
+          </button>
+        </div>
+        
+        <!-- Main hidden menu -->
+         @if (isLoggedIn()===true) {
+        <div class="items-center  justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+          <ul class="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-base bg-gray-50 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-50">
+            
+            <li>
+              <a routerLink="/landing" class="block text-lg py-2 px-3 text-primary rounded  md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.HOME' | translate }}</a>
+            </li>
+            
+    <button id="multiLevelDropdownButton" data-dropdown-toggle="multi-dropdown" data-dropdown-trigger="hover" class="inline-flex items-center justify-center text-primary hover:text-secondary text-lg w-full md:w-auto py-2 px-3 md:p-0" type="button">
+      {{ 'NAVBAR.Our Services' | translate }} 
+      <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+    </button>
+    
+    <!-- Dropdown menu -->
+    <div id="multi-dropdown" class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
+        <ul class="p-2 text-sm text-body font-medium" aria-labelledby="multiLevelDropdownButton">
+          <li>
+            <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exams' | translate }}</a>
+          </li>
+          <li>
+            <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" data-dropdown-trigger="hover" type="button" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">
+            {{ 'NAVBAR.IMPORTANT_BLOGS' | translate }}
+              <svg class="h-4 w-4 ms-auto rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+            </button>
+              <div id="doubleDropdown" class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
+                <ul class="p-2 text-sm text-body font-medium" aria-labelledby="doubleDropdownButton">
+                  <li>
+                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exam Practice' | translate }}</a>
+                  </li>
+                  <li>
+                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exam Course Enrollment' | translate }}</a>
+                  </li>
+                  <li>
+                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Overview of the Questions' | translate }}</a>
+                  </li>
+                 
+                </ul>
+            </div>
+          </li>
+          <li>
+            <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.EARNINGS' | translate }}</a>
+          </li>
+       
+         
+        </ul>
+    </div>
+    
+            <li>
+              <a routerLink="/courses" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
+            </li>
+            <li>
+              <a routerLink="/articles" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>
+            </li>
+            <li>
+              <a routerLink="/questions" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.QUESTIONS' | translate }}</a>
+            </li>
+             @if (isAdmin()) {
+             <li>
+            <a routerLink="/dashboard" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.DASHBOARD' | translate }}</a>
+          </li>
+          }
+            <li>
+              <a routerLink="/who-are" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.WHO_WE_ARE' | translate }}</a>
+            </li>
+            <!-- Mobile buttons only -->
+            <li class="mt-2 md:mt-0 md:hidden">
+              @if (!isLoggedIn()===true) {
+               <button routerLink="/login" type="button" class="text-white bg-primary hover:bg-white hover:text-primary box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium rounded-base leading-5 text-sm px-5 py-2 focus:outline-none transition-colors  ease-in-out duration-300 hover:scale-105   cursor-pointer ">{{ 'NAVBAR.LOGIN' | translate}}</button>
+               <button routerLink="/register" type="button" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
+              } @else {
+                       <button type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
+              }
+            </li>
+           
+
+          </ul>
+        </div>
+      }
+      </div>
+    </nav>
+    
+    <!-- Marquee Strip -->
+     @if (isLoggedIn()===true) {
+    <div class="bg-primary text-white py-2 w-full overflow-hidden marquee-container">
+        <div class="marquee-content whitespace-nowrap">
+            <span>{{ 'NAVBAR.MARQUEE_TEXT' | translate }}</span>
+        </div>
+    </div>
+    }
+</header>
+

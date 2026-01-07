@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+@import "primeicons/primeicons.css";
+ 
+@theme "default" {
+    --color-primary: #003764;
+    --color-secondary: #FF6A00;
+    --color-surface: #ffffff;
+    --radius-base: 0.375rem; 
+}
+
+body {
+    background-color: white;
+    color: black;
+}
+
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+

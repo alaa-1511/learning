@@ -1,0 +1,144 @@
+<!-- Page Container -->
+<div class="min-h-screen bg-gray-50 py-36 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- VIEW 1: EXAM LIST -->
+    <div *ngIf="currentView === 'list'" class="animate-fade-in">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-primary mb-4">{{ 'QUESTIONS.TITLE' | translate }}</h2>
+        <p class="text-lg text-primary/70">{{ 'QUESTIONS.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Exam Card -->
+        <div *ngFor="let exam of exams" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col">
+          <div class="h-48 overflow-hidden relative">
+             <img [src]="exam.image" class="w-full h-full object-cover">
+             <div class="absolute inset-0 bg-black/40"></div>
+             <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+               {{ exam.category | translate }}
+             </span>
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-primary mb-2">{{ exam.title | translate }}</h3>
+            <p class="text-sm text-gray-500 mb-6 flex-grow">{{ exam.description | translate }}</p>
+            
+            <div class="flex items-center justify-between text-sm text-gray-400 mb-6">
+               <span><i class="pi pi-list"></i> {{ exam.questions.length }} {{ 'QUESTIONS.QUESTIONS_COUNT' | translate }}</span>
+               <span><i class="pi pi-clock"></i> {{ 'QUESTIONS.DURATION' | translate }}</span>
+            </div>
+
+            <button (click)="enroll(exam)" class="w-full py-3 bg-primary hover:bg-secondary text-white font-bold rounded-xl transition-colors">
+              {{ 'QUESTIONS.START_PRACTICE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 2: EXAM INTERFACE -->
+    <div *ngIf="currentView === 'exam' && selectedExam" class="animate-fade-in max-w-3xl mx-auto">
+      
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-2 text-sm font-semibold text-gray-500">
+           <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: selectedExam.questions.length} }}</span>
+           <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div class="bg-secondary h-3 transition-all duration-500" 
+               [style.width.%]="((currentQuestionIndex + 1) / selectedExam.questions.length) * 100">
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100">
+        <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed">
+           {{ selectedExam.questions[currentQuestionIndex].text | translate }}
+        </h3>
+
+        <!-- Options -->
+        <div class="space-y-4 mb-10">
+           <div *ngFor="let option of selectedExam.questions[currentQuestionIndex].options; let i = index" 
+                (click)="selectAnswer(i)"
+                [class.bg-blue-50]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                [class.border-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors group">
+                
+                <div [class.bg-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                     [class.border-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                     class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors group-hover:border-secondary">
+                     <i *ngIf="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
+                </div>
+                
+                <span [class.font-semibold]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="text-primary text-lg">{{ option | translate }}</span>
+           </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center">
+             <button (click)="previousQuestion()" 
+                     [disabled]="currentQuestionIndex === 0"
+                     class="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+               {{ 'QUESTIONS.PREVIOUS' | translate }}
+             </button>
+
+             <button *ngIf="currentQuestionIndex < selectedExam.questions.length - 1"
+                     (click)="nextQuestion()"
+                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                     class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+               {{ 'QUESTIONS.NEXT_QUESTION' | translate }}
+             </button>
+
+             <button *ngIf="currentQuestionIndex === selectedExam.questions.length - 1"
+                     (click)="submitExam()"
+                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                     class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+               {{ 'QUESTIONS.SUBMIT_EXAM' | translate }}
+             </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- VIEW 3: RESULTS -->
+    <div *ngIf="currentView === 'result'" class="animate-scale-in max-w-lg mx-auto text-center">
+       <div class="bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+          
+          <div class="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
+               [ngClass]="passed ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
+               <i class="pi text-5xl" [ngClass]="passed ? 'pi-check-circle' : 'pi-times-circle'"></i>
+          </div>
+
+          <h2 class="text-3xl font-extrabold text-primary mb-2">
+            {{ (passed ? 'QUESTIONS.EXAM_PASSED' : 'QUESTIONS.EXAM_FAILED') | translate }}
+          </h2>
+          <p class="text-gray-500 mb-8" [innerHTML]="'QUESTIONS.SCORE_MESSAGE' | translate:{score: percentage, exam: (selectedExam?.title | translate)}">
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 mb-8">
+             <div class="bg-gray-50 p-4 rounded-xl">
+                <span class="block text-gray-400 text-xs uppercase tracking-wider">{{ 'QUESTIONS.CORRECT' | translate }}</span>
+                <span class="text-2xl font-bold text-green-600">{{ score }}</span>
+             </div>
+             <div class="bg-gray-50 p-4 rounded-xl">
+                <span class="block text-gray-400 text-xs uppercase tracking-wider">{{ 'QUESTIONS.TOTAL' | translate }}</span>
+                <span class="text-2xl font-bold text-primary">{{ selectedExam?.questions?.length }}</span>
+             </div>
+          </div>
+
+          <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4">
+             {{ 'QUESTIONS.TRY_ANOTHER' | translate }}
+          </button>
+           <button (click)="currentView = 'exam'; currentQuestionIndex = 0; score = 0" class="w-full py-4 bg-white border-2 border-gray-100 hover:bg-gray-50 text-gray-600 font-bold rounded-xl transition">
+             {{ 'QUESTIONS.RETAKE' | translate }}
+          </button>
+
+       </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<section class="pt-32 pb-24 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-extrabold text-primary mb-6">
+        {{ 'COURSES.TITLE' | translate }}
+      </h2>
+      <p class="text-lg text-primary/70 max-w-2xl mx-auto">
+        {{ 'COURSES.SUBTITLE' | translate }}
+      </p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Course Card Item -->
+      <div *ngFor="let course of courses | paginate: { itemsPerPage: 6, currentPage: p }" class="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        
+        <!-- Image & Badge -->
+        <div class="relative h-56 overflow-hidden">
+          <img [src]="course.image" [alt]="course.title | translate" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+          
+          <span *ngIf="course.isFreeTrial" class="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+            {{ 'COURSES.FREE_TRIAL' | translate }}
+          </span>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col flex-grow p-7">
+          
+          <!-- Tags -->
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-3 py-1 rounded-lg bg-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wide">
+              {{ course.category | translate }}
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-gray-100 text-gray-600 text-xs font-semibold">
+              {{ course.level | translate }}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h3 class="text-xl font-bold text-primary mb-3 leading-tight group-hover:text-secondary transition-colors">
+            {{ course.title | translate }}
+          </h3>
+
+          <!-- Description -->
+          <p class="text-primary/70 text-sm line-clamp-2 mb-2 flex-grow">
+            {{ course.description | translate }}
+          </p>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-100 my-3"></div>
+
+          <!-- Stats -->
+          <div class="flex items-center justify-between text-sm text-primary/60 mb-6">
+            <div class="flex items-center gap-1.5">
+              <span class="text-yellow-400 text-lg"><i class="pi pi-star"></i> </span>
+              <span class="font-bold text-primary">{{ course.rating }}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              <span>{{ course.students }} {{ 'COURSES.STUDENTS' | translate }}</span>
+            </div>
+          </div>
+
+          <!-- Footer: Price & CTA -->
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-2xl font-extrabold text-secondary">
+              ${{ course.price }}
+            </span>
+            <a routerLink="/dateliscourses" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary hover:text-secondary/80 transition-colors group/link">
+              {{ 'COURSES.VIEW_DETAILS' | translate }}
+              <svg class="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="mt-16 flex justify-center">
+      <pagination-controls 
+        (pageChange)="p = $event"
+        [previousLabel]="'COURSES.PREVIOUS' | translate"
+        [nextLabel]="'COURSES.NEXT' | translate"
+        class="my-pagination">
+      </pagination-controls>
+    </div>
+  </div>
+</section>
