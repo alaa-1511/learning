@@ -1,65 +1,66 @@
-<section class=" bg-gray-100 h-screen ">
-    <div class="max-w-3xl mx-auto  py-5">
-    <div class="w-full   p-10 bg-white rounded-lg shadow-xs ">
-        <h1 class="text-4xl font-bold text-primary text-center mb-6">{{ 'AUTH.REGISTER_TITLE' | translate }}</h1>
-        <form [formGroup]="formRegisterData()" (ngSubmit)="formRegister()">
+<section class=" bg-gray-100 h-195  pt-30 ">
+    
+        <div class="max-w-3xl mx-auto    ">
+        <div class="w-full   p-10 bg-white rounded-lg shadow-xs ">
+            <h1 class="text-4xl font-bold text-primary text-center mb-6">{{ 'AUTH.REGISTER_TITLE' | translate }}</h1>
+            <form [formGroup]="formRegisterData()" (ngSubmit)="formRegister()">
 
-            @if (errorMessage()) {
-                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-                  <span class="font-medium">{{ 'COMMON.ERROR_LABEL' | translate }}</span> {{ errorMessage() }}
-                </div>
-            }
+                @if (errorMessage()) {
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                    <span class="font-medium">{{ 'COMMON.ERROR_LABEL' | translate }}</span> {{ errorMessage() }}
+                    </div>
+                }
 
-            @if (successMessage()) {
-                <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
-                  <span class="font-medium">{{ 'COMMON.SUCCESS_LABEL' | translate }}</span> {{ successMessage() }}
-                </div>
-            }
+                @if (successMessage()) {
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+                    <span class="font-medium">{{ 'COMMON.SUCCESS_LABEL' | translate }}</span> {{ successMessage() }}
+                    </div>
+                }
 
-          <app-input
-          [typeInput]="'text'"
-          [labelInput]="'AUTH.FIRST_NAME'"
-          [idInput]="'firstName'"
-          [placeholderInput]="'AUTH.FIRST_NAME'"
-          [controlInput]="formRegisterData().get('firstName')"
-          ></app-input>
-          <app-input
-          [typeInput]="'text'"
-          [labelInput]="'AUTH.LAST_NAME'"
-          [idInput]="'lastName'"
-          [placeholderInput]="'AUTH.LAST_NAME'"
-          [controlInput]="formRegisterData().get('lastName')"
-          ></app-input>
-          <app-input
-          [typeInput]="'email'"
-          [labelInput]="'AUTH.EMAIL'"
-          [idInput]="'email'"
-          [controlInput]="formRegisterData().get('email')"
-          [placeholderInput]="'AUTH.EMAIL'"
-          ></app-input>
-          <app-input
-          [typeInput]="'password'"
-          [labelInput]="'AUTH.PASSWORD'"
-          [idInput]="'password'"
-          [controlInput]="formRegisterData().get('password')"
-          [placeholderInput]="'AUTH.PASSWORD'"
-          ></app-input>
-          <button type="submit" [disabled]="isLoading()" [class.opacity-50]="isLoading()"
-              class="w-full bg-primary text-white text-sm font-medium rounded-base py-2.5 px-5 text-center hover:bg-secondary focus:ring-4 focus:outline-none focus:ring-secondary/50">
-              @if (isLoading()) {
-                  {{ 'COMMON.LOADING' | translate }}
-              } @else {
-                  {{ 'AUTH.REGISTER_BUTTON' | translate }}
-              }
-          </button>
+            <app-input
+            [typeInput]="'text'"
+            [labelInput]="'AUTH.FIRST_NAME'"
+            [idInput]="'firstName'"
+            [placeholderInput]="'AUTH.FIRST_NAME'"
+            [controlInput]="formRegisterData().get('firstName')"
+            ></app-input>
+            <app-input
+            [typeInput]="'text'"
+            [labelInput]="'AUTH.LAST_NAME'"
+            [idInput]="'lastName'"
+            [placeholderInput]="'AUTH.LAST_NAME'"
+            [controlInput]="formRegisterData().get('lastName')"
+            ></app-input>
+            <app-input
+            [typeInput]="'email'"
+            [labelInput]="'AUTH.EMAIL'"
+            [idInput]="'email'"
+            [controlInput]="formRegisterData().get('email')"
+            [placeholderInput]="'AUTH.EMAIL'"
+            ></app-input>
+            <app-input
+            [typeInput]="'password'"
+            [labelInput]="'AUTH.PASSWORD'"
+            [idInput]="'password'"
+            [controlInput]="formRegisterData().get('password')"
+            [placeholderInput]="'AUTH.PASSWORD'"
+            ></app-input>
+            <button type="submit" [disabled]="isLoading()" [class.opacity-50]="isLoading()"
+                class="w-full bg-primary text-white text-sm font-medium rounded-base py-2.5 px-5 text-center hover:bg-secondary focus:ring-4 focus:outline-none focus:ring-secondary/50">
+             {{ 'AUTH.REGISTER_BUTTON' | translate }}
+             @if(isLoading()){
+             <span [class.animate-spin]="isLoading()" class="pi pi-spinner"></span>
+             }
+            </button>
 
-          <div class="mt-4 text-center">
-            <a routerLink="/login" class="text-sm font-medium text-primary hover:underline hover:text-secondary transition-colors cursor-pointer">
-                {{ 'AUTH.ALREADY_HAVE_ACCOUNT' | translate }}
-            </a>
-          </div>
-      </form>
-    </div>
-    </div>
+            <div class="mt-4 text-center">
+                <a routerLink="/login" class="text-sm font-medium text-primary hover:underline hover:text-secondary transition-colors cursor-pointer">
+                    {{ 'AUTH.ALREADY_HAVE_ACCOUNT' | translate }}
+                </a>
+            </div>
+        </form>
+        </div>
+        </div>
+ 
 </section>
 

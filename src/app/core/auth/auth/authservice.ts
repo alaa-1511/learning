@@ -10,14 +10,13 @@ import emailjs from '@emailjs/browser';
 export class Authservice {
   private supabase: SupabaseClient;
 
-  // TODO: Replace with actual EmailJS credentials
-  private serviceID = 'YOUR_SERVICE_ID';
-  private templateID = 'YOUR_TEMPLATE_ID';
-  private publicKey = 'YOUR_PUBLIC_KEY';
+  private serviceID = 'service_uhvwfbb';
+  private templateID = 'template_9kqzzu5';
+  private publicKey = 'HmVEfd9rlmh1aBHI4';
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-    // Initialize EmailJS
+    // Initialize EmailJs
     emailjs.init(this.publicKey);
   }
 

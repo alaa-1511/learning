@@ -100,6 +100,10 @@ export class Questions implements OnInit {
     }
   }
 
+  goToQuestion(index: number) {
+    this.currentQuestionIndex = index;
+  }
+
   nextQuestion() {
     if (this.selectedExam && this.currentQuestionIndex < this.selectedExam.questions.length - 1) {
       this.currentQuestionIndex++;

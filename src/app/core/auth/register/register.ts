@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Authservice } from '../auth/authservice';
 import { Router, RouterLink } from '@angular/router';
 import { Input } from '../../../shared/components/input/input';
-
+import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -17,9 +17,10 @@ export class Register {
    private readonly authservice = inject(Authservice);
   private readonly fb = inject(FormBuilder);
   private readonly route=inject(Router)
+  private readonly toastr = inject(ToastrService);
 
 
-
+isLoading = signal<boolean>(false);
   
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
@@ -33,13 +34,13 @@ export class Register {
     
   }));
 
-  isLoading = signal<boolean>(false);
 
   formRegister(): void {
     if (this.formRegisterData().valid) {
         this.errorMessage.set(null);
         this.successMessage.set(null);
         this.isLoading.set(true);
+        this.toastr.success('Registration successful! Please check your email to confirm your account before logging in.');
         
         this.authservice.register(this.formRegisterData().value).subscribe({
             next: (res) => {
@@ -62,12 +63,14 @@ export class Register {
                      localStorage.setItem('token', res.data.session.access_token);
                      this.formRegisterData().reset();
                      this.route.navigate(['/login']);
+                     this.toastr.success('Registration successful! Please check your email to confirm your account before logging in.');
                 }
             },
             error: (err) => {
                 this.isLoading.set(false);
                 console.log(err);
                 this.errorMessage.set('An unexpected error occurred. Please try again.');
+                this.toastr.error('An unexpected error occurred. Please try again.');
             },
         });
     } else {

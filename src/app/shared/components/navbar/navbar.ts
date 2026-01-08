@@ -1,7 +1,7 @@
 import { Component, inject, input, InputSignal, signal } from '@angular/core';
 import { Flowbit } from '../../../core/service/flowbite/flowbit';
 import { initFlowbite } from 'flowbite';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { Translate } from '../../../core/service/translate';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { SpecailEmail } from '../../../core/service/specailemail';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe ],
+  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe ,RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

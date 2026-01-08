@@ -53,6 +53,24 @@
         </div>
       </div>
 
+      <!-- Question Navigator Grid -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">{{ 'QUESTIONS.NAVIGATOR' | translate }}</h4>
+        <div class="flex flex-wrap gap-2">
+            <button *ngFor="let q of selectedExam.questions; let i = index"
+                    (click)="goToQuestion(i)"
+                    [class.bg-primary]="currentQuestionIndex === i"
+                    [class.text-white]="currentQuestionIndex === i"
+                    [class.bg-secondary]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                    [class.text-white]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                    [class.bg-gray-100]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                    [class.text-gray-600]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                    class="w-10 h-10 rounded-lg font-bold text-sm transition-all hover:scale-105 hover:shadow-md flex items-center justify-center">
+                {{ i + 1 }}
+            </button>
+        </div>
+      </div>
+
       <!-- Question Card -->
       <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100">
         <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed">

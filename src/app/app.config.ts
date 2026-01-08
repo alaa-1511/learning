@@ -8,6 +8,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideTranslateService({
       defaultLanguage: 'en', 
     }),
+       provideToastr(),
+
     provideTranslateHttpLoader({
       prefix: '/i18n/',
       suffix: '.json',

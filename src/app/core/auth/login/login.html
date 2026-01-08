@@ -25,7 +25,11 @@
           ></app-input>
           
           <button type="submit"
-              class="w-full bg-primary text-white text-sm font-medium rounded-base py-2.5 px-5 text-center hover:bg-black hover:text-white focus:ring-4 focus:outline-none focus:ring-secondary/50">{{ 'AUTH.LOGIN_BUTTON' | translate }}</button>
+              class="w-full bg-primary text-white text-sm font-medium rounded-base py-2.5 px-5 text-center hover:bg-secondary hover:text-white focus:ring-4 focus:outline-none focus:ring-secondary/50">{{ 'AUTH.LOGIN_BUTTON' | translate }} 
+              @if(isLoading()){
+                <span [class.animate-spin]="isLoading()" class="pi pi-spinner"></span>
+              }
+               </button>
           
           <div class="mt-4 text-center">
             <a routerLink="/register" class="text-sm font-medium text-primary hover:underline hover:text-secondary transition-colors cursor-pointer">

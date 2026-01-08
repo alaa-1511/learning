@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Authservice } from '../auth/authservice';
 import { Input } from '../../../shared/components/input/input';
 import { SpecailEmail } from '../../service/specailemail';
-
+import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -14,12 +14,15 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './login.css',
 })
 export class Login {
+
   private readonly fb = inject(FormBuilder);
   private readonly authservice = inject(Authservice);
   private readonly specailemail = inject(SpecailEmail);
   private readonly route = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   errorMessage = signal<string | null>(null);
+  isLoading = signal<boolean>(false);
 
   formLoginData = signal<FormGroup>(this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -40,11 +43,15 @@ export class Login {
                   localStorage.setItem('token', data.session.access_token);
                   this.formLoginData().reset();
                   this.route.navigate(['/landing']);
+                  this.toastr.success('Login successful');
+                  this.isLoading.set(false);
                }
             }
           ).catch((err) => {
              console.error('Login failed:', err);
              this.errorMessage.set(err.message || 'Login failed');
+             this.toastr.error('Login failed');
+             this.isLoading.set(false);
           });
 
         } else {
@@ -55,9 +62,13 @@ export class Login {
                 localStorage.setItem('token', res.data.session.access_token);
                 this.formLoginData().reset();
                 this.route.navigate(['/landing']);
+                this.toastr.success('Login successful');
+                this.isLoading.set(false);
               } else if (res.error) {
                 console.error('Login failed:', res.error.message);
                 this.errorMessage.set(res.error.message);
+                this.toastr.error('Login failed');
+                this.isLoading.set(false);
               }
             },
             error: (err: any) => {

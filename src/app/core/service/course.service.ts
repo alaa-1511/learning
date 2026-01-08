@@ -18,6 +18,7 @@ export interface Course {
   providedIn: 'root'
 })
 export class CourseService {
+  private readonly STORAGE_KEY = 'courses';
   private initialCourses: Course[] = [
     {
       id: 1,
@@ -93,10 +94,27 @@ export class CourseService {
     }
   ];
 
-  private coursesSubject = new BehaviorSubject<Course[]>(this.initialCourses);
+  private coursesSubject = new BehaviorSubject<Course[]>([]);
   courses$ = this.coursesSubject.asObservable();
 
-  constructor() { }
+  constructor() {
+    this.loadCourses();
+  }
+
+  private loadCourses() {
+    const savedCourses = localStorage.getItem(this.STORAGE_KEY);
+    if (savedCourses) {
+      this.coursesSubject.next(JSON.parse(savedCourses));
+    } else {
+      this.coursesSubject.next(this.initialCourses);
+      this.saveCourses(this.initialCourses);
+    }
+  }
+
+  private saveCourses(courses: Course[]) {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(courses));
+    this.coursesSubject.next(courses);
+  }
 
   getCourses(): Observable<Course[]> {
     return this.courses$;
@@ -108,7 +126,8 @@ export class CourseService {
     if (!course.id) {
        course.id = Math.max(...currentCourses.map(c => c.id), 0) + 1;
     }
-    this.coursesSubject.next([...currentCourses, course]);
+    const updatedCourses = [...currentCourses, course];
+    this.saveCourses(updatedCourses);
   }
 
   updateCourse(updatedCourse: Course) {
@@ -116,12 +135,13 @@ export class CourseService {
     const index = currentCourses.findIndex(c => c.id === updatedCourse.id);
     if (index !== -1) {
       currentCourses[index] = updatedCourse;
-      this.coursesSubject.next([...currentCourses]);
+      this.saveCourses([...currentCourses]);
     }
   }
 
   deleteCourse(id: number) {
     const currentCourses = this.coursesSubject.value;
-    this.coursesSubject.next(currentCourses.filter(c => c.id !== id));
+    const updatedCourses = currentCourses.filter(c => c.id !== id);
+    this.saveCourses(updatedCourses);
   }
 }
