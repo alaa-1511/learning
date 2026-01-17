@@ -15,6 +15,8 @@ import { adminGuard } from './core/guards/admin-guard';
 import { Dashboard } from './feature/dashboard/dashboard';
 import { Articles } from './feature/articles/articles';
 import { WhoAre } from './feature/who-are/who-are';
+import { Scopa } from './feature/scopa/scopa';
+import { FreeTrail } from './feature/free-trail/free-trail';
 
 
 
@@ -29,6 +31,9 @@ export const routes: Routes = [
       {path:'questions', component: Questions},
       {path:'articles', component: Articles},
       {path:'who-are', component: WhoAre},
+      {path:'scopa', component: Scopa},
+      {path:'free-trail', component: FreeTrail},
+      {path:'certification/:id', loadComponent: () => import('./feature/certificate-details/certificate-details').then(m => m.CertificateDetails)},
     
     ]
 

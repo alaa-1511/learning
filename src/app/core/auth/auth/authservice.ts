@@ -25,13 +25,17 @@ export class Authservice {
   }
 
   private async sendAdminNotification(action: 'register' | 'login', userData: any) {
+    const fullName = userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : (userData.name || 'N/A');
+    const phone = userData.phone || 'N/A';
+    
     const templateParams = {
       to_name: 'Admin',
       from_name: 'E-Learning App',
-      message: `User ${action} successful.\nName: ${userData.name || 'N/A'}\nEmail: ${userData.email}`,
+      message: `User ${action} successful.\nName: ${fullName}\nEmail: ${userData.email}\nPhone: ${phone}`,
       user_action: action,
-      user_name: userData.name || 'N/A',
+      user_name: fullName,
       user_email: userData.email,
+      user_phone: phone
     };
 
     try {
@@ -78,6 +82,7 @@ export class Authservice {
       })
     );
   }
+  
   async signOut(): Promise<void> {
     await this.supabase.auth.signOut();
   }

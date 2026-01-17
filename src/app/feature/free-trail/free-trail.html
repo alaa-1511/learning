@@ -1,0 +1,164 @@
+<!-- Page Container -->
+<div class="min-h-screen bg-gray-50 py-36 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- VIEW 1: EXAM LIST -->
+    <div *ngIf="currentView === 'list'" class="animate-fade-in">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-extrabold text-primary mb-4">Free Trial Exams</h2>
+        <p class="text-lg text-primary/70">Try our free practice exams to get a taste of our content.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Exam Card -->
+        <div *ngFor="let exam of exams" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col">
+          <div class="h-48 overflow-hidden relative">
+             <img [src]="exam.image" class="w-full h-full object-cover">
+             <div class="absolute inset-0 bg-black/40"></div>
+             <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+               {{ exam.category | translate }}
+             </span>
+             <span class="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+               Free Trial
+             </span>
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-primary mb-2">{{ exam.title | translate }}</h3>
+            <p class="text-sm text-gray-500 mb-6 flex-grow">{{ exam.description | translate }}</p>
+            
+            <div class="flex items-center justify-between text-sm text-gray-400 mb-6">
+               <span><i class="pi pi-list"></i> {{ exam.questions.length }} Questions</span>
+            </div>
+
+            <button (click)="enroll(exam)" class="w-full py-3 bg-primary hover:bg-secondary text-white font-bold rounded-xl transition-colors">
+              Start Free Trial
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="exams.length === 0" class="text-center py-12">
+          <p class="text-gray-500 text-lg">No free trial exams available at the moment.</p>
+      </div>
+    </div>
+
+
+    <!-- VIEW 2: EXAM INTERFACE -->
+    <div *ngIf="currentView === 'exam' && selectedExam" class="animate-fade-in max-w-3xl mx-auto">
+      
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-2 text-sm font-semibold text-gray-500">
+           <span>Question {{ currentQuestionIndex + 1 }} of {{ selectedExam.questions.length }}</span>
+           <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div class="bg-secondary h-3 transition-all duration-500" 
+               [style.width.%]="((currentQuestionIndex + 1) / selectedExam.questions.length) * 100">
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Navigator Grid -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Navigator</h4>
+        <div class="flex flex-wrap gap-2">
+            <button *ngFor="let q of selectedExam.questions; let i = index"
+                    (click)="goToQuestion(i)"
+                    [class.bg-primary]="currentQuestionIndex === i"
+                    [class.text-white]="currentQuestionIndex === i"
+                    [class.bg-secondary]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                    [class.text-white]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                    [class.bg-gray-100]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                    [class.text-gray-600]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                    class="w-10 h-10 rounded-lg font-bold text-sm transition-all hover:scale-105 hover:shadow-md flex items-center justify-center">
+                {{ i + 1 }}
+            </button>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100">
+        <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed">
+           {{ selectedExam.questions[currentQuestionIndex].text | translate }}
+        </h3>
+
+        <!-- Options -->
+        <div class="space-y-4 mb-10">
+           <div *ngFor="let option of selectedExam.questions[currentQuestionIndex].options; let i = index" 
+                (click)="selectAnswer(i)"
+                [class.bg-blue-50]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                [class.border-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors group">
+                
+                <div [class.bg-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                     [class.border-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                     class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors group-hover:border-secondary">
+                     <i *ngIf="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
+                </div>
+                
+                <span [class.font-semibold]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="text-primary text-lg">{{ option | translate }}</span>
+           </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center">
+             <button (click)="previousQuestion()" 
+                     [disabled]="currentQuestionIndex === 0"
+                     class="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+               Previous
+             </button>
+
+             <button *ngIf="currentQuestionIndex < selectedExam.questions.length - 1"
+                     (click)="nextQuestion()"
+                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                     class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+               Next Question
+             </button>
+
+             <button *ngIf="currentQuestionIndex === selectedExam.questions.length - 1"
+                     (click)="submitExam()"
+                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                     class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+               Submit Exam
+             </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- VIEW 3: RESULTS -->
+    <div *ngIf="currentView === 'result'" class="animate-scale-in max-w-lg mx-auto text-center">
+       <div class="bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+          
+          <div class="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
+               [ngClass]="passed ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
+               <i class="pi text-5xl" [ngClass]="passed ? 'pi-check-circle' : 'pi-times-circle'"></i>
+          </div>
+
+          <h2 class="text-3xl font-extrabold text-primary mb-2">
+            {{ passed ? 'Passed!' : 'Failed' }}
+          </h2>
+          <p class="text-gray-500 mb-8" [innerHTML]="'You scored ' + percentage + '% on ' + (selectedExam?.title | translate)">
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 mb-8">
+             <div class="bg-gray-50 p-4 rounded-xl">
+                <span class="block text-gray-400 text-xs uppercase tracking-wider">Correct</span>
+                <span class="text-2xl font-bold text-green-600">{{ score }}</span>
+             </div>
+             <div class="bg-gray-50 p-4 rounded-xl">
+                <span class="block text-gray-400 text-xs uppercase tracking-wider">Total</span>
+                <span class="text-2xl font-bold text-primary">{{ selectedExam?.questions?.length }}</span>
+             </div>
+          </div>
+
+          <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4">
+             Try Another Exam
+          </button>
+       </div>
+    </div>
+
+  </div>
+</div>

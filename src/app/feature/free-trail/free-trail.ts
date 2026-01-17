@@ -1,14 +1,12 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { QuestionService, Question } from '../../core/service/question.service';
-
 import { CourseService, Course } from '../../core/service/course.service';
 import { Router } from '@angular/router';
 
 interface ExamQuestion extends Question {
-  selectedAnswer?: number; // User's selected option index
+  selectedAnswer?: number;
 }
 
 interface Exam {
@@ -18,20 +16,18 @@ interface Exam {
   category: string;
   questions: ExamQuestion[];
   image: string;
-  part: string; // P1, P2, P3
+  part: string;
 }
 
 @Component({
-  selector: 'app-questions',
+  selector: 'app-free-trail',
   standalone: true,
   imports: [CommonModule, TranslateModule],
-  templateUrl: './questions.html',
-  styleUrl: './questions.css',
+  templateUrl: './free-trail.html',
+  styleUrl: './free-trail.css',
 })
-export class Questions implements OnInit {
-  // State: 'list' | 'exam' | 'result'
+export class FreeTrail implements OnInit {
   currentView: string = 'list';
-  
   exams: Exam[] = [];
 
   selectedExam: Exam | null = null;
@@ -47,27 +43,24 @@ export class Questions implements OnInit {
   ) {}
 
   ngOnInit() {
-    // 1. Fetch Courses (Exams)
     this.courseService.courses$.subscribe(courses => {
-       // Filter for Exam Courses (Testbank)
-       const standardCourses = courses.filter(c => c.type === 'exam' && !c.isFreeTrial);
+       // Filter for Free Trial Courses
+       const freeTrialCourses = courses.filter(c => c.type === 'exam' && c.isFreeTrial);
        
-       this.exams = standardCourses.map(course => ({
+       this.exams = freeTrialCourses.map(course => ({
            id: course.id,
            title: course.title,
            category: course.category,
            description: course.description,
            image: course.image,
-           part: 'P1', // Default or derived if you add 'part' to Course
+           part: 'P1', 
            questions: []
        }));
 
-       // 2. Fetch Questions and map to Courses
        this.questionService.questions$.subscribe(questions => {
           const activeQuestions = questions.filter(q => q.status === 'Active') as ExamQuestion[];
           
           this.exams.forEach(exam => {
-              // Filter questions that belong to this course
               exam.questions = activeQuestions.filter(q => q.courseId === exam.id);
           });
        });
@@ -83,8 +76,6 @@ export class Questions implements OnInit {
     this.selectedExam = exam;
     this.currentView = 'exam';
     this.currentQuestionIndex = 0;
-    
-    // Reset selections
     this.selectedExam.questions.forEach(q => q.selectedAnswer = undefined);
   }
 
@@ -122,7 +113,7 @@ export class Questions implements OnInit {
 
     this.score = correctCount;
     this.percentage = Math.round((correctCount / this.selectedExam.questions.length) * 100);
-    this.passed = this.percentage >= 70; // 70% passing grade
+    this.passed = this.percentage >= 70;
     this.currentView = 'result';
   }
 

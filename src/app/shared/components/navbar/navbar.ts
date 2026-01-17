@@ -1,4 +1,5 @@
 import { Component, inject, input, InputSignal, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Flowbit } from '../../../core/service/flowbite/flowbit';
 import { initFlowbite } from 'flowbite';
 import { RouterLink, Router, RouterLinkActive } from '@angular/router';
@@ -10,14 +11,14 @@ import { SpecailEmail } from '../../../core/service/specailemail';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe ,RouterLinkActive],
+  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar {
 
   private readonly flowbiteService = inject(Flowbit);
-  private readonly translate = inject(Translate);
+  readonly translate = inject(Translate);
   private readonly authService = inject(Authservice);
   private readonly router = inject(Router);
   private readonly specialEmail = inject(SpecailEmail);

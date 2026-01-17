@@ -13,7 +13,7 @@
         "MY_DOWNLOADS": "My Downloads",
         "BILLING": "Billing",
         "REWARDS": "Rewards",
-        "EARNINGS": "Earnings",
+        "SOCPA Certificate": "SOCPA Certificate",
         "MARQUEE_TEXT": "CIA courses (Parts 1, 2, and 3) and CAT certification with a comprehensive question bank for exam practice",
         "SELECT_COURSES": "Select Courses",
         "Our Services": "Our Services",
@@ -178,6 +178,7 @@
         "FIRST_NAME": "First Name",
         "LAST_NAME": "Last Name",
         "PASSWORD": "Password",
+        "PHONE": "Phone Number",
         "CONFIRM_PASSWORD": "Confirm Password",
         "FULL_NAME": "Full Name",
         "SUBMIT": "Submit",
@@ -185,7 +186,8 @@
         "DONT_HAVE_ACCOUNT": "Don't have an account? Sign up",
         "FORGOT_PASSWORD": "Forgot Password?",
         "LOGIN_BUTTON": "Login",
-        "REGISTER_BUTTON": "Sign Up"
+        "REGISTER_BUTTON": "Sign Up",
+        "TERMS_AGREE": "I agree to receive a brief summary of recent exam questions, updates, and study materials via WhatsApp or my email"
     },
     "COMMON": {
         "LOADING": "Loading...",

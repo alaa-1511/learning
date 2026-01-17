@@ -11,9 +11,9 @@
         </a>
         
         <div class="flex items-center gap-2 md:order-2 ms-auto  me-3 rtl:space-x-reverse">
-             <button (click)="switchLanguage('en')" class="text-sm font-medium text-primary hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_EN' | translate }}</button>
+             <button  [ngClass]="{'text-secondary': translate.languageSignal() === 'en', 'text-primary': translate.languageSignal() !== 'en'}" (click)="switchLanguage('en')" class="text-sm font-medium hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_EN' | translate }}</button>
             <span class="text-primary">|</span>
-            <button (click)="switchLanguage('ar')" class="text-sm font-medium text-primary hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_AR' | translate }}</button>
+            <button [ngClass]="{'text-secondary': translate.languageSignal() === 'ar', 'text-primary': translate.languageSignal() !== 'ar'}" (click)="switchLanguage('ar')" class="text-sm font-medium hover:text-secondary cursor-pointer">{{ 'NAVBAR.LANG_AR' | translate }}</button>
         </div>
     
         <div class="flex items-center md:order-2 gap-3 rtl:space-x-reverse">
@@ -74,7 +74,7 @@
             </div>
           </li>
           <li>
-            <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.EARNINGS' | translate }}</a>
+            <a routerLink="/scopa" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.SOCPA Certificate' | translate }}</a>
           </li>
        
          
@@ -83,6 +83,9 @@
     
             <li>
               <a routerLink="/courses" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
+            </li>
+            <li>
+              <a routerLink="/free-trail" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
             </li>
             <li>
               <a routerLink="/articles" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>

@@ -65,7 +65,7 @@ export class CoursesManagement implements OnInit {
 
   ngOnInit() {
     this.courseService.courses$.subscribe(data => {
-      this.courses = data;
+      this.courses = data.filter(c => c.type !== 'exam');
       this.applyFilters();
     });
   }
@@ -135,7 +135,8 @@ export class CoursesManagement implements OnInit {
         ...formVal,
         rating: 4.5, // Default for new
         students: 0, // Default for new
-        isFreeTrial: false 
+        isFreeTrial: false,
+        type: 'standard' 
     };
 
     if (this.isEditMode) {

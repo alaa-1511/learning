@@ -1,0 +1,31 @@
+<section class="py-20 bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4">
+        <div class="mb-8">
+            <a routerLink="/scopa" class="text-primary hover:text-secondary transition-colors duration-300 flex items-center gap-2 font-medium">
+                <i class="pi pi-arrow-left"></i> Back to Certifications
+            </a>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-4xl font-bold text-primary mb-6">{{ certificateTitle() }}</h1>
+            
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg mb-4">
+                    {{ certificateDescription() }}
+                </p>
+                <p>
+                    Gain the skills and recognition you need to excel in your career with our comprehensive training program for the {{ certificateTitle() }}.
+                </p>
+            </div>
+            
+            <div class="mt-8 flex gap-4">
+                <button class="bg-primary text-white px-8 py-3 rounded-md hover:bg-secondary transition-colors duration-300 font-medium cursor-pointer">
+                    Enroll Now
+                </button>
+                <button class="border border-primary text-primary px-8 py-3 rounded-md hover:bg-primary hover:text-white transition-colors duration-300 font-medium cursor-pointer">
+                    Download Guide
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

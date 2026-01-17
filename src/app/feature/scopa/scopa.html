@@ -1,0 +1,46 @@
+<section class="pt-35 pb-10">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-10 items-center">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <span class="border border-secondary rounded-full px-4 py-2 text-secondary bg-primary/10 font-bold text-sm">
+                        Professional Certification
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-6xl font-semibold leading-tight">
+                    <span class="text-secondary uppercase">SOCPA Certification</span>
+                    <span class="text-primary"> – Your Path to Professional Accounting in Saudi Arabia</span>
+                </h1>
+                <p class="text-lg text-gray-600">Learn about the importance, eligibility, exam system, postponement rules, and exam schedule</p>
+                <div class="flex gap-4">
+                    <button class="bg-primary text-white px-6 py-2 rounded-md hover:bg-secondary transition-colors duration-300 cursor-pointer">Start your scopa  <i class= "ps-1 p pi pi-arrow-right"></i></button>
+                    <button class="bg-white text-primary px-6 py-2 rounded-md border border-primary hover:bg-primary hover:text-white transition-colors duration-300 cursor-pointer"> <i class="pi pi-download"></i> Dropdown SOCPA Guide</button>
+                </div>
+            </div>
+            
+           <div class="">
+            <div class="">
+                <img src="/imgs/photo-1553484771-0a615f264d58.jfif" alt="" class="rounded-lg hover:scale-105 transition-all duration-300 cursor-pointer">
+            </div>
+           </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container mx-auto py-5">    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (cert of certifications; track cert.id) {
+            <a [routerLink]="['/certification', cert.id]" class="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer">
+                <div class="p-6 flex flex-col items-center text-center">
+                    <div class="w-20 h-20 mb-4 flex items-center justify-center bg-gray-50 rounded-full group-hover:bg-blue-50 transition-colors duration-300">
+                        <span class="text-xl font-bold text-gray-400 group-hover:text-primary">{{cert.name}}</span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-500 font-medium  transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        View Details <i class="pi pi-arrow-right ml-1 text-xs"></i>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+    </div>
+</section>

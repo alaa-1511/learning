@@ -21,7 +21,7 @@ export class Courses implements OnInit {
 
   ngOnInit() {
     this.courseService.courses$.subscribe(data => {
-      this.courses = data;
+      this.courses = data.filter(c => c.type !== 'exam');
     });
   }
 }

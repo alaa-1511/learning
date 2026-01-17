@@ -3,17 +3,27 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Question {
   id: number;
-  text: string;
-  type: 'multiple-choice' | 'true-false';
+  text: string; 
+  type: 'multiple-choice' | 'true-false' | 'essay';
   options: string[];
-  correctAnswer: number;
-  // New/Updated fields
-  ciaPart: 'P1' | 'P2' | 'P3';
+  correctAnswer: number; 
+  answerExplanation?: string; 
+  ciaPart?: 'P1' | 'P2' | 'P3';
   topic: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   status: 'Active' | 'Draft' | 'Archived';
-  examId?: number; // Keeping for compatibility but might removing later
-  category?: string; // Keeping for compatibility
+  examId?: number; 
+  category?: string;
+  courseId?: number;
+  targetPage?: 'testbank' | 'free-trial';
+}
+
+export interface ExamConfig {
+  courseId: number;
+  durationMinutes: number;
+  questionCount: number; 
+  passingScore: number;
+  randomize: boolean;
 }
 
 @Injectable({
@@ -65,8 +75,31 @@ export class QuestionService {
     }
   ];
 
+  // Exam Config Management
+  private examConfigs: Record<string, ExamConfig> = {};
+
+  getExamConfig(courseId: number): ExamConfig {
+    return this.examConfigs[courseId] || {
+        courseId: courseId,
+        durationMinutes: 120,
+        questionCount: 100,
+        passingScore: 75,
+        randomize: true,
+        ciaPart: 'P1' // Fallback/Legacy
+    }; 
+  }
+
+  saveExamConfig(config: ExamConfig) {
+    this.examConfigs[config.courseId] = config;
+    localStorage.setItem('examConfigs', JSON.stringify(this.examConfigs));
+  }
+
   constructor() {
     this.loadFromStorage();
+    const storedConfigs = localStorage.getItem('examConfigs');
+    if (storedConfigs) {
+      this.examConfigs = JSON.parse(storedConfigs);
+    }
   }
 
   getQuestions(): Observable<Question[]> {
@@ -114,7 +147,6 @@ export class QuestionService {
     if (stored) {
       this.mockedQuestions = JSON.parse(stored);
     }
-    // else: keep default mockedQuestions
     this.questionsSubject.next(this.mockedQuestions);
   }
 }

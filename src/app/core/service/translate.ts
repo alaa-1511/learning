@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { inject, Inject, Injectable, PLATFORM_ID, RendererFactory2 } from '@angular/core';
+import { inject, Inject, Injectable, PLATFORM_ID, RendererFactory2, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
@@ -39,7 +39,10 @@ export class Translate {
   //   this.translateService.use(lang)
   //   this.changeDirection()
   // }
-   private readonly renderer2 =inject(RendererFactory2).createRenderer(null, null);
+    private readonly renderer2 =inject(RendererFactory2).createRenderer(null, null);
+    
+   languageSignal = signal<string>('en');
+
   constructor( private translateService: TranslateService ,@Inject(PLATFORM_ID) private platformId: Object ) { 
 
     if(isPlatformBrowser(this.platformId)){
@@ -52,6 +55,7 @@ export class Translate {
           //  3- use language lacal
           if (savedLanguage) {
             this.translateService.use(savedLanguage !);
+            this.languageSignal.set(savedLanguage);
           }
           this.changeDirection();
     }
@@ -75,6 +79,7 @@ export class Translate {
     localStorage.setItem('language',lang)
     this.translateService.use(lang)
     this.changeDirection(lang)
+    this.languageSignal.set(lang);
   }
 
   get currentLang(){

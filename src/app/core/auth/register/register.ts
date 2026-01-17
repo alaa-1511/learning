@@ -29,6 +29,7 @@ isLoading = signal<boolean>(false);
    firstName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     lastName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     email: [null, [Validators.required, Validators.email]],
+    phone: [null, [Validators.required, Validators.pattern(/^(01)(0|1|2|5)[0-9]{8}$/)]],
     password: [null, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/)
 ]],
     

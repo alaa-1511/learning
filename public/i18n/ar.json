@@ -13,7 +13,7 @@
         "MY_DOWNLOADS": "تنزيلاتي",
         "BILLING": "الفواتير",
         "REWARDS": "المكافآت",
-        "EARNINGS": "الأرباح",
+        "SOCPA Certificate": "شهاده سوكبا",
         "MARQUEE_TEXT": "دورات CIA (الأجزاء 1 و 2 و 3) وشهادة CAT مع بنك أسئلة شامل للتدريب على الامتحان",
         "SELECT_COURSES": "اختر المواد",
         "Our Services": "خدماتنا",
@@ -178,6 +178,7 @@
         "FIRST_NAME": "الاسم الأول",
         "LAST_NAME": "اسم العائلة",
         "PASSWORD": "كلمة المرور",
+        "PHONE": "رقم الهاتف",
         "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
         "FULL_NAME": "الاسم الكامل",
         "SUBMIT": "إرسال",
@@ -185,7 +186,8 @@
         "DONT_HAVE_ACCOUNT": "ليس لديك حساب؟ إنشاء حساب",
         "FORGOT_PASSWORD": "نسيت كلمة المرور؟",
         "LOGIN_BUTTON": "تسجيل الدخول",
-        "REGISTER_BUTTON": "إنشاء حساب"
+        "REGISTER_BUTTON": "إنشاء حساب",
+        "TERMS_AGREE": "أوافق على تلقي ملخص موجز لأحدث أسئلة الاختبارات والتحديثات والمواد الدراسية عبر واتساب أو البريد الإلكتروني"
     },
     "COMMON": {
         "LOADING": "جاري التحميل...",
