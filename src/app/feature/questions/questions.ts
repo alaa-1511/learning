@@ -2,7 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { QuestionService, Question } from '../../core/service/question.service';
+import { FormsModule } from '@angular/forms';
+import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 
 import { CourseService, Course } from '../../core/service/course.service';
 import { Router } from '@angular/router';
@@ -19,12 +20,13 @@ interface Exam {
   questions: ExamQuestion[];
   image: string;
   part: string; // P1, P2, P3
+  config?: ExamConfig;
 }
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, FormsModule],
   templateUrl: './questions.html',
   styleUrl: './questions.css',
 })
@@ -59,6 +61,7 @@ export class Questions implements OnInit {
            description: course.description,
            image: course.image,
            part: 'P1', // Default or derived if you add 'part' to Course
+           config: this.questionService.getExamConfig(course.id),
            questions: []
        }));
 

@@ -33,6 +33,7 @@ export class QuestionsManagement implements OnInit {
   questionDialog: boolean = false;
   deleteDialog: boolean = false;
   examSettingsDialog: boolean = false;
+  deleteCourseDialog: boolean = false;
 
   questionToDelete: Question | null = null;
   
@@ -47,7 +48,7 @@ export class QuestionsManagement implements OnInit {
   p: number = 1;
 
   // Filter State
-  currentPartFilter: string | null = null;
+  currentCourseFilter: number | null = null;
   currentDiffFilter: string | null = null;
   currentSearch: string = '';
 
@@ -135,11 +136,9 @@ export class QuestionsManagement implements OnInit {
     this.applyFilters();
   }
 
-  onPartFilter(event: any) {
+  onCourseFilter(event: any) {
     const val = event.target.value;
-    this.currentPartFilter = val === 'null' ? null : val.replace(/^\d+:\s*/, '').trim(); 
- 
-    this.currentPartFilter = (val === 'null' || val === 'All Parts') ? null : val;
+    this.currentCourseFilter = (val === 'null' || val === 'All Courses') ? null : Number(val);
     this.applyFilters();
   }
 
@@ -155,13 +154,12 @@ export class QuestionsManagement implements OnInit {
             q.text.toLowerCase().includes(this.currentSearch) || 
             q.topic.toLowerCase().includes(this.currentSearch);
         
-        const matchPart = !this.currentPartFilter || 
- 
-             q.ciaPart === this.currentPartFilter;
+        const matchCourse = !this.currentCourseFilter || 
+             q.courseId === this.currentCourseFilter;
 
         const matchDiff = !this.currentDiffFilter || q.difficulty === this.currentDiffFilter;
 
-        return matchSearch && matchPart && matchDiff;
+        return matchSearch && matchCourse && matchDiff;
     });
     this.p = 1; 
   }
@@ -195,6 +193,21 @@ export class QuestionsManagement implements OnInit {
   loadExamSettings(courseId: number) {
       const config = this.questionService.getExamConfig(courseId);
       this.examSettingsForm.patchValue(config);
+  }
+
+  deleteExamCourseConfirmation() {
+      this.deleteCourseDialog = true;
+  }
+
+  deleteExamCourse() {
+      const courseId = this.examSettingsForm.get('courseId')?.value;
+      if (courseId) {
+          this.courseService.deleteCourse(Number(courseId));
+          this.deleteCourseDialog = false;
+          this.examSettingsDialog = false;
+          // Refresh happens via subscription update usually, but ensure 'courses' local list is updated if needed.
+          // Since we subscribe to courseService.courses$, it should be automatic.
+      }
   }
 
   saveExamSettings() {

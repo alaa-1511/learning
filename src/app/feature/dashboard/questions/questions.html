@@ -29,14 +29,14 @@
             </div>
 
             <!-- Filters -->
-             <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                 <div class="relative min-w-[200px]">
-                    <select class="bg-white border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 block w-full p-2.5 shadow-sm cursor-pointer transition-shadow" (change)="onPartFilter($event)">
-                        <option [ngValue]="null">{{ 'MANAGE_QUESTIONS.ALL_PARTS' | translate }}</option>
-                        <option *ngFor="let part of formParts" [value]="part.value">{{part.label}}</option>
+                    <select class="bg-white border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 block w-full p-2.5 shadow-sm cursor-pointer transition-shadow" (change)="onCourseFilter($event)">
+                        <option [value]="'null'">All Courses</option>
+                        <option *ngFor="let course of courses" [value]="course.id">{{course.title | translate}}</option>
                     </select>
                 </div>
-                
+               
                 <div class="relative min-w-[200px]">
                     <select class="bg-white border-0 ring-1 ring-gray-200 text-gray-700 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 block w-full p-2.5 shadow-sm cursor-pointer transition-shadow" (change)="onDifficultyFilter($event)">
                         <option [ngValue]="null">{{ 'MANAGE_QUESTIONS.ALL_DIFFICULTIES' | translate }}</option>
@@ -55,7 +55,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.QUESTION' | translate }}</th>
                         <th scope="col" class="px-6 py-4 font-semibold">Type</th>
-                        <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.CIA_PART' | translate }}</th>
+                        <!-- <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.CIA_PART' | translate }}</th> -->
                         <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.TOPIC' | translate }}</th>
                         <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.DIFFICULTY' | translate }}</th>
                         <th scope="col" class="px-6 py-4 font-semibold">{{ 'MANAGE_QUESTIONS.TABLE.STATUS' | translate }}</th>
@@ -72,11 +72,11 @@
                                 {{question.type === 'multiple-choice' ? 'MCQ' : (question.type === 'essay' ? 'Essay' : 'T/F')}}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
+                        <!-- <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 text-xs font-medium ring-1 ring-inset ring-gray-500/10">
                                 {{question.ciaPart}}
                             </span>
-                        </td>
+                        </td> -->
                         <td class="px-6 py-4">
                             <span class="text-gray-700 font-medium">{{question.topic}}</span>
                         </td>
@@ -274,6 +274,12 @@
              <select formControlName="courseId" (change)="onSettingsCourseChange($event)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 <option *ngFor="let course of courses" [value]="course.id">{{course.title | translate}}</option>
             </select>
+            <button type="button" 
+                    (click)="deleteExamCourseConfirmation()"
+                    [disabled]="!examSettingsForm.get('courseId')?.value"
+                    class="mt-2 text-red-600 hover:text-red-800 text-xs font-semibold hover:underline flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="pi pi-trash"></i> Delete this Course
+            </button>
         </div>
         
         <div>
@@ -324,3 +330,15 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Course Dialog -->
+<p-dialog [(visible)]="deleteCourseDialog" [modal]="true" [style]="{width: '400px'}" header="Confirm Deletion" [draggable]="false" [resizable]="false">
+    <div class="flex items-center gap-4 mb-4">
+        <i class="pi pi-exclamation-triangle text-red-500 text-4xl"></i>
+        <p class="text-gray-700">Are you sure you want to delete this course? All associated questions might become orphaned.</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <button (click)="deleteCourseDialog=false" type="button" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+        <button (click)="deleteExamCourse()" type="button" class="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+    </ng-template>
+</p-dialog>
