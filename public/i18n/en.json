@@ -14,6 +14,7 @@
         "BILLING": "Billing",
         "REWARDS": "Rewards",
         "SOCPA Certificate": "SOCPA Certificate",
+        "CERTIFICATION_VERIFICATION": "Verify Certificate",
         "MARQUEE_TEXT": "CIA courses (Parts 1, 2, and 3) and CAT certification with a comprehensive question bank for exam practice",
         "SELECT_COURSES": "Select Courses",
         "Our Services": "Our Services",
@@ -254,9 +255,7 @@
     },
     "SIDEBAR": {
         "DASHBOARD": "Dashboard",
-        "CIA_PART_1": "CIA Part 1",
-        "CIA_PART_2": "CIA Part 2",
-        "CIA_PART_3": "CIA Part 3",
+        "CERTIFICATION": "Certification",
         "QUESTION_BANK": "Question Bank",
         "STUDENTS": "Students",
         "COURSES": "Courses",
@@ -410,5 +409,26 @@
             "EXPLORE_COURSES": "Explore Courses",
             "CONTACT_US": "Contact Us"
         }
+    },
+    "CERTIFICATION": {
+        "TITLE": "Certificate Verification",
+        "SUBTITLE": "Enter the certificate ID below to verify its authenticity.",
+        "PLACEHOLDER": "Enter Certificate ID (e.g., CERT-2024-1234)",
+        "VERIFY_BTN": "Verify",
+        "CERTIFICATE_OF_COMPLETION": "Certificate of Completion",
+        "THIS_IS_TO_CERTIFY": "This is to certify that",
+        "COMPLETED_COURSE": "has successfully completed the course",
+        "ISSUE_DATE": "Issue Date",
+        "AUTHORIZED_SIGNATURE": "Authorized Signature",
+        "CERTIFICATE_ID": "Certificate ID",
+        "PRINT": "Print Certificate",
+        "SHARE": "Share",
+        "RECENT_CERTIFICATIONS": "Recent Certifications",
+        "ISSUED": "Issued",
+        "VERIFIED": "VERIFIED",
+        "ENTER_ID_HINT": "Enter ID above to download",
+        "NO_CERTIFICATES": "No certificates issued yet.",
+        "NOT_FOUND": "Certificate not found. Please check the ID and try again."
     }
 }
+

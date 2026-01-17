@@ -53,6 +53,14 @@ export const routes: Routes = [
             },
         ]
     },
+    {
+        path: 'certifications',
+        loadComponent: () => import('./feature/certifications/certifications').then(m => m.CertificationsComponent)
+    },
+    {
+        path: 'login',
+        loadComponent: () => import('./core/auth/login/login').then(m => m.Login)
+    },
       {
         path: 'dashboard',
         canActivate: [adminGuard],
@@ -65,6 +73,10 @@ export const routes: Routes = [
             {
                 path: 'courses',
                 loadComponent: () => import('./feature/dashboard/courses/courses').then(m => m.CoursesManagement)
+            },
+            {
+                path: 'certification',
+                loadComponent: () => import('./feature/dashboard/certification/certification').then(m => m.Certification)
             },
             { path: '', redirectTo: 'questions', pathMatch: 'full' }
         ]

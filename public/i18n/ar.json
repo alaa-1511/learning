@@ -13,7 +13,8 @@
         "MY_DOWNLOADS": "تنزيلاتي",
         "BILLING": "الفواتير",
         "REWARDS": "المكافآت",
-        "SOCPA Certificate": "شهاده سوكبا",
+        "SOCPA Certificate": "شهادة SOCPA",
+        "CERTIFICATION_VERIFICATION": "التحقق من الشهادة",
         "MARQUEE_TEXT": "دورات CIA (الأجزاء 1 و 2 و 3) وشهادة CAT مع بنك أسئلة شامل للتدريب على الامتحان",
         "SELECT_COURSES": "اختر المواد",
         "Our Services": "خدماتنا",
@@ -33,6 +34,11 @@
         "VIEW_DETAILS": "عرض التفاصيل",
         "PREVIOUS": "السابق",
         "NEXT": "التالي",
+        "STUDENT_NAME": "اسم الطالب",
+        "SELECT_COURSE": "اختر الدورة",
+        "ISSUE_DATE": "تاريخ الإصدار",
+        "CANCEL": "إلغاء",
+        "ISSUE": "إصدار",
         "LIST": {
              "COURSE1_TITLE": "CIA الجزء 1: أساسيات التدقيق الداخلي",
              "COURSE1_DESC": "تغطية شاملة لأساسيات التدقيق الداخلي، بما في ذلك الحوكمة وإدارة المخاطر والرقابة.",
@@ -254,7 +260,7 @@
     },
     "SIDEBAR": {
         "DASHBOARD": "لوحة التحكم",
-        "CIA_PART_1": "CIA الجزء 1",
+        "CERTIFICATION": " الشهادة",
         "CIA_PART_2": "CIA الجزء 2",
         "CIA_PART_3": "CIA الجزء 3",
         "QUESTION_BANK": "بنك الأسئلة",
@@ -410,5 +416,25 @@
             "EXPLORE_COURSES": "استكشف الدورات",
             "CONTACT_US": "اتصل بنا"
         }
+    },
+    "CERTIFICATION": {
+        "TITLE": "التحقق من الشهادة",
+        "SUBTITLE": "أدخل معرف الشهادة أدناه للتحقق من صحتها.",
+        "PLACEHOLDER": "أدخل معرف الشهادة (مثل: CERT-2024-1234)",
+        "VERIFY_BTN": "تحقق",
+        "CERTIFICATE_OF_COMPLETION": "شهادة إتمام",
+        "THIS_IS_TO_CERTIFY": "تشهد بأن",
+        "COMPLETED_COURSE": "قد أكمل بنجاح دورة",
+        "ISSUE_DATE": "تاريخ الإصدار",
+        "AUTHORIZED_SIGNATURE": "التوقيع المعتمد",
+        "CERTIFICATE_ID": "معرف الشهادة",
+        "PRINT": "طباعة الشهادة",
+        "SHARE": "مشاركة",
+        "RECENT_CERTIFICATIONS": "أحدث الشهادات",
+        "ISSUED": "صدرت",
+        "VERIFIED": "مؤكدة",
+        "ENTER_ID_HINT": "أدخل المعرف أعلاه للتنزيل",
+        "NO_CERTIFICATES": "لا توجد شهادات صادرة بعد.",
+        "NOT_FOUND": "الشهادة غير موجودة. يرجى التحقق من المعرف والمحاولة مرة أخرى."
     }
 }
