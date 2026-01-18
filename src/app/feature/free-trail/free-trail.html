@@ -5,8 +5,8 @@
     <!-- VIEW 1: EXAM LIST -->
     <div *ngIf="currentView === 'list'" class="animate-fade-in">
       <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-5xl font-extrabold text-primary mb-4">Free Trial Exams</h2>
-        <p class="text-lg text-primary/70">Try our free practice exams to get a taste of our content.</p>
+        <h2 class="text-3xl md:text-5xl font-extrabold text-primary mb-4">{{ 'FREE_TRIAL_PAGE.TITLE' | translate }}</h2>
+        <p class="text-lg text-primary/70">{{ 'FREE_TRIAL_PAGE.SUBTITLE' | translate }}</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -26,22 +26,22 @@
             <h3 class="text-xl font-bold text-primary mb-2">{{ exam.title | translate }}</h3>
             <p class="text-sm text-gray-500 mb-6 flex-grow">{{ exam.description | translate }}</p>
             
-            <div class="flex items-center justify-between text-sm text-gray-400 mb-6">
-               <span><i class="pi pi-list"></i> {{ exam.questions.length }} Questions</span>
-                <span *ngIf="exam.config?.durationMinutes"><i class="pi pi-clock"></i> {{ exam.config?.durationMinutes }} Minutes</span>
-                <span *ngIf="!exam.config?.durationMinutes"><i class="pi pi-clock"></i> Duration</span>
+             <div class="flex items-center justify-between text-sm text-gray-400 mb-6">
+                <span><i class="pi pi-list"></i> {{ exam.questions.length }} {{ 'QUESTIONS.QUESTIONS_COUNT' | translate }}</span>
+                <span *ngIf="exam.config?.durationMinutes"><i class="pi pi-clock"></i> {{ exam.config?.durationMinutes }} {{ 'QUESTIONS.MINUTES' | translate }}</span>
+                <span *ngIf="!exam.config?.durationMinutes"><i class="pi pi-clock"></i> {{ 'QUESTIONS.DURATION' | translate }}</span>
              </div>
 
              <button (click)="enroll(exam)" class="w-full py-3 bg-primary hover:bg-secondary text-white font-bold rounded-xl transition-colors">
-               Start Free Trial
+               {{ 'FREE_TRIAL_PAGE.START' | translate }}
              </button>
            </div>
          </div>
        </div>
        
-       <div *ngIf="exams.length === 0" class="text-center py-12">
-           <p class="text-gray-500 text-lg">No free trial exams available at the moment.</p>
-       </div>
+        <div *ngIf="exams.length === 0" class="text-center py-12">
+            <p class="text-gray-500 text-lg">{{ 'FREE_TRIAL_PAGE.NO_EXAMS' | translate }}</p>
+        </div>
      </div>
 
 
@@ -50,10 +50,10 @@
        
        <!-- Progress Bar -->
        <div class="mb-8">
-         <div class="flex justify-between items-center mb-2 text-sm font-semibold text-gray-500">
-            <span>Question {{ currentQuestionIndex + 1 }} of {{ selectedExam.questions.length }}</span>
-            <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
-         </div>
+          <div class="flex justify-between items-center mb-2 text-sm font-semibold text-gray-500">
+             <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: selectedExam.questions.length} }}</span>
+             <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
+          </div>
          <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
            <div class="bg-secondary h-3 transition-all duration-500" 
                 [style.width.%]="((currentQuestionIndex + 1) / selectedExam.questions.length) * 100">
@@ -62,9 +62,9 @@
        </div>
 
        <!-- Question Navigator Grid -->
-       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-         <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Navigator</h4>
-         <div class="flex flex-wrap gap-2">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+          <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">{{ 'QUESTIONS.NAVIGATOR' | translate }}</h4>
+          <div class="flex flex-wrap gap-2">
              <button *ngFor="let q of selectedExam.questions; let i = index"
                      (click)="goToQuestion(i)"
                      [class.bg-primary]="currentQuestionIndex === i"
@@ -110,14 +110,14 @@
 
           <!-- Essay Answer -->
           <div *ngIf="selectedExam.questions[currentQuestionIndex].type === 'essay'" class="mb-10">
-              <textarea 
-                  [(ngModel)]="selectedExam.questions[currentQuestionIndex].studentAnswer" 
-                  (ngModelChange)="selectedExam.questions[currentQuestionIndex].selectedAnswer = 0" 
-                  rows="6" 
-                  [readonly]="reviewMode"
-                  class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent resize-none disabled:bg-gray-100 disabled:text-gray-500"
-                  placeholder="Enter your answer...">
-              </textarea>
+               <textarea 
+                   [(ngModel)]="selectedExam.questions[currentQuestionIndex].studentAnswer" 
+                   (ngModelChange)="selectedExam.questions[currentQuestionIndex].selectedAnswer = 0" 
+                   rows="6" 
+                   [readonly]="reviewMode"
+                   class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent resize-none disabled:bg-gray-100 disabled:text-gray-500"
+                   [placeholder]="'QUESTIONS.ENTER_ANSWER' | translate">
+               </textarea>
           </div>
 
           <!-- Explanation Div (Only in Review Mode) -->
@@ -126,7 +126,7 @@
                    <div class="flex items-start gap-3">
                        <i class="pi pi-info-circle text-secondary text-xl mt-1"></i>
                        <div>
-                           <h4 class="font-bold text-gray-800 mb-2">{{ 'Explanation' | translate }}</h4>
+                           <h4 class="font-bold text-gray-800 mb-2">{{ 'QUESTIONS.EXPLANATION' | translate }}</h4>
                            <p class="text-gray-600 leading-relaxed">
                                {{ selectedExam.questions[currentQuestionIndex].answerExplanation }}
                            </p>
@@ -137,25 +137,25 @@
 
          <!-- Navigation -->
          <div class="flex justify-between items-center">
-              <button (click)="previousQuestion()" 
-                      [disabled]="currentQuestionIndex === 0"
-                      class="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                Previous
-              </button>
+               <button (click)="previousQuestion()" 
+                       [disabled]="currentQuestionIndex === 0"
+                       class="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+                 {{ 'QUESTIONS.PREVIOUS' | translate }}
+               </button>
 
-              <button *ngIf="currentQuestionIndex < selectedExam.questions.length - 1"
-                      (click)="nextQuestion()"
+               <button *ngIf="currentQuestionIndex < selectedExam.questions.length - 1"
+                       (click)="nextQuestion()"
+                       [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                       class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                 {{ 'QUESTIONS.NEXT_QUESTION' | translate }}
+               </button>
+
+              <button *ngIf="currentQuestionIndex === selectedExam.questions.length - 1"
+                      (click)="submitExam()"
                       [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
-                      class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                Next Question
+                      class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ 'QUESTIONS.SUBMIT_EXAM' | translate }}
               </button>
-
-             <button *ngIf="currentQuestionIndex === selectedExam.questions.length - 1"
-                     (click)="submitExam()"
-                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
-                     class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-               Submit Exam
-             </button>
         </div>
 
       </div>
@@ -171,28 +171,28 @@
                <i class="pi text-5xl" [ngClass]="passed ? 'pi-check-circle' : 'pi-times-circle'"></i>
           </div>
 
-          <h2 class="text-3xl font-extrabold text-primary mb-2">
-            {{ passed ? 'Passed!' : 'Failed' }}
-          </h2>
-          <p class="text-gray-500 mb-8" [innerHTML]="'You scored ' + percentage + '% on ' + (selectedExam?.title | translate)">
-          </p>
+           <h2 class="text-3xl font-extrabold text-primary mb-2">
+             {{ (passed ? 'QUESTIONS.EXAM_PASSED' : 'QUESTIONS.EXAM_FAILED') | translate }}
+           </h2>
+           <p class="text-gray-500 mb-8" [innerHTML]="'QUESTIONS.SCORE_MESSAGE' | translate:{score: percentage, exam: (selectedExam?.title | translate)}">
+           </p>
 
           <div class="grid grid-cols-2 gap-4 mb-8">
-             <div class="bg-gray-50 p-4 rounded-xl">
-                <span class="block text-gray-400 text-xs uppercase tracking-wider">Correct</span>
-                <span class="text-2xl font-bold text-green-600">{{ score }}</span>
-             </div>
-             <div class="bg-gray-50 p-4 rounded-xl">
-                <span class="block text-gray-400 text-xs uppercase tracking-wider">Total</span>
-                <span class="text-2xl font-bold text-primary">{{ selectedExam?.questions?.length }}</span>
-             </div>
+              <div class="bg-gray-50 p-4 rounded-xl">
+                 <span class="block text-gray-400 text-xs uppercase tracking-wider">{{ 'QUESTIONS.CORRECT' | translate }}</span>
+                 <span class="text-2xl font-bold text-green-600">{{ score }}</span>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-xl">
+                 <span class="block text-gray-400 text-xs uppercase tracking-wider">{{ 'QUESTIONS.TOTAL' | translate }}</span>
+                 <span class="text-2xl font-bold text-primary">{{ selectedExam?.questions?.length }}</span>
+              </div>
           </div>
 
-           <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4">
-              Try Another Exam
-           </button>
+            <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4">
+               {{ 'QUESTIONS.TRY_ANOTHER' | translate }}
+            </button>
            <button (click)="startReview()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg mb-4">
-              Review Answers
+              {{ 'QUESTIONS.REVIEW_ANSWERS' | translate }}
            </button>
        </div>
     </div>

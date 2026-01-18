@@ -86,5 +86,13 @@ export class Authservice {
   async signOut(): Promise<void> {
     await this.supabase.auth.signOut();
   }
+
+  updateSubscription(isSubscribed: boolean): Observable<any> {
+    return from(
+      this.supabase.auth.updateUser({
+        data: { isSubscribed }
+      })
+    );
+  }
 }
   

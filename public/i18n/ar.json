@@ -3,6 +3,8 @@
         "HOME": "الرئيسية",
         "COURSES": "الدورات",
         "ARTICLES": "المقالات",
+        "FREE-TRAIL": "توجربة مجانية",
+        "TESTBANK": "بنك الأسئلة",
         "QUESTIONS": "الأسئلة",
         "WHO_WE_ARE": "من نحن",
         "SIGNUP": "إنشاء حساب",
@@ -211,7 +213,11 @@
         "SUBTITLE": "اختبر معلوماتك مع بنك الأسئلة الشامل لدينا.",
         "NAVIGATOR": "قائمة الأسئلة",
         "QUESTIONS_COUNT": "سؤال",
-        "DURATION": "120 دقيقة",
+        "MINUTES": "دقيقة",
+        "DURATION": "المدة",
+        "EXPLANATION": "الشرح",
+        "REVIEW_ANSWERS": "مراجعة الإجابات",
+        "ENTER_ANSWER": "أدخل إجابتك...",
         "START_PRACTICE": "ابدأ التدريب",
         "QUESTION_OF": "السؤال {{current}} من {{total}}",
         "PREVIOUS": "السابق",
@@ -257,6 +263,12 @@
                  "Q2_OPT": ["IFRS 9", "IFRS 15", "IFRS 16", "IAS 1"]
             }
         }
+    },
+    "FREE_TRIAL_PAGE": {
+        "TITLE": "امتحانات تجريبية مجانية",
+        "SUBTITLE": "جرب امتحاناتنا المجانية للحصول على لمحة عن محتوانا.",
+        "START": "ابدأ التجربة المجانية",
+        "NO_EXAMS": "لا توجد امتحانات تجريبية متاحة حالياً."
     },
     "SIDEBAR": {
         "DASHBOARD": "لوحة التحكم",

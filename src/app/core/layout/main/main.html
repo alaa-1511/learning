@@ -3,3 +3,32 @@
         <router-outlet></router-outlet>
 
 <app-footer></app-footer>
+
+<!-- Subscription Modal -->
+<div *ngIf="subscriptionService.showModal()" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden">
+        
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-secondary"></div>
+
+        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="pi pi-lock text-3xl text-primary"></i>
+        </div>
+
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">Subscription Required</h3>
+        <p class="text-gray-500 mb-8 leading-relaxed">
+            You need an active subscription to access the Question Bank. Please subscribe to continue.
+        </p>
+
+        <div class="space-y-3">
+            <button (click)="subscriptionService.subscribe()" 
+                    class="w-full py-3.5 bg-primary hover:bg-secondary text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Subscribe Now
+            </button>
+            <button (click)="subscriptionService.closeModal()" 
+                    [disabled]="subscriptionService.isLoading()"
+                    class="w-full py-3.5 text-gray-500 font-bold hover:bg-gray-50 rounded-xl transition-colors disabled:opacity-50">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

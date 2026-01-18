@@ -11,6 +11,7 @@ import { Dateliscourses } from './feature/courses/dateliscourses/dateliscourses'
 import { Questions } from './feature/questions/questions';
 import { mainguardGuard } from './core/guards/mainguard-guard';
 import { authguardGuard } from './core/guards/authguard-guard';
+import { subscriptionGuard } from './core/guards/subscription-guard';
 import { adminGuard } from './core/guards/admin-guard';
 import { Dashboard } from './feature/dashboard/dashboard';
 import { Articles } from './feature/articles/articles';
@@ -28,7 +29,7 @@ export const routes: Routes = [
       {path:'landing', component: Landing},
       {path:'courses', component: Courses},
       {path:'dateliscourses', component: Dateliscourses},
-      {path:'questions', component: Questions},
+      {path:'questions', component: Questions, canActivate: [subscriptionGuard]},
       {path:'articles', component: Articles},
       {path:'article/:id', loadComponent: () => import('./feature/article-details/article-details').then(m => m.ArticleDetails) },
       {path:'who-are', component: WhoAre},

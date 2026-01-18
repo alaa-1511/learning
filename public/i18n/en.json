@@ -3,7 +3,8 @@
         "HOME": "Home",
         "COURSES": "Courses",
         "ARTICLES": "Articles",
-        "QUESTIONS": "Questions",
+        "TESTBANK": "Test Bank",
+        "FREE-TRAIL": "Free Trial",
         "WHO_WE_ARE": "Who We Are",
         "SIGNUP": "Sign Up",
         "LOGIN": "Login",
@@ -202,11 +203,12 @@
         "PASSWORD_PATTERN": "Password must contain at least 1 number and 1 special char."
     },
     "QUESTIONS": {
-        "TITLE": "Exam Practice",
-        "SUBTITLE": "Test your knowledge with our comprehensive question bank.",
-        "NAVIGATOR": "Question Navigator",
         "QUESTIONS_COUNT": "Questions",
-        "DURATION": "120 Mins",
+        "MINUTES": "Minutes",
+        "DURATION": "Duration",
+        "EXPLANATION": "Explanation",
+        "REVIEW_ANSWERS": "Review Answers",
+        "ENTER_ANSWER": "Enter your answer...",
         "START_PRACTICE": "Start Practice",
         "QUESTION_OF": "Question {{current}} of {{total}}",
         "PREVIOUS": "Previous",
@@ -252,6 +254,12 @@
                  "Q2_OPT": ["IFRS 9", "IFRS 15", "IFRS 16", "IAS 1"]
             }
         }
+    },
+    "FREE_TRIAL_PAGE": {
+        "TITLE": "Free Trial Exams",
+        "SUBTITLE": "Try our free practice exams to get a taste of our content.",
+        "START": "Start Free Trial",
+        "NO_EXAMS": "No free trial exams available at the moment."
     },
     "SIDEBAR": {
         "DASHBOARD": "Dashboard",
