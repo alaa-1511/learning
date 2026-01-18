@@ -100,7 +100,7 @@ export class QuestionsManagement implements OnInit {
   }
 
   createForm(): FormGroup {
-    return this.fb.group({
+    const form = this.fb.group({
       text: ['', Validators.required],
       type: ['multiple-choice', Validators.required],
       topic: ['', Validators.required],
@@ -120,10 +120,36 @@ export class QuestionsManagement implements OnInit {
       correctAnswer: [0, Validators.required],
       answerExplanation: ['']
     });
+
+    // Listen to type changes to handle validation
+    form.get('type')?.valueChanges.subscribe(type => {
+        this.updateValidatorsForType(type || 'multiple-choice', form);
+    });
+
+    return form;
   }
 
-  createOptionControl(value: string = '') { 
-    return this.fb.control(value, Validators.required);
+  updateValidatorsForType(type: string, form: FormGroup) {
+      const optionsArray = form.get('options') as FormArray;
+      const correctAnswer = form.get('correctAnswer');
+
+      if (type === 'multiple-choice') {
+          optionsArray.enable();
+          correctAnswer?.enable();
+      } else if (type === 'true-false') {
+          // True/False doesn't need dynamic options input, we can handle it manually or disable validation
+          // But we probably want to save 'True'/'False' as options
+          optionsArray.disable(); 
+          correctAnswer?.enable();
+      } else {
+          // Essay
+          optionsArray.disable();
+          correctAnswer?.disable();
+      }
+  }
+
+  createOptionControl(value: string | null = '') { 
+    return this.fb.control(value || '', Validators.required);
   }
   
   get optionsControls() {
@@ -231,6 +257,10 @@ export class QuestionsManagement implements OnInit {
       newCourseTitle: '',
       newCourseImage: ''
     });
+    
+    // Reset validators state
+    this.updateValidatorsForType('multiple-choice', this.questionForm);
+
     this.isCreatingCourse = false;
     this.imagePreview = null;
 
@@ -256,14 +286,25 @@ export class QuestionsManagement implements OnInit {
         courseId: question.courseId || null
     });
     
+    // Synchronize validators with existing type
+    this.updateValidatorsForType(question.type, this.questionForm);
+    
     this.isCreatingCourse = false;
     this.imagePreview = null;
 
     const optionsArray = this.questionForm.get('options') as FormArray;
     optionsArray.clear();
-    question.options.forEach(opt => {
-        optionsArray.push(this.createOptionControl(opt));
-    });
+    if (question.options && question.options.length > 0) {
+        question.options.forEach(opt => {
+            optionsArray.push(this.createOptionControl(opt));
+        });
+    } else {
+        // Fallback for edit if emptiness is issue (e.g. was Essay, switching to MCQ manually)
+        // If type is Essay, this is fine. If type is MCQ and empty, add 4
+        if (question.type === 'multiple-choice' && optionsArray.length === 0) {
+             for(let i=0; i<4; i++) optionsArray.push(this.createOptionControl());
+        }
+    }
 
     this.currentQuestionId = question.id;
     this.questionDialog = true;
@@ -292,16 +333,19 @@ export class QuestionsManagement implements OnInit {
   saveQuestion() {
     this.submitted = true;
 
+    // Standard form validation (Text, Options, basic courseId presence)
     if (this.questionForm.invalid) {
-      // Allow saving if creating new course effectively
-      if(this.questionForm.get('courseId')?.value === 'new' && (!this.questionForm.get('newCourseTitle')?.value || !this.questionForm.get('newCourseImage')?.value)) {
-           return;
-      }
-       // If standard validation fails (excluding courseId if it's 'new' which technically isn't a number)
-       if(this.questionForm.get('courseId')?.value !== 'new' && this.questionForm.invalid) return;
+        return;
     }
 
-    const formValue = this.questionForm.value;
+    // Custom Validation for New Course Creation
+    if (this.questionForm.get('courseId')?.value === 'new') {
+         if (!this.questionForm.get('newCourseTitle')?.value || !this.questionForm.get('newCourseImage')?.value) {
+             return;
+         }
+    }
+
+    const formValue = this.questionForm.getRawValue();
     let finalCourseId = formValue.courseId;
 
     // Handle New Course Creation
@@ -332,11 +376,18 @@ export class QuestionsManagement implements OnInit {
         finalCourseId = allCourses.length > 0 ? allCourses[allCourses.length - 1].id : 0;
     }
 
+    let finalOptions = formValue.options;
+    if (formValue.type === 'true-false') {
+        finalOptions = ['True', 'False'];
+    } else if (formValue.type === 'essay') {
+        finalOptions = [];
+    }
+
     const questionData: Question = {
       id: this.isEditMode ? (this.currentQuestionId as number) : 0,
       text: formValue.text,
       type: formValue.type,
-      options: formValue.type === 'essay' ? [] : formValue.options,
+      options: finalOptions,
       correctAnswer: formValue.type === 'essay' ? -1 : formValue.correctAnswer,
       // ciaPart removed
       topic: formValue.topic,
