@@ -28,3 +28,51 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+
+
+@media print {
+    @page {
+        size: landscape;
+        margin: 0mm;
+    }
+    
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Only show the certificate and its children */
+    #certificate-container, #certificate-container * {
+        visibility: visible;
+    }
+
+    /* Position the certificate to fill the page, but respect aspect ratio */
+    #certificate-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100vh; /* Force exact fit */
+        margin: 0;
+        padding: 0;
+        border: none !important;
+        box-shadow: none !important;
+        z-index: 9999;
+        background-color: white;
+        overflow: hidden; /* Cut off anything that spills over to avoid 2nd page */
+        page-break-after: always; /* Or avoid, but usually 'overflow: hidden' on strict height handles it */
+        page-break-inside: avoid;
+        
+        /* Layout to center */
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Ensure styles print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

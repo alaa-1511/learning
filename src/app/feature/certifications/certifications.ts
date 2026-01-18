@@ -4,6 +4,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificationService, Certificate } from '../../core/service/certification.service';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-certifications',
@@ -61,5 +63,39 @@ export class CertificationsComponent implements OnInit {
 
   printCertificate() {
       window.print();
+  }
+
+  downloadCertificate() {
+    console.log('Download started (html-to-image)');
+    const data = document.getElementById('certificate-container');
+    if (data) {
+        console.log('Element found', data);
+        
+        toPng(data, { cacheBust: true })
+        .then((dataUrl: string) => {
+            console.log('PNG generated');
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            
+            // Calculate height to maintain aspect ratio, but max out at A4 height
+            // We use an actual Image object to get dimensions of the generated PNG
+            const img = new Image();
+            img.src = dataUrl;
+            img.onload = () => {
+                 const imgHeight = img.height * imgWidth / img.width;
+                 const pdf = new jsPDF('p', 'mm', 'a4');
+                 pdf.addImage(dataUrl, 'PNG', 0, 0, imgWidth, imgHeight);
+                 pdf.save(`certificate-${this.certificate?.id || 'download'}.pdf`);
+                 console.log('PDF saved');
+            };
+        })
+        .catch((err: unknown) => {
+            console.error('Error generating image:', err);
+            alert('Error generating certificate: ' + err);
+        });
+    } else {
+        console.error('Certificate container not found');
+        alert('Error: Certificate element not found');
+    }
   }
 }

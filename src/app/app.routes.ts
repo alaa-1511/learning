@@ -78,6 +78,10 @@ export const routes: Routes = [
                 path: 'certification',
                 loadComponent: () => import('./feature/dashboard/certification/certification').then(m => m.Certification)
             },
+            {
+                path: 'articles',
+                loadComponent: () => import('./feature/dashboard/articles/articles').then(m => m.Articles)
+            },
             { path: '', redirectTo: 'questions', pathMatch: 'full' }
         ]
       }

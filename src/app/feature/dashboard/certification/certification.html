@@ -61,7 +61,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <div *ngFor="let cert of certificates" class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col">
             <!-- Card Header / Visual -->
-            <div [class]="getCertColor(cert.courseId) + '/10'" class="h-32 flex items-center justify-center relative">
+            <div [class]="getCertColor(cert.courseId) + '/10'" class="h-16 flex items-center justify-center relative">
                 <div [class]="getCertColor(cert.courseId) + '/20'" class="w-16 h-16 rounded-2xl flex items-center justify-center">
                     <i [class]="'pi ' + getCertIcon(cert.courseId)" [class]="getCertColor(cert.courseId).replace('bg-', 'text-') + ' text-2xl'"></i>
                 </div>

@@ -26,7 +26,7 @@
     </div>
 
     <!-- Certificate Display -->
-    <div *ngIf="certificate" class="mt-12 w-full max-w-4xl bg-white shadow-2xl rounded-xl overflow-hidden border-8 border-double border-gray-100 print:shadow-none print:border-0 print:w-full print:mt-0 animate-fade-in-up">
+    <div *ngIf="certificate" id="certificate-container" class="mt-12 w-full max-w-4xl bg-white shadow-2xl rounded-xl overflow-hidden border-8 border-double border-gray-100 animate-fade-in-up relative">
         <div class="relative p-10 md:p-16 text-center">
             <!-- Background Watermark (Optional) -->
             <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
@@ -35,7 +35,7 @@
 
             <!-- Header -->
             <div class="mb-12">
-                <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg text-white">
+                <div class="w-20 h-22 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg text-white">
                     <i class="pi pi-verified text-4xl"></i>
                 </div>
                 <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-wide mb-2">{{ 'CERTIFICATION.CERTIFICATE_OF_COMPLETION' | translate }}</h1>
@@ -79,17 +79,22 @@
             </div>
         </div>
 
-        <!-- Print Actions -->
-        <div class="bg-gray-50 p-4 flex justify-center print:hidden border-t border-gray-100">
-            <button (click)="printCertificate()" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white hover:shadow-sm">
-                <i class="pi pi-print"></i>
-                {{ 'CERTIFICATION.PRINT' | translate }}
-            </button>
-             <button class="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white hover:shadow-sm ml-4">
-                <i class="pi pi-share-alt"></i>
-                {{ 'CERTIFICATION.SHARE' | translate }}
-            </button>
-        </div>
+    </div>
+
+    <!-- Print Actions -->
+    <div *ngIf="certificate" class="flex justify-center flex-wrap gap-4 mt-8 print:hidden">
+        <button (click)="printCertificate()" class="flex items-center gap-2 bg-white text-gray-700 hover:text-blue-600 font-medium px-6 py-3 rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:-translate-y-0.5">
+            <i class="pi pi-print"></i>
+            {{ 'CERTIFICATION.PRINT' | translate }}
+        </button>
+         <button (click)="downloadCertificate()" class="flex items-center gap-2 bg-white text-gray-700 hover:text-green-600 font-medium px-6 py-3 rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:-translate-y-0.5">
+            <i class="pi pi-download"></i>
+            Download
+        </button>
+         <button class="flex items-center gap-2 bg-white text-gray-700 hover:text-blue-600 font-medium px-6 py-3 rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:-translate-y-0.5">
+            <i class="pi pi-share-alt"></i>
+            {{ 'CERTIFICATION.SHARE' | translate }}
+        </button>
     </div>
 
     <!-- Public List of Certificates (Only show if not viewing a specific one) -->

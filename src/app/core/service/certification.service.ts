@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Certificate {
-  id: string; // Unique ID (e.g., UUID or simple random string for now)
+  id: string; 
   studentName: string;
   courseId: number;
   courseName: string;
@@ -101,7 +101,6 @@ export class CertificationService {
   }
 
   private generateCertificateId(): string {
-      // Simple ID generator: CERT-YEAR-RANDOM
       const year = new Date().getFullYear();
       const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
       return `CERT-${year}-${random}`;
