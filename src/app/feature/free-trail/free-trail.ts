@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number;
+  studentAnswer?: string;
 }
 
 interface Exam {
@@ -37,6 +38,7 @@ export class FreeTrail implements OnInit {
   score: number = 0;
   percentage: number = 0;
   passed: boolean = false;
+  reviewMode: boolean = false;
 
   constructor(
     private questionService: QuestionService, 
@@ -117,13 +119,22 @@ export class FreeTrail implements OnInit {
     this.score = correctCount;
     this.percentage = Math.round((correctCount / this.selectedExam.questions.length) * 100);
     this.passed = this.percentage >= 70;
+    this.passed = this.percentage >= 70;
     this.currentView = 'result';
+  }
+
+  startReview() {
+    this.currentView = 'exam';
+    this.reviewMode = true;
+    this.currentQuestionIndex = 0;
   }
 
   reset() {
     this.selectedExam = null;
     this.currentView = 'list';
     this.score = 0;
+    this.score = 0;
     this.percentage = 0;
+    this.reviewMode = false;
   }
 }

@@ -30,6 +30,7 @@ export const routes: Routes = [
       {path:'dateliscourses', component: Dateliscourses},
       {path:'questions', component: Questions},
       {path:'articles', component: Articles},
+      {path:'article/:id', loadComponent: () => import('./feature/article-details/article-details').then(m => m.ArticleDetails) },
       {path:'who-are', component: WhoAre},
       {path:'scopa', component: Scopa},
       {path:'free-trail', component: FreeTrail},

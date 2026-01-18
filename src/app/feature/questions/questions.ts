@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
+  studentAnswer?: string; // For Essay questions
 }
 
 interface Exam {
@@ -41,6 +42,7 @@ export class Questions implements OnInit {
   score: number = 0;
   percentage: number = 0;
   passed: boolean = false;
+  reviewMode: boolean = false;
 
   constructor(
     private questionService: QuestionService, 
@@ -126,13 +128,22 @@ export class Questions implements OnInit {
     this.score = correctCount;
     this.percentage = Math.round((correctCount / this.selectedExam.questions.length) * 100);
     this.passed = this.percentage >= 70; // 70% passing grade
+    this.passed = this.percentage >= 70; // 70% passing grade
     this.currentView = 'result';
+  }
+
+  startReview() {
+    this.currentView = 'exam';
+    this.reviewMode = true;
+    this.currentQuestionIndex = 0;
   }
 
   reset() {
     this.selectedExam = null;
     this.currentView = 'list';
     this.score = 0;
+    this.score = 0;
     this.percentage = 0;
+    this.reviewMode = false;
   }
 }

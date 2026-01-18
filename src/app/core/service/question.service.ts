@@ -71,7 +71,8 @@ export class QuestionService {
         topic: 'Risk Management',
         difficulty: 'Hard',
         status: 'Active',
-        examId: 2
+        examId: 2,
+        answerExplanation: 'Management is responsible for risk management processes. Internal audit provides assurance on them.'
     }
   ];
 
