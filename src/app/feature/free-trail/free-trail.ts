@@ -63,7 +63,10 @@ export class FreeTrail implements OnInit {
        }));
 
        this.questionService.questions$.subscribe(questions => {
-          const activeQuestions = questions.filter(q => q.status === 'Active') as ExamQuestion[];
+          const activeQuestions = questions.filter(q => q.status === 'Active').map(q => ({
+              ...q,
+              type: q.type.toLowerCase() as any
+          })) as ExamQuestion[];
           
           this.exams.forEach(exam => {
               exam.questions = activeQuestions.filter(q => q.courseId === exam.id);

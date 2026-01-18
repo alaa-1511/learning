@@ -69,7 +69,10 @@ export class Questions implements OnInit {
 
        // 2. Fetch Questions and map to Courses
        this.questionService.questions$.subscribe(questions => {
-          const activeQuestions = questions.filter(q => q.status === 'Active') as ExamQuestion[];
+          const activeQuestions = questions.filter(q => q.status === 'Active').map(q => ({
+              ...q,
+              type: q.type.toLowerCase() as any // Normalize type to lowercase
+          })) as ExamQuestion[];
           
           this.exams.forEach(exam => {
               // Filter questions that belong to this course
