@@ -21,7 +21,7 @@
           <div class="hidden md:flex gap-3">
             <!-- @if (isLoggedIn() === false) { -->
              <!-- <button routerLink="/login" type="button"  class="text-white bg-primary hover:bg-white hover:text-primary box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium rounded-base leading-5 text-sm px-5 py-2 focus:outline-none transition-colors  ease-in-out duration-300 hover:scale-105   cursor-pointer "> {{ 'NAVBAR.LOGIN' | translate}}</button> -->
-             <button routerLink="/register"  type="button" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
+             <button routerLink="/register"  type="button" class="text-white bg-primary  hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
             <!-- } @else { -->
              <button   type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
             <!-- } -->
@@ -85,24 +85,24 @@
     </div>
     
             <li>
-              <a routerLink="/courses" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
+              <a routerLink="/courses" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
             </li>
             <li>
-              <a routerLink="/free-trail" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
+              <a routerLink="/free-trail" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
             </li>
             <li>
-              <a routerLink="/articles" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>
+              <a routerLink="/articles"  routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>
             </li>
             <li>
-              <a routerLink="/questions" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.TESTBANK' | translate }}</a>
+              <a routerLink="/questions" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.TESTBANK' | translate }}</a>
             </li>
              @if (isAdmin()) {
              <li>
-            <a routerLink="/dashboard" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.DASHBOARD' | translate }}</a>
+            <a routerLink="/dashboard" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.DASHBOARD' | translate }}</a>
           </li>
           }
             <li>
-              <a routerLink="/who-are" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.WHO_WE_ARE' | translate }}</a>
+              <a routerLink="/who-are" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.WHO_WE_ARE' | translate }}</a>
             </li>
             <!-- Mobile buttons only -->
             <li class="mt-2 md:mt-0 md:hidden">

@@ -10,7 +10,7 @@ import { Button } from "primeng/button";
 @Component({
   selector: 'app-certification',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, ReactiveFormsModule, DialogModule, Button],
+  imports: [CommonModule, TranslateModule, FormsModule, ReactiveFormsModule, DialogModule],
   templateUrl: './certification.html',
   styleUrl: './certification.css',
 })

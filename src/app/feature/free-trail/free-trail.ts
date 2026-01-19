@@ -47,30 +47,30 @@ export class FreeTrail implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.courseService.courses$.subscribe(courses => {
-       // Filter for Free Trial Courses
-       const freeTrialCourses = courses.filter(c => c.type === 'exam' && c.isFreeTrial);
-       
-       this.exams = freeTrialCourses.map(course => ({
-           id: course.id,
-           title: course.title,
-           category: course.category,
-           description: course.description,
-           image: course.image,
-           part: 'P1', 
-           config: this.questionService.getExamConfig(course.id),
-           questions: []
-       }));
+    // Subscribe to questions first to see which courses have content
+    this.questionService.questions$.subscribe(questions => {
+       // Filter for Active, Free Trial Questions
+       const freeQuestions = questions.filter(q => q.status === 'Active' && q.targetPage === 'free-trial').map(q => ({
+           ...q,
+           type: q.type.toLowerCase() as any
+       })) as ExamQuestion[];
 
-       this.questionService.questions$.subscribe(questions => {
-          const activeQuestions = questions.filter(q => q.status === 'Active').map(q => ({
-              ...q,
-              type: q.type.toLowerCase() as any
-          })) as ExamQuestion[];
-          
-          this.exams.forEach(exam => {
-              exam.questions = activeQuestions.filter(q => q.courseId === exam.id);
-          });
+       const freeCourseIds = new Set(freeQuestions.map(q => q.courseId));
+
+       this.courseService.courses$.subscribe(courses => {
+           // Show course if it is marked as Free Trial OR if it has Free Trial questions inside it
+           const visibleCourses = courses.filter(c => c.type === 'exam' && (c.isFreeTrial || freeCourseIds.has(c.id)));
+           
+           this.exams = visibleCourses.map(course => ({
+               id: course.id,
+               title: course.title,
+               category: course.category,
+               description: course.description,
+               image: course.image,
+               part: 'P1', 
+               config: this.questionService.getExamConfig(course.id),
+               questions: freeQuestions.filter(q => q.courseId === course.id)
+           }));
        });
     });
   }

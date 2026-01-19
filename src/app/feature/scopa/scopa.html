@@ -26,21 +26,4 @@
         </div>
     </div>
 </section>
-<section>
-    <div class="container mx-auto py-5">    
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        @for (cert of certifications; track cert.id) {
-            <a [routerLink]="['/certification', cert.id]" class="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer">
-                <div class="p-6 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 mb-4 flex items-center justify-center bg-gray-50 rounded-full group-hover:bg-blue-50 transition-colors duration-300">
-                        <span class="text-xl font-bold text-gray-400 group-hover:text-primary">{{cert.name}}</span>
-                    </div>
-                    <div class="flex items-center text-sm text-gray-500 font-medium  transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        View Details <i class="pi pi-arrow-right ml-1 text-xs"></i>
-                    </div>
-                </div>
-            </a>
-        }
-    </div>
-    </div>
-</section>
+<app-certifications></app-certifications>

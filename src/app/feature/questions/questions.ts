@@ -51,33 +51,31 @@ export class Questions implements OnInit {
   ) {}
 
   ngOnInit() {
-    // 1. Fetch Courses (Exams)
-    this.courseService.courses$.subscribe(courses => {
-       // Filter for Exam Courses (Testbank)
-       const standardCourses = courses.filter(c => c.type === 'exam' && !c.isFreeTrial);
-       
-       this.exams = standardCourses.map(course => ({
-           id: course.id,
-           title: course.title,
-           category: course.category,
-           description: course.description,
-           image: course.image,
-           part: 'P1', // Default or derived if you add 'part' to Course
-           config: this.questionService.getExamConfig(course.id),
-           questions: []
-       }));
+    this.questionService.questions$.subscribe(questions => {
+       // Filter for Active, Testbank Questions (Default targetPage is 'testbank' if undefined?)
+       // We assume strict 'testbank' or undefined/null defaults to testbank? 
+       // Based on form, it's required 'testbank' or 'free-trial'.
+       const testbankQuestions = questions.filter(q => q.status === 'Active' && q.targetPage !== 'free-trial').map(q => ({
+           ...q,
+           type: q.type.toLowerCase() as any
+       })) as ExamQuestion[];
 
-       // 2. Fetch Questions and map to Courses
-       this.questionService.questions$.subscribe(questions => {
-          const activeQuestions = questions.filter(q => q.status === 'Active').map(q => ({
-              ...q,
-              type: q.type.toLowerCase() as any // Normalize type to lowercase
-          })) as ExamQuestion[];
-          
-          this.exams.forEach(exam => {
-              // Filter questions that belong to this course
-              exam.questions = activeQuestions.filter(q => q.courseId === exam.id);
-          });
+       const testbankCourseIds = new Set(testbankQuestions.map(q => q.courseId));
+
+       this.courseService.courses$.subscribe(courses => {
+           // Show course if it is standard exam (not free trial flag) OR has testbank questions
+           const visibleCourses = courses.filter(c => c.type === 'exam' && (!c.isFreeTrial || testbankCourseIds.has(c.id)));
+           
+           this.exams = visibleCourses.map(course => ({
+               id: course.id,
+               title: course.title,
+               category: course.category,
+               description: course.description,
+               image: course.image,
+               part: 'P1',
+               config: this.questionService.getExamConfig(course.id),
+               questions: testbankQuestions.filter(q => q.courseId === course.id)
+           }));
        });
     });
   }

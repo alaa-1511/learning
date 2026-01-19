@@ -35,7 +35,6 @@ export const routes: Routes = [
       {path:'who-are', component: WhoAre},
       {path:'scopa', component: Scopa},
       {path:'free-trail', component: FreeTrail},
-      {path:'certification/:id', loadComponent: () => import('./feature/certificate-details/certificate-details').then(m => m.CertificateDetails)},
     
     ]
 

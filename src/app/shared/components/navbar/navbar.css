@@ -53,3 +53,10 @@
 ::ng-deep .p-treeselect-trigger {
     width: 2rem !important;
 }
+.active{
+   background-color: var(--color-secondary);
+   color: white;
+   padding: 6px 15px;
+   border-radius: 10px;
+   
+}

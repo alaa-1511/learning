@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../../core/service/question.service';
@@ -83,7 +83,8 @@ export class QuestionsManagement implements OnInit {
   constructor(
     private questionService: QuestionService,
     private courseService: CourseService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cd: ChangeDetectorRef
   ) {
     this.questionForm = this.createForm();
     this.examSettingsForm = this.createExamSettingsForm();
@@ -136,6 +137,11 @@ export class QuestionsManagement implements OnInit {
       if (type === 'multiple-choice') {
           optionsArray.enable();
           correctAnswer?.enable();
+          
+          // Auto-populate if empty (e.g. switching back from Essay/TF)
+          if (optionsArray.length === 0) {
+               for(let i=0; i<4; i++) optionsArray.push(this.createOptionControl());
+          }
       } else if (type === 'true-false') {
           // True/False doesn't need dynamic options input, we can handle it manually or disable validation
           // But we probably want to save 'True'/'False' as options
@@ -146,6 +152,7 @@ export class QuestionsManagement implements OnInit {
           optionsArray.disable();
           correctAnswer?.disable();
       }
+      this.cd.detectChanges(); // Fix for ExpressionChangedAfterItHasBeenCheckedError
   }
 
   createOptionControl(value: string | null = '') { 
@@ -330,17 +337,39 @@ export class QuestionsManagement implements OnInit {
     this.submitted = false;
   }
 
-  saveQuestion() {
+  async saveQuestion(addAnother: boolean = false) {
     this.submitted = true;
+    console.log('Attempting to save question...');
+    console.log('Form Invalid:', this.questionForm.invalid);
+    console.log('Form Value:', this.questionForm.getRawValue());
+    console.log('Course ID Value:', this.questionForm.get('courseId')?.value);
 
     // Standard form validation (Text, Options, basic courseId presence)
     if (this.questionForm.invalid) {
-        return;
+         // Special handling for "New Course" case where courseId is 'new' (invalid number pattern maybe?)
+         // but our validator is just 'required', so string 'new' is valid. 
+         // Real issue is standard fields.
+         // However, if courseId is 'new', we must check newCourseTitle/Image manually.
+         const isNewCourse = this.questionForm.get('courseId')?.value === 'new';
+         if (!isNewCourse) {
+             console.log('Form invalid and NOT new course. Returning.');
+             return;
+         }
+         // If it IS new course, we check standard fields (like Topic) + New Course Fields below.
+         // If text/topic invalid, we return.
+         if (this.questionForm.get('topic')?.invalid || 
+             this.questionForm.get('text')?.invalid || 
+             this.questionForm.get('correctAnswer')?.invalid ||
+             (this.questionForm.get('type')?.value === 'multiple-choice' && this.questionForm.get('options')?.invalid)) {
+             console.log('Standard fields invalid for new course. Topic/Text/CorrectAnswer/Options invalid.');
+             return;
+         }
     }
 
     // Custom Validation for New Course Creation
     if (this.questionForm.get('courseId')?.value === 'new') {
          if (!this.questionForm.get('newCourseTitle')?.value || !this.questionForm.get('newCourseImage')?.value) {
+             console.log('New Course Title or Image missing.');
              return;
          }
     }
@@ -350,7 +379,11 @@ export class QuestionsManagement implements OnInit {
 
     // Handle New Course Creation
     if (finalCourseId === 'new') { 
-        if (!formValue.newCourseTitle || !formValue.newCourseImage) return;
+        console.log('Detected new course creation');
+        if (!formValue.newCourseTitle || !formValue.newCourseImage) {
+            console.log('Missing title/image inside creation block');
+            return;
+        }
 
         const newCourse: Course = {
             id: 0, // Assigned by service
@@ -366,14 +399,21 @@ export class QuestionsManagement implements OnInit {
             type: 'exam'
         };
         
-        // We need to add logic to get the ID back or handle async.
-        // Since the service updates the subject synchronously, this.courses (subscribed) should be updated.
-        this.courseService.addCourse(newCourse);
-        
-        // Get the last added course from the updated local list
-        const allCourses = this.courses;
-        // Verify we have courses, otherwise fallback (shouldn't happen if add worked)
-        finalCourseId = allCourses.length > 0 ? allCourses[allCourses.length - 1].id : 0;
+        console.log('Adding new course:', newCourse);
+        try {
+            const createdId = await this.courseService.addCourse(newCourse);
+            console.log('Created Course ID:', createdId);
+            finalCourseId = createdId;
+        } catch (error: any) {
+            console.error('Failed to create course:', error);
+            if (error?.code === 'PGRST205' || error?.message?.includes('Could not find the table')) {
+                const projectId = 'rfvvnutdtnousxlgkvik'; // From environment
+                const url = `https://supabase.com/dashboard/project/${projectId}/sql`;
+                alert(`DATABASE ERROR: Tables are missing!\n\nYou must run the SQL script in Supabase.\n1. Go to: ${url}\n2. Paste the SQL code provided in the chat.\n3. Click Run.`);
+                window.open(url, '_blank');
+            }
+            return;
+        }
     }
 
     let finalOptions = formValue.options;
@@ -399,14 +439,62 @@ export class QuestionsManagement implements OnInit {
     };
 
     if (this.isEditMode) {
-      this.questionService.updateQuestion(questionData);
+      await this.questionService.updateQuestion(questionData);
     } else {
-      this.questionService.addQuestion(questionData);
+      await this.questionService.addQuestion(questionData);
     }
 
-    this.questionDialog = false;
-    this.questionForm.reset();
-    this.isCreatingCourse = false;
+    if (addAnother) {
+        // preserve context
+        const context = {
+            courseId: finalCourseId, // Use the resolved ID (handle 'new' case becoming real ID)
+            topic: formValue.topic,
+            difficulty: formValue.difficulty,
+            targetPage: formValue.targetPage,
+            type: formValue.type
+        };
+
+        this.submitted = false;
+        this.questionForm.reset();
+        
+        // Reset specific creation states
+        this.isCreatingCourse = false;
+        this.imagePreview = null;
+        
+        // Restore context
+        // We use setTimeout to ensure any async UI updates (like dropdown options) have a chance to settle,
+        // although RxJS is sync, Angular CD is not.
+        setTimeout(() => {
+             this.questionForm.patchValue({
+                ...context,
+                status: 'Active',
+                correctAnswer: 0,
+                answerExplanation: '',
+                // ensure new course fields are clean
+                newCourseTitle: '',
+                newCourseImage: ''
+            });
+            
+            // Ensure options are ready
+            this.updateValidatorsForType(context.type, this.questionForm);
+            
+            const optionsArray = this.questionForm.get('options') as FormArray;
+            optionsArray.clear();
+            if (context.type === 'multiple-choice') {
+                for(let i=0; i<4; i++) optionsArray.push(this.createOptionControl());
+            }
+        });
+
+        // Stay in creation mode, but switch off 'new' course mode since it's created now
+        this.isEditMode = false;
+        this.currentQuestionId = null;
+
+    } else {
+        this.questionDialog = false;
+        this.questionForm.reset();
+        this.isCreatingCourse = false;
+        this.imagePreview = null;
+    }
   }
 
   onCourseChange(event: any) {

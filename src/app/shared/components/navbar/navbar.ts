@@ -11,7 +11,7 @@ import { SpecailEmail } from '../../../core/service/specailemail';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule ],
+  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule  ,RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

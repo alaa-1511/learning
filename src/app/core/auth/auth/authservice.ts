@@ -1,21 +1,23 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { from, Observable, tap } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
+import { SupabaseService } from '../../service/supabase.service';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import emailjs from '@emailjs/browser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Authservice {
-  private supabase: SupabaseClient;
+  private supabaseService = inject(SupabaseService);
+  private get supabase(): SupabaseClient {
+      return this.supabaseService.client;
+  }
 
   private serviceID = 'service_uhvwfbb';
   private templateID = 'template_9kqzzu5';
   private publicKey = 'HmVEfd9rlmh1aBHI4';
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
     // Initialize EmailJs
     emailjs.init(this.publicKey);
   }
@@ -64,8 +66,6 @@ export class Authservice {
     );
   }
   
-
-
   login(data: any): Observable<any> {
     const { email, password } = data;
     return from(

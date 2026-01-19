@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { SupabaseService } from './supabase.service';
 
 export interface Question {
   id: number;
@@ -33,51 +34,132 @@ export class QuestionService {
   private questionsSubject = new BehaviorSubject<Question[]>([]);
   public questions$ = this.questionsSubject.asObservable();
 
-  private mockedQuestions: Question[] = [
-    {
-      id: 1,
-      text: 'What is the primary purpose of internal auditing?',
-      type: 'multiple-choice',
-      options: ['To detect fraud', 'To evaluate internal controls', 'To prepare financial statements', 'To assist management'],
-      correctAnswer: 3,
-      category: 'Internal Audit',
-      ciaPart: 'P1',
-      topic: 'Essentials of Internal Auditing',
-      difficulty: 'Easy',
-      status: 'Active',
-      examId: 1
-    },
-    {
-      id: 2,
-      text: 'Which framework is commonly used for...',
-      type: 'true-false',
-      options: ['True', 'False'],
-      correctAnswer: 0,
-       category: 'Programming',
-       ciaPart: 'P1',
-       topic: 'Governance',
-       difficulty: 'Medium',
-       status: 'Active',
-       examId: 2
-    },
-    {
-        id: 3,
-        text: 'Risk management is the responsibility of...',
-        type: 'multiple-choice',
-        options: ['Internal Audit', 'Management', 'Board', 'External Audit'],
-        correctAnswer: 1,
-        category: 'Programming',
-        ciaPart: 'P2',
-        topic: 'Risk Management',
-        difficulty: 'Hard',
-        status: 'Active',
-        examId: 2,
-        answerExplanation: 'Management is responsible for risk management processes. Internal audit provides assurance on them.'
-    }
-  ];
-
-  // Exam Config Management
+  // Exam Config Management (kept in LocalStorage for simplicity as per current scope)
   private examConfigs: Record<string, ExamConfig> = {};
+
+  constructor(private supabaseService: SupabaseService) {
+    this.loadQuestions();
+    const storedConfigs = localStorage.getItem('examConfigs');
+    if (storedConfigs) {
+      this.examConfigs = JSON.parse(storedConfigs);
+    }
+  }
+
+  private async loadQuestions() {
+    const { data, error } = await this.supabaseService.client
+      .from('questions')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error loading questions:', error);
+      return;
+    }
+
+    // Map snake_case to camelCase
+    const mappedQuestions: Question[] = data.map((q: any) => ({
+      ...q,
+      correctAnswer: q.correct_answer,
+      answerExplanation: q.answer_explanation,
+      ciaPart: q.cia_part, // if column exists, or ignore
+      courseId: q.course_id,
+      targetPage: q.target_page,
+      // options comes as JSON array, automatically parsed by Supabase JS client usually
+      options: q.options || [] 
+    }));
+
+    this.questionsSubject.next(mappedQuestions);
+  }
+
+  getQuestions(): Observable<Question[]> {
+    return this.questions$;
+  }
+
+  async addQuestion(question: Omit<Question, 'id'>) {
+    const dbQuestion = {
+      text: question.text,
+      type: question.type,
+      options: question.options,
+      correct_answer: question.correctAnswer,
+      answer_explanation: question.answerExplanation,
+      topic: question.topic,
+      difficulty: question.difficulty,
+      status: question.status,
+      course_id: question.courseId,
+      target_page: question.targetPage,
+      // cia_part: question.ciaPart // Add column if needed in schema
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('questions')
+      .insert(dbQuestion)
+      .select()
+      .single();
+
+    if (error) {
+        console.error('Error adding question:', error);
+        return;
+    }
+
+    const newQuestion: Question = {
+        ...data,
+        correctAnswer: data.correct_answer,
+        answerExplanation: data.answer_explanation,
+        courseId: data.course_id,
+        targetPage: data.target_page,
+        options: data.options
+    };
+
+    const current = this.questionsSubject.value;
+    this.questionsSubject.next([newQuestion, ...current]);
+  }
+
+  async updateQuestion(updatedQuestion: Question) {
+    const dbQuestion = {
+      text: updatedQuestion.text,
+      type: updatedQuestion.type,
+      options: updatedQuestion.options,
+      correct_answer: updatedQuestion.correctAnswer,
+      answer_explanation: updatedQuestion.answerExplanation,
+      topic: updatedQuestion.topic,
+      difficulty: updatedQuestion.difficulty,
+      status: updatedQuestion.status,
+      course_id: updatedQuestion.courseId,
+      target_page: updatedQuestion.targetPage
+    };
+
+    const { error } = await this.supabaseService.client
+      .from('questions')
+      .update(dbQuestion)
+      .eq('id', updatedQuestion.id);
+
+    if (error) {
+        console.error('Error updating question:', error);
+        return;
+    }
+
+    const current = this.questionsSubject.value;
+    const index = current.findIndex(q => q.id === updatedQuestion.id);
+    if (index !== -1) {
+        current[index] = updatedQuestion;
+        this.questionsSubject.next([...current]);
+    }
+  }
+
+  async deleteQuestion(id: number) {
+    const { error } = await this.supabaseService.client
+      .from('questions')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting question:', error);
+        return;
+    }
+
+    const current = this.questionsSubject.value;
+    this.questionsSubject.next(current.filter(q => q.id !== id));
+  }
 
   getExamConfig(courseId: number): ExamConfig {
     return this.examConfigs[courseId] || {
@@ -86,68 +168,12 @@ export class QuestionService {
         questionCount: 100,
         passingScore: 75,
         randomize: true,
-        ciaPart: 'P1' // Fallback/Legacy
+        // ciaPart: 'P1' 
     }; 
   }
 
   saveExamConfig(config: ExamConfig) {
     this.examConfigs[config.courseId] = config;
     localStorage.setItem('examConfigs', JSON.stringify(this.examConfigs));
-  }
-
-  constructor() {
-    this.loadFromStorage();
-    const storedConfigs = localStorage.getItem('examConfigs');
-    if (storedConfigs) {
-      this.examConfigs = JSON.parse(storedConfigs);
-    }
-  }
-
-  getQuestions(): Observable<Question[]> {
-    return this.questions$;
-  }
-
-  addQuestion(question: Omit<Question, 'id'>) {
-    const newQuestion = {
-      ...question,
-      id: this.generateId()
-    };
-    this.mockedQuestions = [...this.mockedQuestions, newQuestion];
-    this.updateState();
-  }
-
-  updateQuestion(updatedQuestion: Question) {
-    this.mockedQuestions = this.mockedQuestions.map(q => 
-      q.id === updatedQuestion.id ? updatedQuestion : q
-    );
-    this.updateState();
-  }
-
-  deleteQuestion(id: number) {
-    this.mockedQuestions = this.mockedQuestions.filter(q => q.id !== id);
-    this.updateState();
-  }
-
-  private generateId(): number {
-    return this.mockedQuestions.length > 0 
-      ? Math.max(...this.mockedQuestions.map(q => q.id)) + 1 
-      : 1;
-  }
-
-  private updateState() {
-    this.questionsSubject.next(this.mockedQuestions);
-    this.saveToStorage();
-  }
-
-  private saveToStorage() {
-    localStorage.setItem('questions', JSON.stringify(this.mockedQuestions));
-  }
-
-  private loadFromStorage() {
-    const stored = localStorage.getItem('questions');
-    if (stored) {
-      this.mockedQuestions = JSON.parse(stored);
-    }
-    this.questionsSubject.next(this.mockedQuestions);
   }
 }
