@@ -1,5 +1,29 @@
+
+<div *ngIf="mini">
+  <div class="grid grid-cols-3 gap-4">
+    <div *ngFor="let exam of exams.slice(0, 6)" class="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 flex flex-col group cursor-pointer" (click)="enroll(exam)">
+      <div class="h-28 overflow-hidden relative rounded-t-xl">
+          <img [src]="exam.image" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <span class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {{ exam.category | translate }}
+          </span>
+      </div>
+      <div class="p-3">
+          <h3 class="text-sm font-bold text-primary mb-1 line-clamp-1 group-hover:text-secondary transition-colors">{{ exam.title | translate }}</h3>
+          <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[2.5em]">{{ exam.description | translate }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-4 text-center border-t border-gray-100 pt-3">
+      <a routerLink="/questions" class="text-secondary font-bold hover:underline text-sm inline-flex items-center gap-2">
+          View All Questions <i class="pi pi-arrow-right text-xs"></i>
+      </a>
+  </div>
+</div>
+
 <!-- Page Container -->
-<div class="min-h-screen bg-gray-50 py-36 px-6">
+<div *ngIf="!mini" class="min-h-screen bg-gray-50 py-36 px-6">
   <div class="max-w-6xl mx-auto">
 
     <!-- VIEW 1: EXAM LIST -->

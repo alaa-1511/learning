@@ -60,3 +60,57 @@
    border-radius: 10px;
    
 }
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    height: 100%; /* Ensure full height for better hover target */
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-mini {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 480px; /* Slightly wider for the grid */
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    z-index: 50;
+    margin-top: 10px; /* Visual gap */
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* Arrow Tip */
+.dropdown-mini::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-left: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Interactive Bridge to prevent closing when moving over gap */
+.dropdown-mini::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
+}

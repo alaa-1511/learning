@@ -136,7 +136,23 @@
                         </div>
                         <div class="col-span-2">
                             <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.DESCRIPTION' | translate }}</label>
-                            <textarea formControlName="description" rows="4" class="block p-3 w-full text-sm text-gray-700 bg-gray-50/50 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-y"></textarea>
+                            <textarea formControlName="description" rows="3" class="block p-3 w-full text-sm text-gray-700 bg-gray-50/50 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-y"></textarea>
+                        </div>
+                        <div class="col-span-2">
+                             <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.DETAILS' | translate }}</label>
+                             <p-editor formControlName="details" [style]="{ height: '200px' }" placeholder="Enter full course details (supports rich text)...">
+                                <ng-template pTemplate="header">
+                                    <span class="ql-formats">
+                                        <button class="ql-bold" aria-label="Bold"></button>
+                                        <button class="ql-italic" aria-label="Italic"></button>
+                                        <button class="ql-underline" aria-label="Underline"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                </ng-template>
+                            </p-editor>
                         </div>
                         <div class="col-span-2">
                             <label class="block mb-2 text-sm font-semibold text-gray-900">{{ 'MANAGE_COURSES.MODAL.IMAGE_URL' | translate }}</label>

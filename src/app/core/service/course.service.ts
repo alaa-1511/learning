@@ -9,6 +9,7 @@ export interface Course {
   level: string;
   image: string;
   description: string;
+  details?: string;
   rating: number;
   students: number;
   price: number;
@@ -55,6 +56,7 @@ export class CourseService {
       level: course.level,
       image: course.image,
       description: course.description,
+      details: course.details,
       rating: course.rating,
       students: course.students,
       price: course.price,
@@ -91,6 +93,7 @@ export class CourseService {
        level: updatedCourse.level,
        image: updatedCourse.image,
        description: updatedCourse.description,
+       details: updatedCourse.details,
        rating: updatedCourse.rating,
        students: updatedCourse.students,
        price: updatedCourse.price,

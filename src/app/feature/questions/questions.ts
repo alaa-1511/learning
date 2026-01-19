@@ -1,12 +1,12 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 
 import { CourseService, Course } from '../../core/service/course.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
@@ -27,14 +27,15 @@ interface Exam {
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, FormsModule, RouterModule],
   templateUrl: './questions.html',
   styleUrl: './questions.css',
 })
 export class Questions implements OnInit {
   // State: 'list' | 'exam' | 'result'
   currentView: string = 'list';
-  
+    @Input() mini: boolean = false;
+
   exams: Exam[] = [];
 
   selectedExam: Exam | null = null;

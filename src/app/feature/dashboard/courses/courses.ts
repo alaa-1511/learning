@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TranslateModule } from '@ngx-translate/core';
+import { EditorModule } from 'primeng/editor';
 import { CourseService, Course } from '../../../core/service/course.service';
 
 @Component({
@@ -13,7 +14,8 @@ import { CourseService, Course } from '../../../core/service/course.service';
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    TranslateModule
+    TranslateModule,
+    EditorModule
   ],
   templateUrl: './courses.html',
   styleUrls: ['./courses.css']
@@ -47,6 +49,7 @@ export class CoursesManagement implements OnInit {
       category: ['COURSES.CATEGORIES.ACCOUNTING', Validators.required],
       level: ['COURSES.LEVELS.BEGINNER', Validators.required],
       description: ['', Validators.required],
+      details: [''], // Rich text details
       image: ['/courses/img mealify1.jfif', Validators.required]
     });
   }
@@ -89,6 +92,7 @@ export class CoursesManagement implements OnInit {
       category: 'COURSES.CATEGORIES.ACCOUNTING',
       level: 'COURSES.LEVELS.BEGINNER',
       description: '',
+      details: '',
       image: 'assets/images/default-course.jpg' // Default image if needed, or empty
     });
     this.imagePreview = null;
@@ -104,6 +108,7 @@ export class CoursesManagement implements OnInit {
         category: course.category,
         level: course.level,
         description: course.description,
+        details: course.details || '', // Handle potential undefined
         image: course.image
     });
     this.imagePreview = course.image;

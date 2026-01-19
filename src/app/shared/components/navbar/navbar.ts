@@ -8,10 +8,11 @@ import { Translate } from '../../../core/service/translate';
 import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/auth/auth/authservice';
 import { SpecailEmail } from '../../../core/service/specailemail';
+import { Questions } from "../../../feature/questions/questions";
 
 @Component({
   selector: 'app-navbar',
-  imports: [ RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule  ,RouterLinkActive],
+  imports: [RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule, RouterLinkActive, Questions],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -24,7 +25,14 @@ export class Navbar {
   private readonly specialEmail = inject(SpecailEmail);
 
   isAdmin = signal<boolean>(false);
+ showSelector  =signal<boolean>(false)
+ open() {
+    this.showSelector.set(true);
+  }
 
+  close() {
+    this.showSelector.set(false);
+  }
   constructor() {
   }
 
