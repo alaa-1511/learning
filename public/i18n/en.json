@@ -278,16 +278,21 @@
         "SEARCH_PLACEHOLDER": "Search questions...",
         "ALL_PARTS": "All Parts",
         "ALL_DIFFICULTIES": "All Difficulties",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "BACK_TO_COURSES": "Back to Courses",
+        "ALL_COURSES_FILTER": "All Courses",
+        "VIEW_QUESTIONS": "View Questions",
         "TABLE": {
             "QUESTION": "Question",
             "CIA_PART": "CIA Part",
             "TOPIC": "Topic",
             "DIFFICULTY": "Difficulty",
             "STATUS": "Status",
-            "ACTION": "Action"
+            "ACTION": "Action",
+            "COURSE_NAME": "Course Name",
+            "QUESTION_COUNT": "Question Count"
         },
-        "EDIT": "Edit",
-        "DELETE": "Delete",
         "MODAL": {
             "ADD_TITLE": "Add New Question",
             "EDIT_TITLE": "Edit Question",
@@ -419,6 +424,31 @@
             "CONTACT_US": "Contact Us"
         }
     },
+    "DASHBOARD_CERTIFICATION": {
+        "MANAGE_TITLE": "Certification Management",
+        "MANAGE_SUBTITLE": "Manage certification templates and issuance.",
+        "ISSUE_CERTIFICATE": "Issue Certificate",
+        "TOTAL_ISSUED": "Total Issued",
+        "AVAILABLE_COURSES": "Available Courses",
+        "PENDING": "Pending",
+        "SEARCH_PLACEHOLDER": "Search certificates...",
+        "FILTER": "Filter",
+        "ID": "ID",
+        "ISSUE_NEW": "Issue New Certificate",
+        "EDIT_TITLE": "Edit Certificate",
+        "ISSUE_TITLE": "Issue New Certificate",
+        "DELETE_TITLE": "Confirm Deletion",
+        "STUDENT_NAME": "Student Name",
+        "STUDENT_PLACEHOLDER": "Enter student full name",
+        "COURSE": "Course / Certification",
+        "SELECT_COURSE": "Select Course",
+        "ISSUE_DATE": "Issue Date",
+        "CANCEL": "Cancel",
+        "UPDATE": "Update Certificate",
+        "ISSUE": "Issue Certificate",
+        "DELETE": "Delete",
+        "DELETE_WARNING": "Are you sure you want to delete this certificate? This action cannot be undone."
+    },
     "CERTIFICATION": {
         "TITLE": "Certificate Verification",
         "SUBTITLE": "Enter the certificate ID below to verify its authenticity.",
@@ -437,7 +467,11 @@
         "VERIFIED": "VERIFIED",
         "ENTER_ID_HINT": "Enter ID above to download",
         "NO_CERTIFICATES": "No certificates issued yet.",
-        "NOT_FOUND": "Certificate not found. Please check the ID and try again."
+        "NOT_FOUND": "Certificate not found. Please check the ID and try again.",
+        "AVAILABLE_CERTIFICATIONS": "Available Certifications",
+        "COURSES": "Courses",
+        "GET_CERTIFIED": "Get Certified",
+        "VERIFY": "Verify"
     }
 }
 

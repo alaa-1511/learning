@@ -29,6 +29,10 @@ export class QuestionsManagement implements OnInit {
   filteredQuestions: Question[] = [];
   courses: Course[] = [];
   
+  // View State
+  viewMode: 'courses' | 'questions' = 'courses';
+  selectedCourse: Course | null = null;
+
   // Modals state
   questionDialog: boolean = false;
   deleteDialog: boolean = false;
@@ -524,5 +528,25 @@ export class QuestionsManagement implements OnInit {
 
   removeOption(index: number) {
       this.optionsControls.removeAt(index);
+  }
+
+  // View Navigation
+  selectCourse(course: Course) {
+      this.selectedCourse = course;
+      this.currentCourseFilter = course.id;
+      this.viewMode = 'questions';
+      this.applyFilters();
+  }
+
+  backToCourses() {
+      this.selectedCourse = null;
+      this.currentCourseFilter = null; // or keep it null if we want to show all questions? No, we want course view.
+      this.viewMode = 'courses';
+      this.p = 1;
+      // Clear filters potentially, or just relies on viewMode to show correct template
+  }
+
+  getQuestionCount(courseId: number): number {
+      return this.questions.filter(q => q.courseId === courseId).length;
   }
 }

@@ -287,18 +287,23 @@
         "SUBTITLE": "إدارة أسئلة الامتحانات لأجزاء CIA 1 و 2 و 3",
         "ADD_NEW": "إضافة سؤال جديد",
         "SEARCH_PLACEHOLDER": "ابحث عن الأسئلة...",
-        "ALL_PARTS": "كل الأجزاء",
+        "ALL_PARTS": "كل التخصصات",
         "ALL_DIFFICULTIES": "كل المستويات",
+        "EDIT": "تعديل",
+        "DELETE": "حذف",
+        "BACK_TO_COURSES": "العودة للدورات",
+        "ALL_COURSES_FILTER": "كل الدورات",
+        "VIEW_QUESTIONS": "عرض الأسئلة",
         "TABLE": {
             "QUESTION": "السؤال",
             "CIA_PART": "جزء CIA",
             "TOPIC": "الموضوع",
             "DIFFICULTY": "الصعوبة",
             "STATUS": "الحالة",
-            "ACTION": "إجراء"
+            "ACTION": "إجراء",
+            "COURSE_NAME": "اسم الدورة",
+            "QUESTION_COUNT": "عدد الأسئلة"
         },
-        "EDIT": "تعديل",
-        "DELETE": "حذف",
         "MODAL": {
             "ADD_TITLE": "إضافة سؤال جديد",
             "EDIT_TITLE": "تعديل السؤال",
@@ -430,6 +435,31 @@
             "CONTACT_US": "اتصل بنا"
         }
     },
+    "DASHBOARD_CERTIFICATION": {
+        "MANAGE_TITLE": "إدارة الشهادات",
+        "MANAGE_SUBTITLE": "إدارة قوالب الشهادات وإصدارها.",
+        "ISSUE_CERTIFICATE": "إصدار شهادة",
+        "TOTAL_ISSUED": "إجمالي الصادرة",
+        "AVAILABLE_COURSES": "الدورات المتاحة",
+        "PENDING": "قيد الانتظار",
+        "SEARCH_PLACEHOLDER": "البحث في الشهادات...",
+        "FILTER": "تصفية",
+        "ID": "رقم التعريف",
+        "ISSUE_NEW": "إصدار شهادة جديدة",
+        "EDIT_TITLE": "تعديل الشهادة",
+        "ISSUE_TITLE": "إصدار شهادة جديدة",
+        "DELETE_TITLE": "تأكيد الحذف",
+        "STUDENT_NAME": "اسم الطالب",
+        "STUDENT_PLACEHOLDER": "أدخل اسم الطالب الكامل",
+        "COURSE": "الدورة / الشهادة",
+        "SELECT_COURSE": "اختر الدورة",
+        "ISSUE_DATE": "تاريخ الإصدار",
+        "CANCEL": "إلغاء",
+        "UPDATE": "تحديث الشهادة",
+        "ISSUE": "إصدار الشهادة",
+        "DELETE": "حذف",
+        "DELETE_WARNING": "هل أنت متأكد أنك تريد حذف هذه الشهادة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
     "CERTIFICATION": {
         "TITLE": "التحقق من الشهادة",
         "SUBTITLE": "أدخل معرف الشهادة أدناه للتحقق من صحتها.",
@@ -448,6 +478,10 @@
         "VERIFIED": "مؤكدة",
         "ENTER_ID_HINT": "أدخل المعرف أعلاه للتنزيل",
         "NO_CERTIFICATES": "لا توجد شهادات صادرة بعد.",
-        "NOT_FOUND": "الشهادة غير موجودة. يرجى التحقق من المعرف والمحاولة مرة أخرى."
+        "NOT_FOUND": "الشهادة غير موجودة. يرجى التحقق من المعرف والمحاولة مرة أخرى.",
+        "AVAILABLE_CERTIFICATIONS": "الشهادات المتاحة",
+        "COURSES": "دورات",
+        "GET_CERTIFIED": "احصل على شهادة",
+        "VERIFY": "تحقق"
     }
 }

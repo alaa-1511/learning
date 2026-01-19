@@ -4,33 +4,48 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificationService, Certificate } from '../../core/service/certification.service';
+import { CourseService, Course } from '../../core/service/course.service';
 import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-certifications',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    TranslateModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule
+  ],
   templateUrl: './certifications.html'
 })
 export class CertificationsComponent implements OnInit {
+  verificationVisible: boolean = false;
+  verificationId: string = '';
+
   searchId: string = '';
   certificate: Certificate | null = null;
-  publicCertificates: Certificate[] = []; // List for public display
+  availableCourses: Course[] = []; // List for public display
   error: string | null = null;
   loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private certService: CertificationService
+    private certService: CertificationService,
+    private courseService: CourseService
   ) {}
 
   ngOnInit() {
-    // Load all certificates for display
-    this.certService.certificates$.subscribe(certs => {
-        // Sort by date desc (newest first)
-        this.publicCertificates = [...certs].sort((a, b) => new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime());
+    // Load all courses for display
+    this.courseService.courses$.subscribe(courses => {
+        this.availableCourses = courses;
     });
 
     // Check if ID is in URL query params
@@ -42,7 +57,20 @@ export class CertificationsComponent implements OnInit {
     });
   }
 
-  verifyCertificate() {
+  openVerificationDialog() {
+      this.verificationVisible = true;
+      this.verificationId = '';
+  }
+
+  checkVerificationId() {
+      if (!this.verificationId.trim()) return;
+      
+      this.searchId = this.verificationId;
+      this.verifyCertificate();
+      this.verificationVisible = false;
+  }
+
+  async verifyCertificate() {
       if (!this.searchId.trim()) return;
       
       this.loading = true;
@@ -50,15 +78,15 @@ export class CertificationsComponent implements OnInit {
       this.certificate = null;
 
       // Simulate network delay for effect
-      setTimeout(() => {
-          const cert = this.certService.getCertificateById(this.searchId.trim());
+      // setTimeout(async () => {
+          const cert = await this.certService.getCertificateById(this.searchId.trim());
           if (cert) {
               this.certificate = cert;
           } else {
               this.error = 'Certificate not found. Please check the ID and try again.';
           }
           this.loading = false;
-      }, 500);
+      // }, 500);
   }
 
   printCertificate() {
