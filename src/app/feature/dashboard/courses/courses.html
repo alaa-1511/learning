@@ -2,6 +2,15 @@
     
     <!-- Header & Actions -->
     <div class="mb-8">
+        <div class="flex items-center gap-4 mb-6 border-b border-gray-100 pb-2">
+            <button (click)="setTab('courses')" [class.text-blue-600]="activeTab === 'courses'" [class.border-blue-600]="activeTab === 'courses'" class="px-4 py-2 font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent transition-all">
+                Main Courses
+            </button>
+            <button (click)="setTab('courses_2')" [class.text-blue-600]="activeTab === 'courses_2'" [class.border-blue-600]="activeTab === 'courses_2'" class="px-4 py-2 font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent transition-all">
+                Special Courses
+            </button>
+        </div>
+
         <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
              <div class="text-center md:text-start">
                 <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">{{ 'MANAGE_COURSES.TITLE' | translate }}</h1>
@@ -175,7 +184,11 @@
             </div>
             <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl">
                 <button (click)="hideDialog()" type="button" class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-colors">{{ 'MANAGE_COURSES.MODAL.CANCEL' | translate }}</button>
-                <button (click)="saveCourse()" type="button" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg shadow-lg shadow-blue-500/30 transition-all">{{ 'MANAGE_COURSES.MODAL.SAVE' | translate }}</button>
+                <button (click)="saveCourse()" type="button" [disabled]="isLoading" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <!-- <span *ngIf="isLoading"><i class="pi pi-spin pi-spinner mr-2"></i>{{ 'MANAGE_COURSES.MODAL.SAVING' | translate }}</span> -->
+                    <!-- <span *ngIf="!isLoading">{{ 'MANAGE_COURSES.MODAL.SAVE' | translate }}</span> -->
+                     <span>{{ 'MANAGE_COURSES.MODAL.SAVE' | translate }}</span>
+                </button>
             </div>
         </div>
     </div>
@@ -193,7 +206,10 @@
             
             <div class="flex items-center justify-center gap-3">
                  <button (click)="deleteDialog = false" type="button" class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 transition-colors">{{ 'MANAGE_COURSES.MODAL.CANCEL_DELETE' | translate }}</button>
-                <button (click)="confirmDelete()" type="button" class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg shadow-lg shadow-red-500/30 transition-all">{{ 'MANAGE_COURSES.MODAL.CONFIRM_DELETE' | translate }}</button>
+                <button (click)="confirmDelete()" type="button" [disabled]="isLoading" class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg shadow-lg shadow-red-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span *ngIf="isLoading"><i class="pi pi-spin pi-spinner mr-2"></i>Deleting...</span>
+                    <span *ngIf="!isLoading">{{ 'MANAGE_COURSES.MODAL.CONFIRM_DELETE' | translate }}</span>
+                </button>
             </div>
         </div>
     </div>

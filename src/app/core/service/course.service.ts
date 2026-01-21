@@ -26,7 +26,9 @@ export class CourseService {
 
   constructor(private supabaseService: SupabaseService) {
     this.loadCourses();
+    this.loadCourses2();
   }
+
 
   private async loadCourses() {
     const { data, error } = await this.supabaseService.client
@@ -56,7 +58,7 @@ export class CourseService {
       level: course.level,
       image: course.image,
       description: course.description,
-      details: course.details,
+      // details: course.details,
       rating: course.rating,
       students: course.students,
       price: course.price,
@@ -93,7 +95,7 @@ export class CourseService {
        level: updatedCourse.level,
        image: updatedCourse.image,
        description: updatedCourse.description,
-       details: updatedCourse.details,
+       // details: updatedCourse.details,
        rating: updatedCourse.rating,
        students: updatedCourse.students,
        price: updatedCourse.price,
@@ -108,7 +110,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error updating course:', error);
-      return;
+      throw error;
     }
 
     const currentCourses = this.coursesSubject.value;
@@ -127,11 +129,137 @@ export class CourseService {
 
     if (error) {
        console.error('Error deleting course:', error);
-       return;
+       throw error;
     }
 
     const currentCourses = this.coursesSubject.value;
     const updatedCourses = currentCourses.filter(c => c.id !== id);
     this.coursesSubject.next(updatedCourses);
   }
+  // Courses 2 Support
+  private courses2Subject = new BehaviorSubject<Course[]>([]);
+  courses2$ = this.courses2Subject.asObservable();
+
+
+  // ... Existing loadCourses ...
+
+  private async loadCourses2() {
+    const { data, error } = await this.supabaseService.client
+      .from('courses_2')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error loading courses 2:', error);
+      return;
+    }
+
+    const mappedCourses: Course[] = data.map((c: any) => ({
+      ...c,
+      isFreeTrial: false // defaulting as not present in schema
+    }));
+
+    this.courses2Subject.next(mappedCourses);
+  }
+
+  async addCourse2(course: Course): Promise<number> {
+    const dbCourse = {
+      title: course.title,
+      category: course.category,
+      level: course.level,
+      image: course.image,
+      description: course.description,
+      details: course.details,
+      price: course.price
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('courses_2')
+      .insert(dbCourse)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding course 2:', error);
+      throw error;
+    }
+
+    const newCourse: Course = { ...data };
+    const current = this.courses2Subject.value;
+    this.courses2Subject.next([newCourse, ...current]);
+    return newCourse.id;
+  }
+
+  async updateCourse2(course: Course) {
+    const dbCourse = {
+       title: course.title,
+       category: course.category,
+       level: course.level,
+       image: course.image,
+       description: course.description,
+       details: course.details,
+       price: course.price
+    };
+
+    const { error } = await this.supabaseService.client
+      .from('courses_2')
+      .update(dbCourse)
+      .eq('id', course.id);
+
+    if (error) {
+      console.error('Error updating course 2:', error);
+      throw error;
+    }
+
+    const current = this.courses2Subject.value;
+    const index = current.findIndex(c => c.id === course.id);
+    if (index !== -1) {
+      current[index] = course;
+      this.courses2Subject.next([...current]);
+    }
+  }
+
+  async deleteCourse2(id: number) {
+    const { error } = await this.supabaseService.client
+      .from('courses_2')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+       console.error('Error deleting course 2:', error);
+       throw error;
+    }
+
+    const current = this.courses2Subject.value;
+    this.courses2Subject.next(current.filter(c => c.id !== id));
+  }
+
+  async getCourseById(id: number): Promise<Course | null> {
+    const { data, error } = await this.supabaseService.client
+      .from('courses')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error loading course by id:', error);
+      return null;
+    }
+    return { ...data, isFreeTrial: data.is_free_trial };
+  }
+
+  async getCourse2ById(id: number): Promise<Course | null> {
+    const { data, error } = await this.supabaseService.client
+      .from('courses_2')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error loading course 2 by id:', error);
+      return null;
+    }
+    return { ...data, isFreeTrial: false };
+  }
 }
+

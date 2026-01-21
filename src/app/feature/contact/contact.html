@@ -1,0 +1,51 @@
+<section>
+  <div class="bg-primary/50 bg-cover bg-center bg-no-repeat" style="background-image: url('/imgs/img mealify1.jfif');">
+    <div class="container mx-auto py-5">
+      <div class="w-full max-w-lg mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
+        <h2 class="text-3xl font-bold mb-4 text-center  text-primary">{{ 'CONTACT.TITLE' | translate }}</h2>
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-1">
+          <app-input
+          
+            [typeInput]="'text'"
+            [labelInput]="'AUTH.FIRST_NAME'"
+            [idInput]="'firstName'"
+            [placeholderInput]="'AUTH.FIRST_NAME'"
+            [controlInput]="contactForm.get('firstName')"
+          ></app-input>
+
+          <app-input
+            [typeInput]="'email'"
+            [labelInput]="'AUTH.EMAIL'"
+            [idInput]="'email'"
+            [controlInput]="contactForm.get('email')"
+            [placeholderInput]="'AUTH.EMAIL'"
+          ></app-input>
+
+          <app-input
+            [typeInput]="'tel'"
+            [labelInput]="'AUTH.PHONE'"
+            [idInput]="'phone'"
+            [controlInput]="contactForm.get('phone')"
+            [placeholderInput]="'AUTH.PHONE'"
+          ></app-input>
+
+          <div class="flex flex-col gap-1">
+            <label for="message" class="block text-gray-700 font-bold mb-2">{{ 'CONTACT.MESSAGE' | translate }}</label>
+            <textarea
+              name="message"
+              id="message"
+              rows="4"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              [formControlName]="'message'"
+              [placeholder]="'CONTACT.MESSAGE_PLACEHOLDER' | translate"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="bg-primary hover:bg-primary/80 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 mt-3 ">
+            {{ 'CONTACT.SUBMIT' | translate }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

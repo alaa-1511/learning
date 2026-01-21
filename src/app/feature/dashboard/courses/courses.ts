@@ -22,7 +22,9 @@ import { CourseService, Course } from '../../../core/service/course.service';
 })
 export class CoursesManagement implements OnInit {
   courses: Course[] = [];
+  courses2: Course[] = []; // New list
   filteredCourses: Course[] = [];
+  activeTab: 'courses' | 'courses_2' = 'courses'; // Tab State
   
   // Modals
   courseDialog: boolean = false;
@@ -34,6 +36,7 @@ export class CoursesManagement implements OnInit {
   isEditMode: boolean = false;
   currentCourseId: number | null = null;
   imagePreview: string |  ArrayBuffer | null = null;
+  isLoading: boolean = false;
   
   // Pagination
   p: number = 1;
@@ -57,6 +60,13 @@ export class CoursesManagement implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      // Check file size (limit to 500KB for Base64 performance)
+      if (file.size > 500 * 1024) {
+        alert('Image is too large! Please choose an image under 500KB to ensure fast saving.');
+        event.target.value = ''; // Clear input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;
@@ -69,7 +79,12 @@ export class CoursesManagement implements OnInit {
   ngOnInit() {
     this.courseService.courses$.subscribe(data => {
       this.courses = data.filter(c => c.type !== 'exam');
-      this.applyFilters();
+      if (this.activeTab === 'courses') this.applyFilters();
+    });
+
+    this.courseService.courses2$.subscribe(data => {
+        this.courses2 = data;
+        if (this.activeTab === 'courses_2') this.applyFilters();
     });
   }
 
@@ -79,10 +94,16 @@ export class CoursesManagement implements OnInit {
   }
 
   applyFilters() {
-    this.filteredCourses = this.courses.filter(c => 
+    const list = this.activeTab === 'courses' ? this.courses : this.courses2;
+    this.filteredCourses = list.filter(c => 
         !this.currentSearch || c.title.toLowerCase().includes(this.currentSearch)
     );
     this.p = 1; 
+  }
+
+  setTab(tab: 'courses' | 'courses_2') {
+    this.activeTab = tab;
+    this.applyFilters();
   }
 
   openNew() {
@@ -122,34 +143,110 @@ export class CoursesManagement implements OnInit {
     this.deleteDialog = true;
   }
 
-  confirmDelete() {
+  async confirmDelete() {
     if (this.courseToDelete) {
-        this.courseService.deleteCourse(this.courseToDelete.id);
-        this.courseToDelete = null;
+        
+        // OPTIMISTIC UI: Close the dialog IMMEDIATELY
         this.deleteDialog = false;
+
+        this.isLoading = true;
+        try {
+            // Timeout protection
+            const timeout = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Delete request timed out')), 15000)
+            );
+
+            const deleteOperation = (async () => {
+                if (this.activeTab === 'courses') {
+                    await this.courseService.deleteCourse(this.courseToDelete!.id);
+                } else {
+                    await this.courseService.deleteCourse2(this.courseToDelete!.id);
+                }
+            })();
+
+            await Promise.race([deleteOperation, timeout]);
+
+            this.courseToDelete = null;
+
+        } catch (error) {
+            console.error('Error deleting course:', error);
+            // Only alert on error, not success
+            alert('Failed to delete course (check network).');
+        } finally {
+            this.isLoading = false;
+        }
     }
   }
 
-  saveCourse() {
+  async saveCourse() {
     this.submitted = true;
-    if (this.courseForm.invalid) return;
+    if (this.courseForm.invalid) {
+        alert('Please fill in all required fields marked with *');
+        return;
+    }
+
+    // Protection: Check if "Details" (Rich Text) is too large (e.g. pasted images)
+    const detailsContent = this.courseForm.get('details')?.value || '';
+    if (detailsContent.length > 300000) { // ~300KB limit for text
+        alert('The "Details" content is too large! DO NOT paste images directly into the text editor. Use the Image URL field instead.');
+        return;
+    }
 
     const formVal = this.courseForm.value;
     const courseData: Course = {
         id: this.isEditMode ? (this.currentCourseId as number) : 0,
         ...formVal,
-        rating: 4.5, // Default for new
-        students: 0, // Default for new
+        rating: 4.5,
+        students: 0,
         isFreeTrial: false,
         type: 'standard' 
     };
 
-    if (this.isEditMode) {
-        this.courseService.updateCourse(courseData);
-    } else {
-        this.courseService.addCourse(courseData);
-    }
+    // OPTIMISTIC UI: Close the dialog IMMEDIATELY
     this.courseDialog = false;
+
+    // Start background process (don't await in UI thread blocking way)
+    this.isLoading = true;
+    
+    try {
+        // Create a timeout promise to prevent hanging
+        const timeout = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timed out (Network is slow or file is too big)')), 15000)
+        );
+
+        const saveOperation = (async () => {
+            if (this.activeTab === 'courses') {
+                if (this.isEditMode) {
+                    await this.courseService.updateCourse(courseData);
+                } else {
+                    await this.courseService.addCourse(courseData);
+                }
+            } else {
+                 if (this.isEditMode) {
+                    await this.courseService.updateCourse2(courseData);
+                } else {
+                    await this.courseService.addCourse2(courseData);
+                }
+            }
+        })();
+
+        // Race between save and timeout
+        await Promise.race([saveOperation, timeout]);
+        
+        // Success: Do nothing (Modal is already closed)
+
+    } catch (error: any) {
+        console.error('Error saving course:', error);
+        
+        // Error: Show alert since we optimistically closed the modal
+        const msg = error.message || error.error_description || error.details || JSON.stringify(error);
+        alert('Failed to save course (check network): ' + msg);
+        
+        // Re-open modal so they can fix/retry?
+        // this.courseDialog = true; // Optional: Decide if we want to re-open
+    } finally {
+        this.isLoading = false;
+    }
   }
 
   hideDialog() {

@@ -11,11 +11,11 @@
       </p>
     </div>
 
-    <!-- Courses Grid -->
+    <!-- Courses Grid (Displaying Table 2: Special Courses) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       
       <!-- Course Card Item -->
-      <div *ngFor="let course of courses | paginate: { itemsPerPage: 6, currentPage: p }" class="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+      <div *ngFor="let course of displayedCourses | paginate: { itemsPerPage: 6, currentPage: p }" class="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
         
         <!-- Image & Badge -->
         <div class="relative h-56 overflow-hidden">
@@ -32,7 +32,7 @@
           
           <!-- Tags -->
           <div class="flex items-center gap-3 mb-4">
-            <span class="px-3 py-1 rounded-lg bg-purple-100 text-purple-700 text-xs font-bold uppercase tracking-wide">
+            <span class="px-3 py-1 rounded-lg bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide">
               {{ course.category | translate }}
             </span>
             <span class="px-3 py-1 rounded-lg bg-gray-100 text-gray-600 text-xs font-semibold">
@@ -70,7 +70,7 @@
             <span class="text-2xl font-extrabold text-secondary">
               ${{ course.price }}
             </span>
-            <a routerLink="/dateliscourses" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary hover:text-secondary/80 transition-colors group/link">
+            <a [routerLink]="['/course-details', course.sourceType, course.id]" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary hover:text-secondary/80 transition-colors group/link">
               {{ 'COURSES.VIEW_DETAILS' | translate }}
               <svg class="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
             </a>
@@ -78,17 +78,7 @@
 
         </div>
       </div>
-
     </div>
 
-    <!-- Pagination Controls -->
-    <div class="mt-16 flex justify-center">
-      <pagination-controls 
-        (pageChange)="p = $event"
-        [previousLabel]="'COURSES.PREVIOUS' | translate"
-        [nextLabel]="'COURSES.NEXT' | translate"
-        class="my-pagination">
-      </pagination-controls>
-    </div>
-  </div>
-</section>
+    <!-- Special Courses Section Removed (Merged into Main) -->
+    <!-- <div *ngIf="courses2.length > 0" class="mt-16"> ... </div> -->

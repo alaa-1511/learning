@@ -11,18 +11,20 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 
+
 @Component({
   selector: 'app-certifications',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
-    FormsModule, 
+    CommonModule,
+    RouterModule,
+    FormsModule,
     TranslateModule,
     DialogModule,
     ButtonModule,
-    InputTextModule
-  ],
+    InputTextModule,
+    
+],
   templateUrl: './certifications.html'
 })
 export class CertificationsComponent implements OnInit {

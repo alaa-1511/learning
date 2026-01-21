@@ -1,0 +1,70 @@
+<section class="pt-32 pb-24 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6">
+    <div *ngIf="isLoading" class="flex justify-center py-20">
+        <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
+    </div>
+
+    <div *ngIf="!isLoading && course" class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+        <!-- Hero Image -->
+        <div class="relative h-96 w-full">
+            <img [src]="course.image" [alt]="course.title" class="w-full h-full object-cover">
+             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+             <div class="absolute bottom-0 left-0 p-8 md:p-12 text-white">
+                 <span class="px-3 py-1 rounded-lg bg-blue-600/20 backdrop-blur-md border border-white/20 text-white text-sm font-bold uppercase tracking-wide mb-4 inline-block">
+                    {{ course.category | translate }}
+                 </span>
+                 <h1 class="text-4xl md:text-5xl font-extrabold mb-4">{{ course.title }}</h1>
+                 <p class="text-lg text-gray-200 max-w-2xl">{{ course.description }}</p>
+             </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Details Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ 'COURSES.DETAILS' | translate }}</h2>
+                     <!-- Safe HTML for Rich Text -->
+                    <div class="prose prose-blue max-w-none text-gray-600 leading-relaxed" [innerHTML]="course.details"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-32 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <div class="mb-6">
+                        <span class="text-4xl font-extrabold text-blue-600">${{ course.price }}</span>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                            <span class="text-gray-500 font-medium">Level</span>
+                            <span class="font-semibold text-gray-900">{{ course.level }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                            <span class="text-gray-500 font-medium">Students</span>
+                            <span class="font-semibold text-gray-900">{{ course.students }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                            <span class="text-gray-500 font-medium">Rating</span>
+                            <span class="font-semibold text-gray-900 flex items-center gap-1">
+                                <i class="pi pi-star-fill text-yellow-400"></i> {{ course.rating }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1">
+                        Enroll Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="!isLoading && !course" class="text-center py-20">
+        <h3 class="text-xl font-bold text-gray-900">Course not found</h3>
+        <a routerLink="/courses" class="text-blue-600 hover:underline mt-4 inline-block">Back to Courses</a>
+    </div>
+
+  </div>
+</section>

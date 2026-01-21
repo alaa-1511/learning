@@ -4,10 +4,11 @@ import { Auth } from "../../core/layout/auth/auth";
 import { Courses } from "../courses/courses";
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Contact } from "../contact/contact";
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule,  Courses, CarouselModule, TranslateModule],
+  imports: [CommonModule, Courses, CarouselModule, TranslateModule, Contact],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
