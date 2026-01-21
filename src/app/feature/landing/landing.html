@@ -279,20 +279,18 @@
     </div>
 
     <owl-carousel-o [options]="customOptions" class="reviews-carousel relative block">
-      <!-- Review 1 -->
-      <ng-template carouselSlide>
+      <ng-template carouselSlide *ngFor="let review of reviews">
         <div class="p-4 h-full pt-8">
           <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-secondary h-full flex flex-col relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
             <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
               <i class="pi pi-quote-right text-6xl text-secondary"></i>
             </div>
-            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow">
-              "{{ 'LANDING.REVIEWS_LIST.REVIEW1.TEXT' | translate }}"
+            <p class="text-gray-600 text-lg leading-relaxed mb-8 mt-4 relative z-10 flex-grow font-medium" style="white-space: pre-line;">
+              "{{ isAr ? review.textAr : review.textEn }}"
             </p>
             <div class="flex items-end justify-between border-t border-gray-100 pt-6 mt-auto">
               <div>
-                <h4 class="font-bold text-primary text-lg">{{ 'LANDING.REVIEWS_LIST.REVIEW1.NAME' | translate }}</h4>
-                <span class="text-secondary text-sm font-semibold tracking-wide uppercase">{{ 'LANDING.REVIEWS_LIST.REVIEW1.ROLE' | translate }}</span>
+                <h4 class="font-bold text-primary text-lg">{{ isAr ? review.nameAr : review.nameEn }}</h4>
               </div>
               <div class="flex flex-col items-end">
                  <div class="flex gap-1 text-yellow-400 text-sm mb-1">
@@ -308,8 +306,6 @@
           </div>
         </div>
       </ng-template>
-
-
     </owl-carousel-o>
   </div>
 </section>

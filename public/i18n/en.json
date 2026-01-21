@@ -145,9 +145,9 @@
         "REVIEWS_SUBTITLE": "Join hundreds of successful professionals who have advanced their careers with our CIA certification program.",
         "REVIEWS_LIST": {
             "REVIEW1": {
-                "NAME": "Sarah Johnson",
-                "ROLE": "Senior Internal Auditor",
-                "TEXT": "This CIA program was pivotal in my career. The comprehensive coverage of Part 3 gave me the business acumen I needed to excel in my role."
+                "NAME": "Abdulrahman Abdullah",
+                "ROLE": "Student",
+                "TEXT": "Peace be upon you, how are you Mr. Moamen? I have good news, I obtained the fellowship, praise be to God, Lord of the Worlds, after passing my last subject, Finance. I thank you very much, Doctor."
             },
             "REVIEW2": {
                 "NAME": "Michael Ross",
@@ -390,11 +390,9 @@
             "SUBTITLE": "We are dedicated to shaping the next generation of financial leaders through world-class education and practical expertise."
         },
         "ABOUT": {
-            "LABEL": "Who We Are",
-            "TITLE": "Bridging the Gap Between",
-            "TITLE_BR": "Theory and Practice",
-            "DESC_1": "Founded by industry veterans, E-Learning was born from a simple belief: financial education should be accessible, practical, and transformative. We don't just teach concepts; we prepare you for real-world challenges.",
-            "DESC_2": "Our curriculum is designed by CPA holders and financial experts who understand exactly what it takes to succeed in today's competitive landscape.",
+            "LABEL": "About Us",
+            "TITLE_BR": " Instructor Moamen Zakaria ",
+            "DESC_1": "Instructor Moamen Zakaria holds the American CPA fellowship, is a member of the American Institute of Certified Public Accountants (AICPA), holds the Certified Internal Auditor (CIA) and International Standards (IFRS) certificates, and has experience teaching professional accounting certifications.",
             "CERTIFIED_EXPERTS": "Certified Experts",
             "CERTIFIED_EXPERTS_DESC": "Learn from the best in the field",
             "UPDATED_CONTENT": "Updated Content",
