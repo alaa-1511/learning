@@ -17,19 +17,19 @@
         </div>
 
         <!-- Content -->
-        <div class="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="p-8 md:p-12 grid grid-cols-1 md:grid-cols-12 gap-12">
             <!-- Details Column -->
-            <div class="lg:col-span-2 space-y-8">
+            <div class="md:col-span-8 space-y-8">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ 'COURSES.DETAILS' | translate }}</h2>
                      <!-- Safe HTML for Rich Text -->
-                    <div class="prose prose-blue max-w-none text-gray-600 leading-relaxed" [innerHTML]="course.details"></div>
+                    <div class="prose prose-blue max-w-none text-gray-600 leading-relaxed break-words" [innerHTML]="course.details"></div>
                 </div>
             </div>
 
             <!-- Sidebar -->
-            <div class="lg:col-span-1">
-                <div class="sticky top-32 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <div class="md:col-span-4">
+                <div class="sticky top-32 bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-sm">
                     <div class="mb-6">
                         <span class="text-4xl font-extrabold text-blue-600">${{ course.price }}</span>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="space-y-4 mb-8">
                         <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
                             <span class="text-gray-500 font-medium">{{ 'COURSES.DETAILS_PAGE.LEVEL_LABEL' | translate }}</span>
-                            <span class="font-semibold text-gray-900">{{ course.level }}</span>
+                            <span class="font-semibold text-gray-900">{{ course.level | translate }}</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
                             <span class="text-gray-500 font-medium">{{ 'COURSES.DETAILS_PAGE.STUDENTS_LABEL' | translate }}</span>
@@ -55,7 +55,7 @@
                         {{ 'COURSES.DETAILS_PAGE.ENROLL_NOW' | translate }}
                     </button>
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
     

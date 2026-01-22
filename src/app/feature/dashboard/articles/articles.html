@@ -2,12 +2,12 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ 'SIDEBAR.ARTICLES' | translate }}</h1>
-            <p class="text-gray-500 mt-1">Manage news, updates and blog posts.</p>
+            <h1 class="text-2xl font-bold text-gray-900">{{ 'MANAGE_ARTICLES.TITLE' | translate }}</h1>
+            <p class="text-gray-500 mt-1">{{ 'MANAGE_ARTICLES.SUBTITLE' | translate }}</p>
         </div>
         <button (click)="openNew()" class="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30">
             <i class="pi pi-plus"></i>
-            <span>Add New Article</span>
+            <span>{{ 'MANAGE_ARTICLES.ADD_NEW' | translate }}</span>
         </button>
     </div>
 
@@ -57,37 +57,37 @@
             <div class="w-16 h-16 rounded-full bg-gray-50 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
                 <i class="pi pi-plus text-xl group-hover:text-blue-600"></i>
             </div>
-            <span class="font-semibold">Add New Article</span>
+            <span class="font-semibold">{{ 'MANAGE_ARTICLES.ADD_NEW' | translate }}</span>
         </button>
     </div>
 </div>
 
 <!-- Add/Edit Article Dialog -->
-<p-dialog [(visible)]="articleDialog" [modal]="true" [style]="{width: '550px'}" [header]="editingId ? 'Edit Article' : 'Create New Article'" [draggable]="false" [resizable]="false">
+<p-dialog [(visible)]="articleDialog" [modal]="true" [style]="{width: '550px'}" [header]="editingId ? ('MANAGE_ARTICLES.MODAL.EDIT_TITLE' | translate) : ('MANAGE_ARTICLES.MODAL.ADD_TITLE' | translate)" [draggable]="false" [resizable]="false">
     <form [formGroup]="articleForm" class="space-y-4 pt-2">
         <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700">Title</label>
-            <input type="text" formControlName="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Article title" />
+            <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.TITLE' | translate }}</label>
+            <input type="text" formControlName="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.TITLE_PLACEHOLDER' | translate" />
         </div>
         
         <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700">Category</label>
-            <input type="text" formControlName="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="e.g. Technology, Medical" />
+            <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.CATEGORY' | translate }}</label>
+            <input type="text" formControlName="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.CATEGORY_PLACEHOLDER' | translate" />
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block mb-1 text-sm font-medium text-gray-700">Author</label>
-                <input type="text" formControlName="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Author name" />
+                <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.AUTHOR' | translate }}</label>
+                <input type="text" formControlName="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.AUTHOR_PLACEHOLDER' | translate" />
             </div>
             <div>
-                <label class="block mb-1 text-sm font-medium text-gray-700">Date</label>
-                <input type="text" formControlName="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Nov 15, 2025" />
+                <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.DATE' | translate }}</label>
+                <input type="text" formControlName="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.DATE_PLACEHOLDER' | translate" />
             </div>
         </div>
 
         <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700">Image</label>
+            <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.IMAGE' | translate }}</label>
             <div class="flex items-center gap-4">
                 <input type="file" (change)="onFileSelected($event)" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
                 <div *ngIf="articleForm.get('image')?.value" class="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
@@ -99,31 +99,31 @@
         </div>
 
         <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700">Excerpt / Summary</label>
-            <textarea formControlName="excerpt" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Brief summary of the article..."></textarea>
+            <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.EXCERPT' | translate }}</label>
+            <textarea formControlName="excerpt" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.EXCERPT_PLACEHOLDER' | translate"></textarea>
         </div>
 
          <div>
-            <label class="block mb-1 text-sm font-medium text-gray-700">Full Content</label>
-            <textarea formControlName="content" rows="6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Write the full article content here..."></textarea>
+            <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'MANAGE_ARTICLES.MODAL.CONTENT' | translate }}</label>
+            <textarea formControlName="content" rows="6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" [placeholder]="'MANAGE_ARTICLES.MODAL.CONTENT_PLACEHOLDER' | translate"></textarea>
         </div>
     </form>
     <ng-template pTemplate="footer">
-        <button (click)="articleDialog=false" type="button" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+        <button (click)="articleDialog=false" type="button" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ 'MANAGE_ARTICLES.MODAL.CANCEL' | translate }}</button>
         <button (click)="saveArticle()" [disabled]="articleForm.invalid" type="button" class="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
-            {{ editingId ? 'Update Article' : 'Create Article' }}
+            {{ editingId ? ('MANAGE_ARTICLES.MODAL.UPDATE_BTN' | translate) : ('MANAGE_ARTICLES.MODAL.CREATE_BTN' | translate) }}
         </button>
     </ng-template>
 </p-dialog>
 
 <!-- Delete Confirmation Dialog -->
-<p-dialog header="Confirm Deletion" [modal]="true" [(visible)]="deleteDialogVisible" [style]="{ width: '400px' }" [draggable]="false" [resizable]="false">
+<p-dialog [header]="'MANAGE_ARTICLES.MODAL.DELETE_TITLE' | translate" [modal]="true" [(visible)]="deleteDialogVisible" [style]="{ width: '400px' }" [draggable]="false" [resizable]="false">
     <div class="flex items-center gap-4 py-4">
         <i class="pi pi-exclamation-triangle text-3xl text-red-500"></i>
-        <span class="text-gray-600">Are you sure you want to delete this article? This action cannot be undone.</span>
+        <span class="text-gray-600">{{ 'MANAGE_ARTICLES.MODAL.DELETE_WARNING' | translate }}</span>
     </div>
     <ng-template pTemplate="footer">
-        <button (click)="deleteDialogVisible=false" type="button" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
-        <button (click)="confirmDelete()" type="button" class="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+        <button (click)="deleteDialogVisible=false" type="button" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ 'MANAGE_ARTICLES.MODAL.CANCEL' | translate }}</button>
+        <button (click)="confirmDelete()" type="button" class="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">{{ 'MANAGE_ARTICLES.MODAL.CONFIRM_DELETE' | translate }}</button>
     </ng-template>
 </p-dialog>

@@ -356,11 +356,41 @@
             "CANCEL_DELETE": "No, keep it"
         }
     },
+    "MANAGE_ARTICLES": {
+        "TITLE": "Articles Management",
+        "SUBTITLE": "Manage news, updates and blog posts.",
+        "ADD_NEW": "Add New Article",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "MODAL": {
+            "ADD_TITLE": "Create New Article",
+            "EDIT_TITLE": "Edit Article",
+            "TITLE": "Title",
+            "TITLE_PLACEHOLDER": "Article title",
+            "CATEGORY": "Category",
+            "CATEGORY_PLACEHOLDER": "e.g. Technology, Medical",
+            "AUTHOR": "Author",
+            "AUTHOR_PLACEHOLDER": "Author name",
+            "DATE": "Date",
+            "DATE_PLACEHOLDER": "Nov 15, 2025",
+            "IMAGE": "Image",
+            "EXCERPT": "Excerpt / Summary",
+            "EXCERPT_PLACEHOLDER": "Brief summary of the article...",
+            "CONTENT": "Full Content",
+            "CONTENT_PLACEHOLDER": "Write the full article content here...",
+            "CANCEL": "Cancel",
+            "CREATE_BTN": "Create Article",
+            "UPDATE_BTN": "Update Article",
+            "DELETE_TITLE": "Confirm Deletion",
+            "DELETE_WARNING": "Are you sure you want to delete this article? This action cannot be undone.",
+            "CONFIRM_DELETE": "Delete"
+        }
+    },
     "ARTICLES_PAGE": {
         "TITLE": "Accounting Insights",
         "SUBTITLE": "Stay ahead with the latest trends, tips, and strategies in the world of finance and accounting.",
-        "LIST.READ_MORE": "Read Article",
         "LIST": {
+             "READ_MORE": "Read Article",
              "ARTICLE1": {
                   "TITLE": "Introduction to Financial Accounting",
                   "EXCERPT": "Understand the basics of financial accounting, including the balance sheet, income statement, and cash flow statement.",
@@ -480,7 +510,21 @@
         "AVAILABLE_CERTIFICATIONS": "Available Certifications",
         "COURSES": "Courses",
         "GET_CERTIFIED": "Get Certified",
-        "VERIFY": "Verify"
+        "VERIFY": "Verify",
+        "DOWNLOAD": "Download",
+        "VERIFY_TITLE": "Verify Certificate",
+        "ENTER_ID_LABEL": "Certificate ID",
+        "ID_HELP_TEXT": "Enter the unique ID found on your certificate.",
+        "CANCEL": "Cancel",
+        "SIGNATURE_NAME": "E-Learning Team"
+    },
+    "SCOPA_PAGE": {
+        "BADGE": "Professional Certification",
+        "TITLE_HIGHLIGHT": "SOCPA Certification",
+        "TITLE_SUFFIX": " – Your Path to Professional Accounting in Saudi Arabia",
+        "DESCRIPTION": "Learn about the importance, eligibility, exam system, postponement rules, and exam schedule",
+        "START_BTN": "Start your scopa",
+        "GUIDE_BTN": "Download SOCPA Guide"
     }
 }
 

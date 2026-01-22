@@ -4,17 +4,17 @@
             <div class="flex flex-col gap-6">
                 <div>
                     <span class="border border-secondary rounded-full px-4 py-2 text-secondary bg-primary/10 font-bold text-sm">
-                        Professional Certification
+                        {{ 'SCOPA_PAGE.BADGE' | translate }}
                     </span>
                 </div>
                 <h1 class="text-3xl md:text-6xl font-semibold leading-tight">
-                    <span class="text-secondary uppercase">SOCPA Certification</span>
-                    <span class="text-primary"> – Your Path to Professional Accounting in Saudi Arabia</span>
+                    <span class="text-secondary uppercase">{{ 'SCOPA_PAGE.TITLE_HIGHLIGHT' | translate }}</span>
+                    <span class="text-primary">{{ 'SCOPA_PAGE.TITLE_SUFFIX' | translate }}</span>
                 </h1>
-                <p class="text-lg text-gray-600">Learn about the importance, eligibility, exam system, postponement rules, and exam schedule</p>
+                <p class="text-lg text-gray-600">{{ 'SCOPA_PAGE.DESCRIPTION' | translate }}</p>
                 <div class="flex gap-4">
-                    <button class="bg-primary text-white px-6 py-2 rounded-md hover:bg-secondary transition-colors duration-300 cursor-pointer">Start your scopa  <i class= "ps-1 p pi pi-arrow-right"></i></button>
-                    <button class="bg-white text-primary px-6 py-2 rounded-md border border-primary hover:bg-primary hover:text-white transition-colors duration-300 cursor-pointer"> <i class="pi pi-download"></i> Dropdown SOCPA Guide</button>
+                    <button routerLink="/free-trail" class="bg-primary text-white px-6 py-2 rounded-md hover:bg-secondary transition-colors duration-300 cursor-pointer">{{ 'SCOPA_PAGE.START_BTN' | translate }}  <i class= "ps-1 p pi pi-arrow-right"></i></button>
+                    <button routerLink="/certifications" class="bg-white text-primary px-6 py-2 rounded-md border border-primary hover:bg-primary hover:text-white transition-colors duration-300 cursor-pointer"> <i class="pi pi-download"></i> {{ 'SCOPA_PAGE.GUIDE_BTN' | translate }}</button>
                 </div>
             </div>
             

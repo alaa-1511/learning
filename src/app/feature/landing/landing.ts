@@ -5,6 +5,7 @@ import { Courses } from "../courses/courses";
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Contact } from "../contact/contact";
+import { RouterLink } from '@angular/router';
 
 
 export interface Review {
@@ -16,7 +17,7 @@ export interface Review {
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, Courses, CarouselModule, TranslateModule, Contact],
+  imports: [CommonModule, Courses, CarouselModule, TranslateModule, Contact ,RouterLink],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
