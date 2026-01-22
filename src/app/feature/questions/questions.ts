@@ -1,5 +1,4 @@
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -45,10 +44,14 @@ export class Questions implements OnInit {
   passed: boolean = false;
   reviewMode: boolean = false;
 
+  timer: any;
+  remainingTime: number = 0;
+
   constructor(
     private questionService: QuestionService, 
     private courseService: CourseService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -80,6 +83,10 @@ export class Questions implements OnInit {
        });
     });
   }
+  
+  ngOnDestroy() {
+      this.stopTimer();
+  }
 
   // Actions
   enroll(exam: Exam) {
@@ -90,13 +97,47 @@ export class Questions implements OnInit {
     this.selectedExam = exam;
     this.currentView = 'exam';
     this.currentQuestionIndex = 0;
+    this.reviewMode = false;
     
     // Reset selections
     this.selectedExam.questions.forEach(q => q.selectedAnswer = undefined);
+
+    // Initialize Timer
+    if (this.selectedExam.config?.durationMinutes) {
+        this.remainingTime = Math.floor(Number(this.selectedExam.config.durationMinutes) * 60);
+        this.startTimer();
+    } else {
+        this.remainingTime = 0;
+    }
+  }
+
+  startTimer() {
+      this.stopTimer();
+      this.timer = setInterval(() => {
+          if (this.remainingTime > 0) {
+              this.remainingTime--;
+              this.cd.detectChanges();
+          } else {
+              this.submitExam(true);
+          }
+      }, 1000);
+  }
+
+  stopTimer() {
+      if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+      }
+  }
+
+  get formattedTime(): string {
+      const minutes: number = Math.floor(this.remainingTime / 60);
+      const seconds: number = this.remainingTime % 60;
+      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
   selectAnswer(optionIndex: number) {
-    if (this.selectedExam) {
+    if (this.selectedExam && !this.reviewMode) {
       this.selectedExam.questions[this.currentQuestionIndex].selectedAnswer = optionIndex;
     }
   }
@@ -117,8 +158,13 @@ export class Questions implements OnInit {
     }
   }
 
-  submitExam() {
+  submitExam(timeUp: boolean = false) {
     if (!this.selectedExam) return;
+    this.stopTimer();
+
+    if (timeUp) {
+        alert('Time is up! Your exam has been submitted automatically.');
+    }
 
     let correctCount = 0;
     this.selectedExam.questions.forEach(q => {
@@ -130,7 +176,6 @@ export class Questions implements OnInit {
     this.score = correctCount;
     this.percentage = Math.round((correctCount / this.selectedExam.questions.length) * 100);
     this.passed = this.percentage >= 70; // 70% passing grade
-    this.passed = this.percentage >= 70; // 70% passing grade
     this.currentView = 'result';
   }
 
@@ -141,9 +186,9 @@ export class Questions implements OnInit {
   }
 
   reset() {
+    this.stopTimer();
     this.selectedExam = null;
     this.currentView = 'list';
-    this.score = 0;
     this.score = 0;
     this.percentage = 0;
     this.reviewMode = false;

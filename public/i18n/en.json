@@ -213,6 +213,7 @@
         "PASSWORD_PATTERN": "Password must contain at least 1 number and 1 special char."
     },
     "QUESTIONS": {
+        "TIME_REMAINING": "Time Remaining",
         "QUESTIONS_COUNT": "Questions",
         "MINUTES": "Minutes",
         "DURATION": "Duration",

@@ -65,17 +65,28 @@
           <!-- VIEW 2: EXAM INTERFACE -->
           <div *ngIf="currentView === 'exam' && selectedExam" class="animate-fade-in max-w-3xl mx-auto">
             
+            <!-- Timer & Stats Header -->
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <!-- Timer (Only visible in exam mode with duration) -->
+                <div *ngIf="remainingTime > 0 && !reviewMode" class="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-2 animate-fade-in">
+                    <i class="pi pi-clock text-blue-600"></i>
+                    <span class="text-sm font-semibold text-gray-500 hidden sm:inline">{{ 'QUESTIONS.TIME_REMAINING' | translate }}:</span>
+                    <span class="font-mono font-bold text-xl text-gray-900" [class.text-red-500]="remainingTime < 60">{{ formattedTime }}</span>
+                </div>
+                
+                <!-- Progress Stats -->
+                <div class="flex items-center gap-4 text-sm font-medium text-gray-500 ml-auto">
+                     <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: selectedExam.questions.length} }}</span>
+                     <span class="hidden sm:inline">•</span>
+                     <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
+                </div>
+            </div>
+
             <!-- Progress Bar -->
-            <div class="mb-8">
-              <div class="flex justify-between items-center mb-2 text-sm font-semibold text-gray-500">
-                 <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: selectedExam.questions.length} }}</span>
-                 <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                <div class="bg-secondary h-3 transition-all duration-500" 
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
+                <div class="bg-secondary h-full transition-all duration-500" 
                      [style.width.%]="((currentQuestionIndex + 1) / selectedExam.questions.length) * 100">
                 </div>
-              </div>
             </div>
 
             <!-- Question Navigator Grid -->
