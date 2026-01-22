@@ -350,7 +350,7 @@
     "ARTICLES_PAGE": {
         "TITLE": "Accounting Insights",
         "SUBTITLE": "Stay ahead with the latest trends, tips, and strategies in the world of finance and accounting.",
-        "READ_ARTICLE": "Read Article",
+        "LIST.READ_MORE": "Read Article",
         "LIST": {
              "ARTICLE1": {
                   "TITLE": "Introduction to Financial Accounting",
