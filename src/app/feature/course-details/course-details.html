@@ -1,10 +1,8 @@
 <section class="pt-32 pb-24 bg-gray-50 min-h-screen">
   <div class="max-w-7xl mx-auto px-6">
-    <div *ngIf="isLoading" class="flex justify-center py-20">
-        <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
-    </div>
+    
 
-    <div *ngIf="!isLoading && course" class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+    <div *ngIf="course" class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
         <!-- Hero Image -->
         <div class="relative h-96 w-full">
             <img [src]="course.image" [alt]="course.title" class="w-full h-full object-cover">
@@ -61,9 +59,14 @@
         </div>
     </div>
     
-    <div *ngIf="!isLoading && !course" class="text-center py-20">
+    <div *ngIf="!course && !isLoading" class="text-center py-20">
         <h3 class="text-xl font-bold text-gray-900">Course not found</h3>
         <a routerLink="/courses" class="text-blue-600 hover:underline mt-4 inline-block">Back to Courses</a>
+    </div>
+
+    <div *ngIf="isLoading" class="text-center py-20">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+        <p class="mt-2 text-gray-500">Loading course details...</p>
     </div>
 
   </div>

@@ -58,7 +58,8 @@
             "BEGINNER": "Beginner",
             "INTERMEDIATE": "Intermediate",
             "ADVANCED": "Advanced"
-        }
+        },
+        "DETAILS": "Course Details"
     },
     "FOOTER": {
         "DESCRIPTION": "Empowering professionals with world-class education. Join our community and take your career to the next level.",

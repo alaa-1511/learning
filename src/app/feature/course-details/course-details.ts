@@ -12,8 +12,8 @@ import { CourseService, Course } from '../../core/service/course.service';
 })
 export class CourseDetails  {
   course: Course | null = null;
-  isLoading = true;
-
+  isLoading = true; // Add loading state
+ 
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService
@@ -24,12 +24,20 @@ export class CourseDetails  {
     const type = this.route.snapshot.paramMap.get('type'); // 'standard' or 'special'
 
     if (id) {
-       if (type === 'special') {
-           this.course = await this.courseService.getCourse2ById(id);
-       } else {
-           this.course = await this.courseService.getCourseById(id);
+       try {
+           if (type === 'special') {
+               this.course = await this.courseService.getCourse2ById(id);
+           } else {
+               this.course = await this.courseService.getCourseById(id);
+           }
+       } catch (error) {
+           console.error('Error loading course', error);
+       } finally {
+           this.isLoading = false;
        }
+    } else {
+        this.isLoading = false;
     }
-    this.isLoading = false;
+  
   }
 }
