@@ -41,6 +41,11 @@ export class QuestionsManagement implements OnInit {
 
   questionToDelete: Question | null = null;
   
+  // Alert Modal State
+  alertDialogVisible: boolean = false;
+  alertMessage: string = '';
+  alertHeader: string = 'Notification';
+  
   questionForm: FormGroup;
   examSettingsForm: FormGroup;
 
@@ -92,6 +97,12 @@ export class QuestionsManagement implements OnInit {
   ) {
     this.questionForm = this.createForm();
     this.examSettingsForm = this.createExamSettingsForm();
+  }
+
+  showAlert(message: string, header: string = 'Notification') {
+      this.alertMessage = message;
+      this.alertHeader = header;
+      this.alertDialogVisible = true;
   }
 
   ngOnInit() {
@@ -413,7 +424,7 @@ export class QuestionsManagement implements OnInit {
             if (error?.code === 'PGRST205' || error?.message?.includes('Could not find the table')) {
                 const projectId = 'rfvvnutdtnousxlgkvik'; // From environment
                 const url = `https://supabase.com/dashboard/project/${projectId}/sql`;
-                alert(`DATABASE ERROR: Tables are missing!\n\nYou must run the SQL script in Supabase.\n1. Go to: ${url}\n2. Paste the SQL code provided in the chat.\n3. Click Run.`);
+                this.showAlert(`DATABASE ERROR: Tables are missing!\n\nYou must run the SQL script in Supabase.\n1. Go to: ${url}\n2. Paste the SQL code provided in the chat.\n3. Click Run.`, 'Database Error');
                 window.open(url, '_blank');
             }
             return;

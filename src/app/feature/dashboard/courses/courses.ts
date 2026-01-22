@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from 'primeng/editor';
+import { DialogModule } from 'primeng/dialog';
 import { CourseService, Course } from '../../../core/service/course.service';
 
 @Component({
@@ -15,7 +16,8 @@ import { CourseService, Course } from '../../../core/service/course.service';
     ReactiveFormsModule,
     NgxPaginationModule,
     TranslateModule,
-    EditorModule
+    EditorModule,
+    DialogModule
   ],
   templateUrl: './courses.html',
   styleUrls: ['./courses.css']
@@ -39,8 +41,14 @@ export class CoursesManagement implements OnInit {
   isLoading: boolean = false;
   
   // Pagination
+  // Pagination
   p: number = 1;
   currentSearch: string = '';
+
+  // Alert Modal State
+  alertDialogVisible: boolean = false;
+  alertMessage: string = '';
+  alertHeader: string = 'Notification';
 
   constructor(
     private courseService: CourseService,
@@ -57,12 +65,18 @@ export class CoursesManagement implements OnInit {
     });
   }
 
+  showAlert(message: string, header: string = 'Notification') {
+      this.alertMessage = message;
+      this.alertHeader = header;
+      this.alertDialogVisible = true;
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       // Check file size (limit to 500KB for Base64 performance)
       if (file.size > 500 * 1024) {
-        alert('Image is too large! Please choose an image under 500KB to ensure fast saving.');
+        this.showAlert('Image is too large! Please choose an image under 500KB to ensure fast saving.', 'Error');
         event.target.value = ''; // Clear input
         return;
       }
@@ -171,7 +185,7 @@ export class CoursesManagement implements OnInit {
         } catch (error) {
             console.error('Error deleting course:', error);
             // Only alert on error, not success
-            alert('Failed to delete course (check network).');
+            this.showAlert('Failed to delete course (check network).', 'Error');
         } finally {
             this.isLoading = false;
         }
@@ -181,14 +195,14 @@ export class CoursesManagement implements OnInit {
   async saveCourse() {
     this.submitted = true;
     if (this.courseForm.invalid) {
-        alert('Please fill in all required fields marked with *');
+        this.showAlert('Please fill in all required fields marked with *', 'Validation Error');
         return;
     }
 
     // Protection: Check if "Details" (Rich Text) is too large (e.g. pasted images)
     const detailsContent = this.courseForm.get('details')?.value || '';
     if (detailsContent.length > 300000) { // ~300KB limit for text
-        alert('The "Details" content is too large! DO NOT paste images directly into the text editor. Use the Image URL field instead.');
+        this.showAlert('The "Details" content is too large! DO NOT paste images directly into the text editor. Use the Image URL field instead.', 'Validation Error');
         return;
     }
 
@@ -240,7 +254,7 @@ export class CoursesManagement implements OnInit {
         
         // Error: Show alert since we optimistically closed the modal
         const msg = error.message || error.error_description || error.details || JSON.stringify(error);
-        alert('Failed to save course (check network): ' + msg);
+        this.showAlert('Failed to save course (check network): ' + msg, 'Error');
         
         // Re-open modal so they can fix/retry?
         // this.courseDialog = true; // Optional: Decide if we want to re-open

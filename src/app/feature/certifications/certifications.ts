@@ -37,12 +37,23 @@ export class CertificationsComponent implements OnInit {
   error: string | null = null;
   loading: boolean = false;
 
+  // Alert Modal State
+  alertDialogVisible: boolean = false;
+  alertMessage: string = '';
+  alertHeader: string = 'Notification';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private certService: CertificationService,
     private courseService: CourseService
   ) {}
+
+  showAlert(message: string, header: string = 'Notification') {
+      this.alertMessage = message;
+      this.alertHeader = header;
+      this.alertDialogVisible = true;
+  }
 
   ngOnInit() {
     // Load all courses for display
@@ -121,11 +132,11 @@ export class CertificationsComponent implements OnInit {
         })
         .catch((err: unknown) => {
             console.error('Error generating image:', err);
-            alert('Error generating certificate: ' + err);
+            this.showAlert('Error generating certificate: ' + err, 'Error');
         });
     } else {
         console.error('Certificate container not found');
-        alert('Error: Certificate element not found');
+        this.showAlert('Error: Certificate element not found', 'Error');
     }
   }
 }

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { CourseService, Course } from '../../core/service/course.service';
 import { Router } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number;
@@ -25,7 +26,7 @@ interface Exam {
 @Component({
   selector: 'app-free-trail',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, FormsModule, DialogModule],
   templateUrl: './free-trail.html',
   styleUrl: './free-trail.css',
 })
@@ -42,6 +43,11 @@ export class FreeTrail implements OnInit {
 
   timer: any;
   remainingTime: number = 0;
+
+  // Alert Modal State
+  alertDialogVisible: boolean = false;
+  alertMessage: string = '';
+  alertHeader: string = 'Notification';
 
   constructor(
     private questionService: QuestionService, 
@@ -86,7 +92,7 @@ export class FreeTrail implements OnInit {
   // Actions
   enroll(exam: Exam) {
     if (exam.questions.length === 0) {
-        alert('No questions available for this exam yet.');
+        this.showAlert('No questions available for this exam yet.', 'Notice');
         return;
     }
     this.selectedExam = exam;
@@ -102,6 +108,12 @@ export class FreeTrail implements OnInit {
     } else {
         this.remainingTime = 0;
     }
+  }
+
+  showAlert(message: string, header: string = 'Notification') {
+      this.alertMessage = message;
+      this.alertHeader = header;
+      this.alertDialogVisible = true;
   }
 
   startTimer() {
@@ -156,7 +168,7 @@ export class FreeTrail implements OnInit {
     this.stopTimer();
 
     if (timeUp) {
-        alert('Time is up! Your exam has been submitted automatically.');
+        this.showAlert('Time is up! Your exam has been submitted automatically.', 'Time Expired');
     }
 
     let correctCount = 0;

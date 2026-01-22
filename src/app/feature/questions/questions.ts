@@ -6,6 +6,7 @@ import { QuestionService, Question, ExamConfig } from '../../core/service/questi
 
 import { CourseService, Course } from '../../core/service/course.service';
 import { Router, RouterModule } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
@@ -26,7 +27,7 @@ interface Exam {
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, RouterModule],
+  imports: [CommonModule, TranslateModule, FormsModule, RouterModule, DialogModule],
   templateUrl: './questions.html',
   styleUrl: './questions.css',
 })
@@ -46,6 +47,11 @@ export class Questions implements OnInit {
 
   timer: any;
   remainingTime: number = 0;
+
+  // Alert Modal State
+  alertDialogVisible: boolean = false;
+  alertMessage: string = '';
+  alertHeader: string = 'Notification';
 
   constructor(
     private questionService: QuestionService, 
@@ -91,7 +97,7 @@ export class Questions implements OnInit {
   // Actions
   enroll(exam: Exam) {
     if (exam.questions.length === 0) {
-        alert('No questions available for this exam yet.');
+        this.showAlert('No questions available for this exam yet.', 'Notice');
         return;
     }
     this.selectedExam = exam;
@@ -109,6 +115,12 @@ export class Questions implements OnInit {
     } else {
         this.remainingTime = 0;
     }
+  }
+
+  showAlert(message: string, header: string = 'Notification') {
+      this.alertMessage = message;
+      this.alertHeader = header;
+      this.alertDialogVisible = true;
   }
 
   startTimer() {
@@ -163,7 +175,7 @@ export class Questions implements OnInit {
     this.stopTimer();
 
     if (timeUp) {
-        alert('Time is up! Your exam has been submitted automatically.');
+        this.showAlert('Time is up! Your exam has been submitted automatically.', 'Time Expired');
     }
 
     let correctCount = 0;

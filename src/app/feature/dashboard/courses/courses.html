@@ -214,3 +214,16 @@
         </div>
     </div>
 </div>
+
+<!-- Alert Modal -->
+<p-dialog [(visible)]="alertDialogVisible" [modal]="true" [style]="{width: '400px'}" [header]="alertHeader" [draggable]="false" [resizable]="false">
+    <div class="flex items-center gap-4 mb-4">
+        <i class="pi pi-info-circle text-blue-500 text-3xl"></i>
+        <p class="text-gray-700 leading-relaxed">{{ alertMessage }}</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <button (click)="alertDialogVisible=false" type="button" class="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">
+            OK
+        </button>
+    </ng-template>
+</p-dialog>
