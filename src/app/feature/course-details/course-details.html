@@ -36,15 +36,15 @@
 
                     <div class="space-y-4 mb-8">
                         <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
-                            <span class="text-gray-500 font-medium">Level</span>
+                            <span class="text-gray-500 font-medium">{{ 'COURSES.DETAILS_PAGE.LEVEL_LABEL' | translate }}</span>
                             <span class="font-semibold text-gray-900">{{ course.level }}</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
-                            <span class="text-gray-500 font-medium">Students</span>
+                            <span class="text-gray-500 font-medium">{{ 'COURSES.DETAILS_PAGE.STUDENTS_LABEL' | translate }}</span>
                             <span class="font-semibold text-gray-900">{{ course.students }}</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
-                            <span class="text-gray-500 font-medium">Rating</span>
+                            <span class="text-gray-500 font-medium">{{ 'COURSES.DETAILS_PAGE.RATING_LABEL' | translate }}</span>
                             <span class="font-semibold text-gray-900 flex items-center gap-1">
                                 <i class="pi pi-star-fill text-yellow-400"></i> {{ course.rating }}
                             </span>
@@ -52,7 +52,7 @@
                     </div>
 
                     <button class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1">
-                        Enroll Now
+                        {{ 'COURSES.DETAILS_PAGE.ENROLL_NOW' | translate }}
                     </button>
                 </div>
             </div>
@@ -60,13 +60,13 @@
     </div>
     
     <div *ngIf="!course && !isLoading" class="text-center py-20">
-        <h3 class="text-xl font-bold text-gray-900">Course not found</h3>
-        <a routerLink="/courses" class="text-blue-600 hover:underline mt-4 inline-block">Back to Courses</a>
+        <h3 class="text-xl font-bold text-gray-900">{{ 'COURSES.DETAILS_PAGE.COURSE_NOT_FOUND' | translate }}</h3>
+        <a routerLink="/courses" class="text-blue-600 hover:underline mt-4 inline-block">{{ 'COURSES.DETAILS_PAGE.BACK_TO_COURSES' | translate }}</a>
     </div>
 
     <div *ngIf="isLoading" class="text-center py-20">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-        <p class="mt-2 text-gray-500">Loading course details...</p>
+        <p class="mt-2 text-gray-500">{{ 'COURSES.DETAILS_PAGE.LOADING' | translate }}</p>
     </div>
 
   </div>

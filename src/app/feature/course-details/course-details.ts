@@ -24,6 +24,20 @@ export class CourseDetails  {
     const type = this.route.snapshot.paramMap.get('type'); // 'standard' or 'special'
 
     if (id) {
+       // Try synchronous load first for instant display
+       if (type === 'special') {
+           this.course = this.courseService.getCourse2ByIdSync(id) || null;
+       } else {
+           this.course = this.courseService.getCourseByIdSync(id) || null;
+       }
+
+       // If found synchronously, stop loading immediately
+       if (this.course) {
+           this.isLoading = false;
+           return;
+       }
+
+       // Fallback to async load if not found in memory (e.g. refresh)
        try {
            if (type === 'special') {
                this.course = await this.courseService.getCourse2ById(id);
@@ -38,6 +52,5 @@ export class CourseDetails  {
     } else {
         this.isLoading = false;
     }
-  
   }
 }

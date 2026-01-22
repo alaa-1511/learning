@@ -59,7 +59,16 @@
             "INTERMEDIATE": "Intermediate",
             "ADVANCED": "Advanced"
         },
-        "DETAILS": "Course Details"
+        "DETAILS": "Course Details",
+        "DETAILS_PAGE": {
+            "LEVEL_LABEL": "Level",
+            "STUDENTS_LABEL": "Students",
+            "RATING_LABEL": "Rating",
+            "ENROLL_NOW": "Enroll Now",
+            "COURSE_NOT_FOUND": "Course not found",
+            "BACK_TO_COURSES": "Back to Courses",
+            "LOADING": "Loading course details..."
+        }
     },
     "FOOTER": {
         "DESCRIPTION": "Empowering professionals with world-class education. Join our community and take your career to the next level.",

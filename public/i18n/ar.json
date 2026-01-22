@@ -65,7 +65,16 @@
             "INTERMEDIATE": "متوسط",
             "ADVANCED": "متقدم"
         },
-        "DETAILS": "تفاصيل الدورة"
+        "DETAILS": "تفاصيل الدورة",
+        "DETAILS_PAGE": {
+            "LEVEL_LABEL": "المستوى",
+            "STUDENTS_LABEL": "الطلاب",
+            "RATING_LABEL": "التقييم",
+            "ENROLL_NOW": "سجل الآن",
+            "COURSE_NOT_FOUND": "الدورة غير موجودة",
+            "BACK_TO_COURSES": "العودة للدورات",
+            "LOADING": "جاري تحميل تفاصيل الدورة..."
+        }
     },
     "FOOTER": {
         "DESCRIPTION": "تمكين المهنيين من خلال تعليم عالمي المستوى. انضم إلى مجتمعنا وارتقِ بمسيرتك المهنية إلى المستوى التالي.",

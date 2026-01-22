@@ -58,7 +58,7 @@ export class CourseService {
       level: course.level,
       image: course.image,
       description: course.description,
-      // details: course.details,
+      details: course.details,
       rating: course.rating,
       students: course.students,
       price: course.price,
@@ -95,7 +95,7 @@ export class CourseService {
        level: updatedCourse.level,
        image: updatedCourse.image,
        description: updatedCourse.description,
-       // details: updatedCourse.details,
+       details: updatedCourse.details,
        rating: updatedCourse.rating,
        students: updatedCourse.students,
        price: updatedCourse.price,
@@ -260,6 +260,14 @@ export class CourseService {
       return null;
     }
     return { ...data, isFreeTrial: false };
+  }
+
+  getCourseByIdSync(id: number): Course | undefined {
+    return this.coursesSubject.value.find(c => c.id === id);
+  }
+
+  getCourse2ByIdSync(id: number): Course | undefined {
+      return this.courses2Subject.value.find(c => c.id === id);
   }
 }
 
