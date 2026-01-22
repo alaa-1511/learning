@@ -273,7 +273,7 @@
     },
     "MANAGE_QUESTIONS": {
         "TITLE": "Question Bank",
-        "SUBTITLE": "Manage exam questions for CIA Parts 1, 2, and 3",
+        "SUBTITLE": "Manage exam questions ",
         "ADD_NEW": "Add New Question",
         "SEARCH_PLACEHOLDER": "Search questions...",
         "ALL_PARTS": "All Parts",
