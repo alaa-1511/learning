@@ -51,54 +51,10 @@
             </li> <li>
               <a routerLink="/courses" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
             </li>
-                   <li> 
+           <li> 
             <a routerLink="/scopa" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.SOCPA Certificate' | translate }}</a>
           </li> 
 
-
-
-    <!-- <button id="multiLevelDropdownButton" data-dropdown-toggle="multi-dropdown" data-dropdown-trigger="hover" class=" cursor-pointer inline-flex items-center justify-center text-primary hover:text-secondary text-lg w-full md:w-auto py-2 px-3 md:p-0" type="button">
-      {{ 'NAVBAR.Our Services' | translate }} 
-      <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
-    </button> -->
-    
-    <!-- Dropdown menu -->
-    <!-- <div id="multi-dropdown" class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
-        <ul class="p-2 text-sm text-body font-medium" aria-labelledby="multiLevelDropdownButton">
-          <li>
-            <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exams' | translate }}</a>
-          </li>
-          <li>
-            <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" data-dropdown-trigger="hover" type="button" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">
-            {{ 'NAVBAR.IMPORTANT_BLOGS' | translate }}
-              <svg class="h-4 w-4 ms-auto rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
-            </button>
-              <div id="doubleDropdown" class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
-                <ul class="p-2 text-sm text-body font-medium" aria-labelledby="doubleDropdownButton">
-                  <li>
-                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exam Practice' | translate }}</a>
-                  </li>
-                  <li>
-                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Exam Course Enrollment' | translate }}</a>
-                  </li>
-                  <li>
-                    <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.Overview of the Questions' | translate }}</a>
-                  </li>
-                 
-                </ul>
-            </div>
-          </li>
-          <li>
-            <a routerLink="/scopa" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.SOCPA Certificate' | translate }}</a>
-          </li>
-          <li>
-            <a routerLink="/certifications" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{{ 'NAVBAR.CERTIFICATION_VERIFICATION' | translate }}</a>
-          </li>
-       
-         
-        </ul>
-    </div> -->
-    
           
             <li>
               <a routerLink="/articles"  routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>
@@ -113,13 +69,11 @@
               <a routerLink="/who-are" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.WHO_WE_ARE' | translate }}</a>
             </li>
             <!-- Mobile buttons only -->
-            <li class="mt-2 md:mt-0 md:hidden">
-              @if (!isLoggedIn()===true) {
-               <button routerLink="/login" type="button" class="text-white bg-primary hover:bg-white hover:text-primary box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium rounded-base leading-5 text-sm px-5 py-2 focus:outline-none transition-colors  ease-in-out duration-300 hover:scale-105   cursor-pointer ">{{ 'NAVBAR.LOGIN' | translate}}</button>
-               <button routerLink="/register" type="button" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
-              } @else {
-                       <button type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
-              }
+            <li class="mt-2    md:mt-0 md:hidden">
+                        <button routerLink="/register"  type="button" class=" me-6 bg-primary text-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
+
+             <button   type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
+
             </li>
            
 
