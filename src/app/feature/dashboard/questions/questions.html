@@ -297,7 +297,23 @@
             <!-- Answer Explanation / Model Answer (Visible for all) -->
             <div class="mb-2">
                  <label class="block mb-2 text-sm font-semibold text-gray-900">Answer Explanation / Model Answer</label>
-                 <textarea formControlName="answerExplanation" rows="3" class="block p-3 w-full text-gray-700 bg-gray-50/50 rounded-xl border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-y" placeholder="Explain the correct answer..."></textarea>
+                 <p-editor formControlName="answerExplanation" [style]="{ height: '150px' }" placeholder="Explain the correct answer (supports rich text)...">
+                     <ng-template pTemplate="header">
+                        <span class="ql-formats">
+                            <button class="ql-bold" aria-label="Bold"></button>
+                            <button class="ql-italic" aria-label="Italic"></button>
+                            <button class="ql-underline" aria-label="Underline"></button>
+                        </span>
+                         <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                    </ng-template>
+                </p-editor>
             </div>
 
         </form>
@@ -406,3 +422,4 @@
         </button>
     </ng-template>
 </p-dialog>
+  

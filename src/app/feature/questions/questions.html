@@ -155,8 +155,7 @@
                             <i class="pi pi-info-circle text-secondary text-xl mt-1"></i>
                             <div>
                                 <h4 class="font-bold text-gray-800 mb-2">{{ 'QUESTIONS.EXPLANATION' | translate }}</h4>
-                                <p class="text-gray-600 leading-relaxed">
-                                    {{ selectedExam.questions[currentQuestionIndex].answerExplanation }}
+                                <p class="text-gray-600 leading-relaxed" [innerHTML]="selectedExam.questions[currentQuestionIndex].answerExplanation">
                                 </p>
                             </div>
                         </div>
