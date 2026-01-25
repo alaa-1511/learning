@@ -526,6 +526,27 @@
         "DESCRIPTION": "Learn about the importance, eligibility, exam system, postponement rules, and exam schedule",
         "START_BTN": "Start your scopa",
         "GUIDE_BTN": "Download SOCPA Guide"
+    },
+    "CONTACT": {
+        "TITLE": "Contact Us",
+        "MESSAGE": "Message",
+        "MESSAGE_PLACEHOLDER": "Enter your message here...",
+        "SUBMIT": "Send Message",
+        "CERTIFICATES": {
+            "CAT": "CAT",
+            "CERT_IA": "Cert IA",
+            "CERT_IFR": "Cert IFR",
+            "CFA": "CFA",
+            "CIA": "CIA",
+            "CMA": "CMA",
+            "CME": "CME",
+            "CPA": "CPA",
+            "DIPIFRS": "DipIFRS",
+            "SOCPA": "SOCPA",
+            "STEP": "STEP"
+        }
     }
+
+
 }
 

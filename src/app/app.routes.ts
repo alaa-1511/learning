@@ -17,6 +17,18 @@ import { Articles } from './feature/articles/articles';
 import { WhoAre } from './feature/who-are/who-are';
 import { Scopa } from './feature/scopa/scopa';
 import { FreeTrail } from './feature/free-trail/free-trail';
+import { CAT } from './feature/contact/cat/cat';
+import { CertIFR } from './feature/contact/cert-ifr/cert-ifr';
+import { CertIA } from './feature/contact/cert-ia/cert-ia';
+import { CFA } from './feature/contact/cfa/cfa';
+import { CIA } from './feature/contact/cia/cia';
+import { CMA } from './feature/contact/cma/cma';
+import { CME } from './feature/contact/cme/cme';
+import { CPA } from './feature/contact/cpa/cpa';
+import { DIPIFRS } from './feature/contact/dipifrs/dipifrs';
+import { STEP } from './feature/contact/step/step';
+import { SOCPACE } from './feature/contact/socpa/socpa';
+
 
 
 
@@ -34,6 +46,17 @@ export const routes: Routes = [
       {path:'who-are', component: WhoAre},
       {path:'scopa', component: Scopa},
       {path:'free-trail', component: FreeTrail},
+    {path:'cat', component: CAT},
+    {path:'cert-ifr', component: CertIFR},
+    {path:'cert-ia', component: CertIA },
+{path:'cfa', component: CFA},
+{path:'cia', component: CIA},
+{path:'cma', component: CMA},
+{path:'cme', component: CME},
+{path:'cpa', component: CPA},
+{path:'dipifrs', component: DIPIFRS},
+{path:'scopa', component: SOCPACE},
+{path:'step', component: STEP},
     
     ]
 

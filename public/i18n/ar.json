@@ -3,7 +3,7 @@
         "HOME": "الرئيسية",
         "COURSES": "الدورات",
         "ARTICLES": "المقالات",
-        "FREE-TRAIL": "توجربة مجانية",
+        "FREE-TRAIL": "التجربة المجانية",
         "TESTBANK": "بنك الأسئلة",
         "QUESTIONS": "الأسئلة",
         "WHO_WE_ARE": "عننا",
@@ -31,7 +31,7 @@
     "COURSES": {
         "TITLE": "استكشف أفضل الدورات المهنية",
         "SUBTITLE": "طوّر مسارك المهني مع دوراتنا التي يقودها خبراء والمصممة للمحترفين في كل مرحلة من رحلتهم.",
-        "FREE_TRIAL": "توجربة مجانية",
+        "FREE_TRIAL": "تجربة مجانية",
         "STUDENTS": "طالب",
         "VIEW_DETAILS": "عرض التفاصيل",
         "PREVIOUS": "السابق",
@@ -537,5 +537,24 @@
         "DESCRIPTION": "تعرف على الأهمية، شروط الأهلية، نظام الاختبارات، قواعد التأجيل، وجدول الاختبارات",
         "START_BTN": "ابدأ رحلة السوكبا",
         "GUIDE_BTN": "تحميل دليل السوكبا"
+    },
+    "CONTACT": {
+        "TITLE": "تواصل معنا",
+        "MESSAGE": "الرسالة",
+        "MESSAGE_PLACEHOLDER": "أدخل رسالتك هنا...",
+        "SUBMIT": "إرسال الرسالة",
+        "CERTIFICATES": {
+            "CAT": "CAT",
+            "CERT_IA": "IA شهادة",
+            "CERT_IFR": "IFR شهادة",
+            "CFA": "CFA",
+            "CIA": "CIA",
+            "CMA": "CMA",
+            "CME": "CME",
+            "CPA": "CPA",
+            "DIPIFRS": "DipIFRS",
+            "SOCPA": "SOCPA",
+            "STEP": "STEP"
+        }
     }
 }
