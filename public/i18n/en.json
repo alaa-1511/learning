@@ -545,8 +545,163 @@
             "SOCPA": "SOCPA",
             "STEP": "STEP"
         }
+    },
+    "CERTIFICATES_PAGE": {
+        "OVERVIEW": "Overview",
+        "INTERESTED": "Interested in this Certification?",
+        "CONTACT_US": "Contact Us",
+        "CONTACT_US_DESC": "Have valid questions? Our team is here to help you start your journey.",
+        "AUDIENCE": "Target Audience",
+        "REQUIREMENTS": "Prerequisites",
+        "TOPICS": "Key Topics Covered",
+        "DETAILS": {
+            "CAT": {
+                "TITLE": "Certified Accounting Technician (CAT)",
+                "SUBTITLE": "A vocational qualification designed to give you the skills you need to support financial managers.",
+                "DESC": "The CAT qualification is internationally focused and structured mainly for those who wish to pursue a career in finance and accounting. It provides a solid foundation in all areas of accounting.",
+                "AUDIENCE": "Students, entry-level finance professionals, and those looking to start a career in accounting.",
+                "REQ": "No formal academic qualifications required. Open to anyone.",
+                "TOPICS": [
+                    "Recording Financial Transactions",
+                    "Management Information",
+                    "Maintening Financial Records",
+                    "Managing Costs and Finance"
+                ]
+            },
+            "CERT_IA": {
+                "TITLE": "Certificate in International Auditing (Cert IA)",
+                "SUBTITLE": "Gain a comprehensive understanding of International Standards on Auditing (ISAs).",
+                "DESC": "This certificate covers the principles of International Standards on Auditing (ISAs) and how to apply them. It is ideal for audit professionals who want to demonstrate their expertise in international auditing standards.",
+                "AUDIENCE": "Qualified accountants and auditors who need to update their knowledge of ISAs.",
+                "REQ": "Background in auditing or accounting is recommended.",
+                "TOPICS": [
+                    "International Standards on Auditing (ISAs)",
+                    "Audit planning and risk assessment",
+                    "Internal control evaluation",
+                    "Audit evidence and reporting"
+                ]
+            },
+            "CERT_IFR": {
+                "TITLE": "Certificate in International Financial Reporting (Cert IFR)",
+                "SUBTITLE": "Master the basics of International Financial Reporting Standards (IFRS).",
+                "DESC": "The Cert IFR offers a broad introduction to the field of International Financial Reporting and International Financial Reporting Standards. It traces the history of the International Accounting Standards Board (IASB) from its early roots to the present day.",
+                "AUDIENCE": "Professional accountants and auditors qualified in national accounting standards.",
+                "REQ": "Educational background in accounting.",
+                "TOPICS": [
+                    "Nature and operations of the IASB",
+                    "Status and use of IFRS standards",
+                    "Presentation and profit",
+                    "Accounting for assets and liabilities"
+                ]
+            },
+            "CFA": {
+                "TITLE": "Chartered Financial Analyst (CFA)",
+                "SUBTITLE": "The gold standard in the investment industry.",
+                "DESC": "The CFA charter is a designation given to those who have completed the CFA Program and completed acceptable work experience requirements. It is one of the most respected designations in finance and acts as the gold standard for the industry.",
+                "AUDIENCE": "Investment professionals, portfolio managers, research analysts, and finance students.",
+                "REQ": "Bachelor's degree (or final year student) or professional work experience.",
+                "TOPICS": [
+                    "Ethical and Professional Standards",
+                    "Quantitative Methods",
+                    "Economics",
+                    "Financial Statement Analysis"
+                ]
+            },
+            "CIA": {
+                "TITLE": "Certified Internal Auditor (CIA)",
+                "SUBTITLE": "The only globally recognized internal audit certification.",
+                "DESC": "As the only globally recognized internal audit certification, becoming a Certified Internal Auditor® (CIA®) is the optimum way to communicate knowledge, skills, and competencies to effectively carry out professional responsibilities for any internal audit anywhere in the world.",
+                "AUDIENCE": "Internal auditors, risk management professionals, and compliance officers.",
+                "REQ": "Bachelor's degree and internal audit experience (varies by education level).",
+                "TOPICS": [
+                    "Essentials of Internal Auditing",
+                    "Practice of Internal Auditing",
+                    "Business Knowledge for Internal Auditing"
+                ]
+            },
+            "CMA": {
+                "TITLE": "Certified Management Accountant (CMA)",
+                "SUBTITLE": "The benchmark for management accountants and financial professionals.",
+                "DESC": "The CMA certification has been the global benchmark for management accountants and financial professionals. You can master the 12 most critical practice areas in management accounting.",
+                "AUDIENCE": "Management accountants, financial analysts, and finance managers.",
+                "REQ": "Bachelor's degree and 2 years of professional experience.",
+                "TOPICS": [
+                    "Financial Planning, Performance, and Analytics",
+                    "Strategic Financial Management",
+                    "Cost Management",
+                    "Internal Controls"
+                ]
+            },
+            "CME": {
+                "TITLE": "CME Certification",
+                "SUBTITLE": "Capital Market Examination.",
+                "DESC": "A specialized certification for professionals working in the capital market sector, demonstrating knowledge of regulations and best practices.",
+                "AUDIENCE": "Professionals in brokerage firms, asset management, and investment banking.",
+                "REQ": "Varies by specific exam part.",
+                "TOPICS": [
+                    "Capital Market Regulations",
+                    "Securities Operations",
+                    "Compliance and Anti-Money Laundering",
+                    "Investment Fundamentals"
+                ]
+            },
+            "CPA": {
+                "TITLE": "Certified Public Accountant (CPA)",
+                "SUBTITLE": "The highest standard of competence in accountancy.",
+                "DESC": "The CPA license is the accounting profession’s highest standard of competence, a symbol of achievement and assurance of quality. It provides assurance to the public that the accountant has mastery of the body of knowledge and skills necessary.",
+                "AUDIENCE": "Public accountants, auditors, tax professionals, and consultants.",
+                "REQ": "150 semester hours of education and passing the Uniform CPA Exam.",
+                "TOPICS": [
+                    "Auditing and Attestation (AUD)",
+                    "Business Environment and Concepts (BEC)",
+                    "Financial Accounting and Reporting (FAR)",
+                    "Regulation (REG)"
+                ]
+            },
+            "DIPIFRS": {
+                "TITLE": "Diploma in International Financial Reporting (DipIFR)",
+                "SUBTITLE": "Advanced knowledge in IFRS for finance professionals.",
+                "DESC": "The Diploma in International Financial Reporting (DipIFR) is for finance professionals who need to acquire a detailed understanding of IFRS. It is designed to develop your knowledge and understanding of International Financial Reporting Standards.",
+                "AUDIENCE": "Professional accountants and auditors working in an international environment.",
+                "REQ": "Professional accounting qualification or 3 years' relevant experience.",
+                "TOPICS": [
+                    "International sources of authority",
+                    "Elements of financial statements",
+                    "Presentation of accounts",
+                    "Preparation of external financial reports"
+                ]
+            },
+            "SOCPA": {
+                "TITLE": "Saudi Organization for Chartered and Professional Accountants (SOCPA)",
+                "SUBTITLE": "The premier accounting certification in Saudi Arabia.",
+                "DESC": "SOCPA fellowship indicates that the holder has demonstrated deep knowledge and competence in accounting, auditing, zakat, and tax in the Kingdom of Saudi Arabia.",
+                "AUDIENCE": "Accountants and auditors practicing in Saudi Arabia.",
+                "REQ": "Bachelor's degree in accounting (or equivalent with additional hours).",
+                "TOPICS": [
+                    "Accounting",
+                    "Auditing",
+                    "Zakat and Tax",
+                    "Business Law",
+                    "Economics and Finance"
+                ]
+            },
+            "STEP": {
+                "TITLE": "STEP Certification",
+                "SUBTITLE": "Trusted estate practitioner.",
+                "DESC": "A certification for professionals specializing in family inheritance and succession planning.",
+                "AUDIENCE": "Lawyers, accountants, tax advisors, and trust specialists.",
+                "REQ": "Relevant professional qualification or experience.",
+                "TOPICS": [
+                    "Trusts and Estates",
+                    "Taxation of Trusts and Estates",
+                    "Trust and Estate Accounting",
+                    "Administration of Trusts"
+                ]
+            }
+        }
     }
-
-
 }
+
+
+
 

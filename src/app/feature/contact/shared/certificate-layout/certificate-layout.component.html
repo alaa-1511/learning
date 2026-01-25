@@ -1,0 +1,76 @@
+<section class="pt-28 bg-gray-50 min-h-screen">
+  <div class=" ">
+    <div class="  bg-white  overflow-hidden">
+      <!-- Hero Section -->
+      <div class="bg-primary p-10 h-[270px] text-white text-center relative overflow-hidden bg-cover bg-center bg-no-repeat" [style.background-image]="'url(\'' + image + '\')'">
+        <div class="absolute inset-0 bg-primary/30 z-0"></div>
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-white/10 rounded-full blur-3xl z-0"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 h-48 bg-white/10 rounded-full blur-3xl z-0"></div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 relative z-10">{{ title }}</h1>
+        <p class="text-xl text-white/90 max-w-2xl mx-auto relative z-10">{{ subtitle }}</p>
+      </div>
+
+      <!-- Content Section -->
+      <div class="p-8 md:p-12">
+        <!-- Overview -->
+        <div class="mb-10">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="w-2 h-8 bg-secondary rounded-full"></span>
+            {{ 'CERTIFICATES_PAGE.OVERVIEW' | translate }}
+          </h2>
+          <p class="text-gray-600 leading-relaxed text-lg">
+            {{ description }}
+          </p>
+        </div>
+
+        <!-- Key Features / What you'll learn -->
+        
+        <div class="grid md:grid-cols-2 gap-12 mb-12">
+            <!-- Target Audience -->
+            <div *ngIf="targetAudience">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-primary rounded-full"></span>
+                    {{ 'CERTIFICATES_PAGE.AUDIENCE' | translate }}
+                </h3>
+                <p class="text-gray-600 leading-relaxed">{{ targetAudience }}</p>
+            </div>
+
+            <!-- Requirements -->
+            <div *ngIf="requirements">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-primary rounded-full"></span>
+                    {{ 'CERTIFICATES_PAGE.REQUIREMENTS' | translate }}
+                </h3>
+                <p class="text-gray-600 leading-relaxed">{{ requirements }}</p>
+            </div>
+        </div>
+
+        <!-- Topics -->
+        <div *ngIf="topics?.length" class="mb-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <span class="w-2 h-6 bg-secondary rounded-full"></span>
+                {{ 'CERTIFICATES_PAGE.TOPICS' | translate }}
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div *ngFor="let topic of topics" class="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div class="mt-1 w-2 h-2 rounded-full bg-secondary flex-shrink-0"></div>
+                    <span class="text-gray-700">{{ topic }}</span>
+                </div>
+            </div>
+        </div>
+
+        <ng-content></ng-content>
+
+        <!-- CTA Section -->
+        <div class="mt-12 p-8 bg-gray-50 rounded-xl border border-gray-100 text-center">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ 'CERTIFICATES_PAGE.INTERESTED' | translate }}</h3>
+            <p class="text-gray-600 mb-6">{{ 'CERTIFICATES_PAGE.CONTACT_US_DESC' | translate }}</p>
+            <button routerLink="/contact" class="inline-block bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                {{ 'CERTIFICATES_PAGE.CONTACT_US' | translate }}
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

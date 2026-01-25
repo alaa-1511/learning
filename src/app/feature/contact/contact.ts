@@ -4,11 +4,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Input } from '../../shared/components/input/input';
 
 import { ContactService } from '../../core/service/contact';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-contact',
-  imports: [ReactiveFormsModule, Input, TranslateModule ,RouterLink],
+  imports: [ReactiveFormsModule, Input, TranslateModule, RouterLink, RouterLinkActive],
   templateUrl: './contact.html',
   styleUrl: './contact.css',
 })
