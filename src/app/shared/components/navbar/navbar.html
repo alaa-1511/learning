@@ -38,17 +38,26 @@
         <div class="items-center  justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
           <ul class="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-base bg-gray-50 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-50">
             
-             <li   class="dropdown"
-                (mouseenter)="open()"
-                (mouseleave)="close()">
+             <li class="dropdown"
+                (mouseenter)="openQuestions()"
+                (mouseleave)="closeQuestions()">
               <a routerLink="/questions" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.TESTBANK' | translate }}</a>
-              <div class="dropdown-mini" *ngIf="showSelector()">
+              <div class="dropdown-mini" *ngIf="showQuestionsSelector()">
                 <app-questions  [mini]="true" ></app-questions>
               </div>
             </li>
-            <li>
+             <li class="dropdown"
+                (mouseenter)="openFreeTrial()"
+                (mouseleave)="closeFreeTrial()">
               <a routerLink="/free-trail" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
-            </li> <li>
+              <div class="dropdown-mini" *ngIf="showFreeTrialSelector()">
+                <app-free-trail  [minii]="true" ></app-free-trail>
+              </div>
+            </li>
+            <!-- <li>
+              <a routerLink="/free-trail" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
+            </li> -->
+             <li>
               <a routerLink="/courses" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
             </li>
            <li> 

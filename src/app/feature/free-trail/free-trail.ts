@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { CourseService, Course } from '../../core/service/course.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number;
@@ -26,11 +27,12 @@ interface Exam {
 @Component({
   selector: 'app-free-trail',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, DialogModule],
+  imports: [CommonModule, TranslateModule, FormsModule, DialogModule ,RouterLink],
   templateUrl: './free-trail.html',
   styleUrl: './free-trail.css',
 })
 export class FreeTrail implements OnInit {
+   @Input() minii: boolean = false;
   currentView: string = 'list';
   exams: Exam[] = [];
 
@@ -53,8 +55,13 @@ export class FreeTrail implements OnInit {
     private questionService: QuestionService, 
     private courseService: CourseService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
+
+  safeHtml(content: string | undefined): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(content || '');
+  }
 
   ngOnInit() {
     // Subscribe to questions first to see which courses have content

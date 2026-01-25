@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { CourseService, Course } from '../../core/service/course.service';
 import { Router, RouterModule } from '@angular/router';
@@ -57,8 +58,13 @@ export class Questions implements OnInit {
     private questionService: QuestionService, 
     private courseService: CourseService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
+
+  safeHtml(content: string | undefined): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(content || '');
+  }
 
   ngOnInit() {
     this.questionService.questions$.subscribe(questions => {

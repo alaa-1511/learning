@@ -108,8 +108,8 @@
             </div>
 
             <!-- Question Card -->
-            <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100">
-              <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed" [innerHTML]="selectedExam.questions[currentQuestionIndex].text | translate">
+            <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100 break-words max-w-full">
+              <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed break-words" [innerHTML]="safeHtml(selectedExam.questions[currentQuestionIndex].text | translate)">
               </h3>
 
               <!-- Options (Multiple Choice & True/False) -->
@@ -132,7 +132,7 @@
                            <i *ngIf="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
                       </div>
                       
-                      <span [class.font-semibold]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="text-primary text-lg">{{ option | translate }}</span>
+                      <span class="font-semibold text-primary text-lg break-words" [innerHTML]="safeHtml(option | translate)"></span>
                  </div>
               </div>
 
@@ -149,13 +149,13 @@
                </div>
 
                <!-- Explanation Div (Only in Review Mode) -->
-                <div *ngIf="reviewMode && selectedExam.questions[currentQuestionIndex].answerExplanation" class="mb-10 animate-fade-in">
+                <div *ngIf="reviewMode && selectedExam.questions[currentQuestionIndex].answerExplanation" class="mb-10 animate-fade-in break-words">
                     <div class="bg-blue-50 border-l-4 border-secondary p-6 rounded-r-xl">
                         <div class="flex items-start gap-3">
                             <i class="pi pi-info-circle text-secondary text-xl mt-1"></i>
                             <div>
                                 <h4 class="font-bold text-gray-800 mb-2">{{ 'QUESTIONS.EXPLANATION' | translate }}</h4>
-                                <p class="text-gray-600 leading-relaxed" [innerHTML]="selectedExam.questions[currentQuestionIndex].answerExplanation">
+                                <p class="text-gray-600 leading-relaxed overflow-hidden" [innerHTML]="safeHtml(selectedExam.questions[currentQuestionIndex].answerExplanation)">
                                 </p>
                             </div>
                         </div>

@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/auth/auth/authservice';
 import { SpecailEmail } from '../../../core/service/specailemail';
 import { Questions } from "../../../feature/questions/questions";
+import { FreeTrail } from "../../../feature/free-trail/free-trail";
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule, RouterLinkActive, Questions],
+  imports: [RouterLink, TranslateModule, FormsModule, TranslatePipe, CommonModule, RouterLinkActive, Questions, FreeTrail],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -25,14 +26,26 @@ export class Navbar {
   private readonly specialEmail = inject(SpecailEmail);
 
   isAdmin = signal<boolean>(false);
- showSelector  =signal<boolean>(false)
- open() {
-    this.showSelector.set(true);
+  showQuestionsSelector = signal<boolean>(false);
+  showFreeTrialSelector = signal<boolean>(false);
+
+  openQuestions() {
+    this.showQuestionsSelector.set(true);
   }
 
-  close() {
-    this.showSelector.set(false);
+  closeQuestions() {
+    this.showQuestionsSelector.set(false);
   }
+
+  openFreeTrial() {
+    this.showFreeTrialSelector.set(true);
+  }
+
+  closeFreeTrial() {
+    this.showFreeTrialSelector.set(false);
+  }
+
+
   constructor() {
   }
 
