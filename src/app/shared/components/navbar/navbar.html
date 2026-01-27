@@ -36,9 +36,9 @@
         <!-- Main hidden menu -->
          <!-- @if (isLoggedIn()===true) { -->
         <div class="items-center  justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-          <ul class="font-medium flex flex-col items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-base bg-gray-50 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-50">
+          <ul class="font-medium flex flex-col md:items-center p-0 md:p-0 mt-4  bg-gray-50 md:flex-row md:space-x-4 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-50">
             
-             <li class="dropdown"
+             <li class="dropdown w-full md:w-auto border-b border-gray-300 md:border-0"
                 (mouseenter)="openQuestions()"
                 (mouseleave)="closeQuestions()">
               <a routerLink="/questions" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.TESTBANK' | translate }}</a>
@@ -46,7 +46,7 @@
                 <app-questions  [mini]="true" ></app-questions>
               </div>
             </li>
-             <li class="dropdown"
+             <li class="dropdown w-full md:w-auto border-b border-gray-300 md:border-0"
                 (mouseenter)="openFreeTrial()"
                 (mouseleave)="closeFreeTrial()">
               <a routerLink="/free-trail" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
@@ -57,29 +57,29 @@
             <!-- <li>
               <a routerLink="/free-trail" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.FREE-TRAIL' | translate }}</a>
             </li> -->
-             <li>
+             <li class="w-full md:w-auto border-b border-gray-300 md:border-0">
               <a routerLink="/courses" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.COURSES' | translate }}</a>
             </li>
-           <li> 
+           <li class="w-full md:w-auto border-b border-gray-300 md:border-0"> 
             <a routerLink="/scopa" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.SOCPA Certificate' | translate }}</a>
           </li> 
 
           
-            <li>
+            <li class="w-full md:w-auto border-b border-gray-300 md:border-0">
               <a routerLink="/articles"  routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.ARTICLES' | translate }}</a>
             </li>
             
              @if (isAdmin()) {
-             <li>
+             <li class="w-full md:w-auto border-b border-gray-300 md:border-0">
             <a routerLink="/dashboard" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.DASHBOARD' | translate }}</a>
           </li>
           }
-            <li>
+            <li class="w-full md:w-auto border-b border-gray-300 md:border-0">
               <a routerLink="/who-are" routerLinkActive="active" class="block text-lg py-2 px-3 text-primary rounded hover:text-secondary md:hover:bg-transparent md:border-0 md:p-0">{{ 'NAVBAR.WHO_WE_ARE' | translate }}</a>
             </li>
             <!-- Mobile buttons only -->
-            <li class="mt-2    md:mt-0 md:hidden">
-                        <button routerLink="/register"  type="button" class=" me-6 bg-primary text-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
+            <li class="flex flex-col gap-2 p-4 w-full md:w-auto md:mt-0 md:hidden">
+                        <button routerLink="/register"  type="button" class="bg-primary text-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.SIGNUP' | translate}}</button>
 
              <button   type="button" (click)="logout()" class="text-primary bg-white hover:bg-primary hover:text-white box-border border border-primary focus:ring-4 focus:ring-secondary/50 shadow-xs font-medium leading-5 rounded-base text-sm px-5 py-2 focus:outline-none transition-colors ease-in-out duration-300 hover:scale-105 cursor-pointer ">{{ 'NAVBAR.LOGOUT' | translate}}</button>
 
