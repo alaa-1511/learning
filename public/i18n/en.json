@@ -549,8 +549,8 @@
     "CERTIFICATES_PAGE": {
         "OVERVIEW": "Overview",
         "INTERESTED": "Interested in this Certification?",
-        "CONTACT_US": "Contact Us",
-        "CONTACT_US_DESC": "Have valid questions? Our team is here to help you start your journey.",
+        "CONTACT_US": "Certificates",
+        "CONTACT_US_DESC": "Explore our range of accredited professional certificates and start your journey towards career excellence.",
         "AUDIENCE": "Target Audience",
         "REQUIREMENTS": "Prerequisites",
         "TOPICS": "Key Topics Covered",
@@ -620,73 +620,46 @@
                 ]
             },
             "CMA": {
-                "TITLE": "Certified Management Accountant (CMA)",
-                "SUBTITLE": "The benchmark for management accountants and financial professionals.",
-                "DESC": "The CMA certification has been the global benchmark for management accountants and financial professionals. You can master the 12 most critical practice areas in management accounting.",
+                "TITLE": "What is CMA?",
+                "SUBTITLE": "Certified Management Accountant",
+                "DESC": "The Certified Management Accountant (CMA) credential is the advanced professional certification specifically designed to measure the accounting and financial management skills that drive business performance.",
                 "AUDIENCE": "Management accountants, financial analysts, and finance managers.",
-                "REQ": "Bachelor's degree and 2 years of professional experience.",
-                "TOPICS": [
-                    "Financial Planning, Performance, and Analytics",
-                    "Strategic Financial Management",
-                    "Cost Management",
-                    "Internal Controls"
-                ]
+                "REQ": "Bachelor's degree and 2 years of professional experience in management accounting or financial management.",
+                "TOPICS": "Financial Planning, Performance, and Analytics; Strategic Financial Management."
             },
             "CME": {
-                "TITLE": "CME Certification",
-                "SUBTITLE": "Capital Market Examination.",
-                "DESC": "A specialized certification for professionals working in the capital market sector, demonstrating knowledge of regulations and best practices.",
-                "AUDIENCE": "Professionals in brokerage firms, asset management, and investment banking.",
-                "REQ": "Varies by specific exam part.",
-                "TOPICS": [
-                    "Capital Market Regulations",
-                    "Securities Operations",
-                    "Compliance and Anti-Money Laundering",
-                    "Investment Fundamentals"
-                ]
+                "TITLE": "What is CME?",
+                "SUBTITLE": "Capital Market Examination",
+                "DESC": "The CME examinations are regulatory exams for professionals working in the Saudi capital market. They ensure that individuals have the necessary knowledge of laws, regulations, and operations.",
+                "AUDIENCE": "Professionals working or intending to work in the Saudi Stock Exchange (Tadawul) and related financial sectors.",
+                "REQ": "Varies depending on the specific CME exam (CME-1, CME-2, etc.).",
+                "TOPICS": "Capital Market Law, Securities Operations, Compliance, Regulations."
             },
             "CPA": {
-                "TITLE": "Certified Public Accountant (CPA)",
-                "SUBTITLE": "The highest standard of competence in accountancy.",
-                "DESC": "The CPA license is the accounting profession’s highest standard of competence, a symbol of achievement and assurance of quality. It provides assurance to the public that the accountant has mastery of the body of knowledge and skills necessary.",
-                "AUDIENCE": "Public accountants, auditors, tax professionals, and consultants.",
-                "REQ": "150 semester hours of education and passing the Uniform CPA Exam.",
-                "TOPICS": [
-                    "Auditing and Attestation (AUD)",
-                    "Business Environment and Concepts (BEC)",
-                    "Financial Accounting and Reporting (FAR)",
-                    "Regulation (REG)"
-                ]
+                "TITLE": "What is CPA?",
+                "SUBTITLE": "Certified Public Accountant",
+                "DESC": "The Certified Public Accountant (CPA) is the statutory title of qualified accountants in the United States and other jurisdictions. It signifies the highest level of competence in accounting.",
+                "AUDIENCE": "Public accountants, auditors, tax consultants, and financial advisors.",
+                "REQ": "150 semester hours of education (Master's level), passing the Uniform CPA Exam, and work experience.",
+                "TOPICS": "Auditing and Attestation (AUD), Business Environment and Concepts (BEC), Financial Accounting and Reporting (FAR), Regulation (REG)."
             },
             "DIPIFRS": {
-                "TITLE": "Diploma in International Financial Reporting (DipIFR)",
-                "SUBTITLE": "Advanced knowledge in IFRS for finance professionals.",
-                "DESC": "The Diploma in International Financial Reporting (DipIFR) is for finance professionals who need to acquire a detailed understanding of IFRS. It is designed to develop your knowledge and understanding of International Financial Reporting Standards.",
-                "AUDIENCE": "Professional accountants and auditors working in an international environment.",
-                "REQ": "Professional accounting qualification or 3 years' relevant experience.",
-                "TOPICS": [
-                    "International sources of authority",
-                    "Elements of financial statements",
-                    "Presentation of accounts",
-                    "Preparation of external financial reports"
-                ]
+                "TITLE": "What is DipIFR?",
+                "SUBTITLE": "Diploma in International Financial Reporting",
+                "DESC": "The Diploma in International Financial Reporting (DipIFR) is for finance professionals who need to acquire a detailed knowledge of IFRS. It is a higher-level qualification than the Certificate.",
+                "AUDIENCE": "Accountants and auditors working in an IFRS environment.",
+                "REQ": "Professional accounting qualification or 3 years of relevant experience.",
+                "TOPICS": "International sources of authority, Elements of financial statements, Presentation of financial statements, Preparation of external financial reports."
             },
             "SOCPA": {
-                "TITLE": "Saudi Organization for Chartered and Professional Accountants (SOCPA)",
-                "SUBTITLE": "The premier accounting certification in Saudi Arabia.",
-                "DESC": "SOCPA fellowship indicates that the holder has demonstrated deep knowledge and competence in accounting, auditing, zakat, and tax in the Kingdom of Saudi Arabia.",
-                "AUDIENCE": "Accountants and auditors practicing in Saudi Arabia.",
-                "REQ": "Bachelor's degree in accounting (or equivalent with additional hours).",
-                "TOPICS": [
-                    "Accounting",
-                    "Auditing",
-                    "Zakat and Tax",
-                    "Business Law",
-                    "Economics and Finance"
-                ]
+                "TITLE": "What is SOCPA?",
+                "SUBTITLE": "Saudi Organization for Chartered and Professional Accountants",
+                "DESC": "The SOCPA fellowship is the premier accounting qualification in Saudi Arabia. It certifies that the holder has the professional competence to practice accounting and auditing in the Kingdom.",
+                "AUDIENCE": "Accountants and auditors wishing to practice in Saudi Arabia.",
+                "REQ": "Bachelor's degree in Accounting.",
+                "TOPICS": "Accounting, Auditing, Zakat and Tax, Commercial Law, Jurisprudence of Transactions."
             },
             "STEP": {
-                "TITLE": "STEP Certification",
                 "SUBTITLE": "Trusted estate practitioner.",
                 "DESC": "A certification for professionals specializing in family inheritance and succession planning.",
                 "AUDIENCE": "Lawyers, accountants, tax advisors, and trust specialists.",
