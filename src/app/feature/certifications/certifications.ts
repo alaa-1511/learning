@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +28,8 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './certifications.html'
 })
 export class CertificationsComponent implements OnInit {
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
   verificationVisible: boolean = false;
   verificationId: string = '';
 
@@ -46,7 +48,9 @@ export class CertificationsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private certService: CertificationService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private ngZone: NgZone,
+    private cd: ChangeDetectorRef
   ) {}
 
   showAlert(message: string, header: string = 'Notification') {
@@ -83,23 +87,52 @@ export class CertificationsComponent implements OnInit {
       this.verificationVisible = false;
   }
 
-  async verifyCertificate() {
-      if (!this.searchId.trim()) return;
+  async verifyCertificate(id: string | null = null) {
+      // Prioritize explicit ID, then ViewChild value, then ngModel
+      let searchKey = id;
+      if (searchKey === null && this.searchInput && this.searchInput.nativeElement) {
+          searchKey = this.searchInput.nativeElement.value;
+      }
+      if (searchKey === null) {
+          searchKey = this.searchId;
+      }
       
-      this.loading = true;
-      this.error = null;
-      this.certificate = null;
+      if (!searchKey?.trim()) return;
+      
+      this.ngZone.run(() => {
+          this.searchId = searchKey!;
+          this.loading = true;
+          this.error = null;
+          this.certificate = null;
+      });
 
-      // Simulate network delay for effect
-      // setTimeout(async () => {
-          const cert = await this.certService.getCertificateById(this.searchId.trim());
-          if (cert) {
-              this.certificate = cert;
-          } else {
-              this.error = 'Certificate not found. Please check the ID and try again.';
-          }
-          this.loading = false;
-      // }, 500);
+      try {
+          const cert = await this.certService.getCertificateById(searchKey.trim());
+
+          this.ngZone.run(() => {
+              if (cert) {
+                  this.certificate = cert;
+                  // Auto-scroll to certificate after a brief moment for rendering
+                  setTimeout(() => {
+                      const element = document.getElementById('certificate-paper');
+                      if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                  }, 100);
+              } else {
+                  this.error = 'Certificate not found. Please check the ID and try again.';
+              }
+              this.loading = false;
+              this.cd.detectChanges(); // Force UI update
+          });
+      } catch (err) {
+          console.error(err);
+          this.ngZone.run(() => {
+              this.error = 'An error occurred while verifying the certificate.';
+              this.loading = false;
+              this.cd.detectChanges(); // Force UI update
+          });
+      }
   }
 
   printCertificate() {
@@ -107,36 +140,38 @@ export class CertificationsComponent implements OnInit {
   }
 
   downloadCertificate() {
-    console.log('Download started (html-to-image)');
-    const data = document.getElementById('certificate-container');
+    this.loading = true; // Use loading state to show feedback during generation
+    const data = document.getElementById('certificate-paper');
+    
     if (data) {
-        console.log('Element found', data);
         
-        toPng(data, { cacheBust: true })
+        toPng(data, { 
+            cacheBust: true,
+            pixelRatio: 2 // Higher resolution
+        })
         .then((dataUrl: string) => {
-            console.log('PNG generated');
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 297; // A4 height in mm
             
-            // Calculate height to maintain aspect ratio, but max out at A4 height
-            // We use an actual Image object to get dimensions of the generated PNG
-            const img = new Image();
-            img.src = dataUrl;
-            img.onload = () => {
-                 const imgHeight = img.height * imgWidth / img.width;
-                 const pdf = new jsPDF('p', 'mm', 'a4');
-                 pdf.addImage(dataUrl, 'PNG', 0, 0, imgWidth, imgHeight);
-                 pdf.save(`certificate-${this.certificate?.id || 'download'}.pdf`);
-                 console.log('PDF saved');
-            };
+            // A4 Landscape dimensions in mm
+            const pdfWidth = 297; 
+            const pdfHeight = 210;
+            
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            
+            // Add image filling the PDF completely
+            pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`Certificate_${this.certificate?.studentName.replace(/\s+/g, '_')}_${this.certificate?.id}.pdf`);
+            
+            this.loading = false;
         })
         .catch((err: unknown) => {
             console.error('Error generating image:', err);
             this.showAlert('Error generating certificate: ' + err, 'Error');
+            this.loading = false;
         });
     } else {
         console.error('Certificate container not found');
         this.showAlert('Error: Certificate element not found', 'Error');
+        this.loading = false;
     }
   }
 }

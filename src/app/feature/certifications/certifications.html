@@ -8,77 +8,104 @@
             </p>
         </div>
         
-        <div class="mt-8 flex gap-4 max-w-md mx-auto">
+        <form (ngSubmit)="verifyCertificate()" class="mt-8 flex gap-4 max-w-md mx-auto">
             <div class="relative flex-1">
-                <input [(ngModel)]="searchId" (keyup.enter)="verifyCertificate()" type="text" 
-                    class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm shadow-sm" 
+                <input #searchInput [(ngModel)]="searchId" name="certificateId" type="text" 
+                    class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm" 
                     [placeholder]="'CERTIFICATION.PLACEHOLDER' | translate">
             </div>
-            <button (click)="verifyCertificate()" [disabled]="loading" class="group relative flex justify-center py-3 px-6 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all">
+            <button type="submit" class="group relative flex justify-center py-3 px-6 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all whitespace-nowrap min-w-[140px] overflow-hidden">
                 <span *ngIf="loading"><i class="pi pi-spin pi-spinner"></i></span>
                 <span *ngIf="!loading">{{ 'CERTIFICATION.VERIFY_BTN' | translate }}</span>
             </button>
-        </div>
+        </form>
 
         <div *ngIf="error" class="bg-red-50 border-1 border-red-200 text-red-600 rounded-lg p-4 mt-4 text-sm font-medium animate-fade-in text-center">
             {{ error || ('CERTIFICATION.NOT_FOUND' | translate) }}
         </div>
     </div>
 
-    <!-- Certificate Display -->
-    <div *ngIf="certificate" id="certificate-container" class="mt-12 w-full max-w-4xl bg-white shadow-2xl rounded-xl overflow-hidden border-8 border-double border-gray-100 animate-fade-in-up relative">
-        <div class="relative p-10 md:p-16 text-center">
-            <!-- Background Watermark (Optional) -->
-            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-                <i class="pi pi-verified text-[400px]"></i>
-            </div>
-
-            <!-- Header -->
-            <div class="mb-12">
-                <div class="w-20 h-22 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg text-white">
-                    <i class="pi pi-verified text-4xl"></i>
-                </div>
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-wide mb-2">{{ 'CERTIFICATION.CERTIFICATE_OF_COMPLETION' | translate }}</h1>
-                <p class="text-gray-500 uppercase tracking-widest text-sm">{{ 'CERTIFICATION.THIS_IS_TO_CERTIFY' | translate }}</p>
-            </div>
-
-            <!-- Student Name -->
-            <h2 class="text-3xl md:text-5xl font-bold text-blue-900 mb-8 font-serif italic border-b-2 border-gray-100 inline-block pb-4 px-8 min-w-[300px]">
-                {{ certificate.studentName }}
-            </h2>
-
-            <!-- Course Details -->
-            <div class="mb-12">
-                <p class="text-gray-600 text-lg mb-2">{{ 'CERTIFICATION.COMPLETED_COURSE' | translate }}</p>
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-800">{{ certificate.courseName }}</h3>
-            </div>
-
-            <!-- Meta Data (Date & ID) -->
-            <div class="flex flex-col md:flex-row justify-between items-center mt-16 pt-8 border-t border-gray-100 px-8">
-                <div class="text-left">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">{{ 'CERTIFICATION.ISSUE_DATE' | translate }}</p>
-                    <p class="font-semibold text-gray-700">{{ certificate.issueDate | date:'longDate' }}</p>
-                </div>
-
-                <!-- Signature (Mock) -->
-                <div class="mt-8 md:mt-0 text-center">
-                    <div class="font-dancing-script text-3xl text-gray-800 mb-2">{{ 'CERTIFICATION.SIGNATURE_NAME' | translate }}</div>
-                    <div class="w-40 h-0.5 bg-gray-300 mx-auto"></div>
-                    <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">{{ 'CERTIFICATION.AUTHORIZED_SIGNATURE' | translate }}</p>
-                </div>
-                
-                <div class="text-right mt-8 md:mt-0">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">{{ 'CERTIFICATION.CERTIFICATE_ID' | translate }}</p>
-                    <p class="font-mono font-bold text-blue-600">{{ certificate.id }}</p>
-                </div>
-            </div>
+    <!-- Wrapper ensures the download target is isolated from screen styles like shadows -->
+    <div *ngIf="certificate" class="mt-8 flex justify-center animate-fade-in-up w-full overflow-auto p-4">
+        
+        <div id="certificate-paper" class="relative bg-white text-gray-900 shadow-2xl overflow-hidden" 
+             style="width: 1123px; height: 794px; min-width: 1123px; min-height: 794px; padding: 40px;">
             
-            <!-- QR Code Placeholder (Optional) -->
-            <div class="mt-8 pt-4">
-                 <!-- Could insert QR code here -->
+            <!-- Ornate Border -->
+            <div class="w-full h-full border-2 border-double border-gray-400 relative p-2">
+                <div class="w-full h-full border-2 border-gray-300 relative flex flex-col items-center justify-between pt-10 pb-30 px-16 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]">
+                    
+                    <!-- Watermark -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+                         <img src="" onerror="this.src='https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png'" class="w-96 h-96 object-contain grayscale">
+                    </div>
+
+                    <!-- Header -->
+                    <div class="text-center z-10 w-full">
+                        <div class="mb-4">
+                             <!-- Optional: Logo or Icon -->
+                             <i class="pi pi-verified text-5xl text-gray-700opacity-80"></i>
+                        </div>
+                        <h1 class="text-6xl font-serif font-bold tracking-wider text-gray-700 uppercase mb-4" style="font-family: 'Times New Roman', serif;">
+                            {{ 'CERTIFICATION.CERTIFICATE_OF_COMPLETION' | translate }}
+                        </h1>
+                        <div class="h-1 w-64 bg-gray-700 mx-auto my-4"></div>
+                        <p class="text-xl text-gray-600 italic font-serif">
+                            {{ 'CERTIFICATION.THIS_IS_TO_CERTIFY' | translate }}
+                        </p>
+                    </div>
+
+                    <!-- Student Name -->
+                    <div class="text-center z-10 w-full my-8">
+                        <h2 class="text-6xl font-bold text-gray-700 mb-2 font-dancing-script p-4 border-b border-gray-300 inline-block min-w-[500px]" 
+                            style="font-family: 'Great Vibes, cursive', 'Brush Script MT', cursive; color: #1b2949;">
+                            {{ certificate.studentName }}
+                        </h2>
+                    </div>
+
+                    <!-- Course Info -->
+                    <div class="text-center z-10 w-full mb-3">
+                        <p class="text-xl text-gray-600 mb-4 font-serif">{{ 'CERTIFICATION.COMPLETED_COURSE' | translate }}</p>
+                        <h3 class="text-4xl font-bold text-gray-800 uppercase tracking-wide px-8 w-full">
+                            {{ certificate.courseName }}
+                        </h3>
+                    </div>
+
+                    <!-- Footer / Signatures -->
+                    <div class="w-full flex justify-between items-end mb-10 pb-5 px-12 z-10">
+                        <!-- Date -->
+                        <div class="text-center">
+                            <p class="text-lg font-bold text-gray-800 border-b border-gray-400 pb-2 px-8 mb-2">
+                                {{ certificate.issueDate | date:'longDate' }}
+                            </p>
+                            <p class="text-sm text-gray-500 uppercase tracking-widest font-serif">{{ 'CERTIFICATION.ISSUE_DATE' | translate }}</p>
+                        </div>
+
+                        <!-- Seal -->
+                        <div class="mb-4">
+                            <div class="w-32 h-32 rounded-full border-4 border-yellow-600 flex items-center justify-center bg-yellow-50 text-yellow-700 shadow-inner relative">
+                                <div class="absolute inset-1 border border-dashed border-yellow-600 rounded-full"></div>
+                                <i class="pi pi-verified text-6xl"></i>
+                            </div>
+                        </div>
+
+                        <!-- Signature -->
+                        <div class="text-center">
+                            <div class="text-3xl mb-2 font-dancing-script" style="font-family: 'Great Vibes, cursive', 'Brush Script MT', cursive;">
+                                {{ 'CERTIFICATION.SIGNATURE_NAME' | translate }}
+                            </div>
+                            <div class="w-64 h-px bg-gray-400 mb-2"></div>
+                            <p class="text-sm text-gray-500 uppercase tracking-widest font-serif">{{ 'CERTIFICATION.AUTHORIZED_SIGNATURE' | translate }}</p>
+                        </div>
+                    </div>
+
+                    <!-- ID Footer -->
+                    <!-- <div class="absolute bottom-4 right-6 text-xs text-gray-400 font-mono">
+                         ID: {{ certificate.id }}
+                    </div> -->
+                </div>
             </div>
         </div>
-
     </div>
 
     <!-- Print Actions -->
@@ -180,14 +207,4 @@
         </ng-template>
     </p-dialog>
 </div>
-
-<!-- <style>
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
-.font-dancing-script { font-family: 'Dancing Script', cursive; }
-@keyframes fade-in-up {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
-</style> -->
 
