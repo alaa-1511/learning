@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -52,7 +52,8 @@ export class CoursesManagement implements OnInit {
 
   constructor(
     private courseService: CourseService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.courseForm = this.fb.group({
       title: ['', Validators.required],
@@ -94,11 +95,13 @@ export class CoursesManagement implements OnInit {
     this.courseService.courses$.subscribe(data => {
       this.courses = data.filter(c => c.type !== 'exam');
       if (this.activeTab === 'courses') this.applyFilters();
+      this.cdr.markForCheck(); // Ensure UI updates
     });
 
     this.courseService.courses2$.subscribe(data => {
         this.courses2 = data;
         if (this.activeTab === 'courses_2') this.applyFilters();
+        this.cdr.markForCheck(); // Ensure UI updates
     });
   }
 

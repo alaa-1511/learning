@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect, Injector, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArticleService, Article } from '../../../core/service/article.service';
@@ -13,6 +13,7 @@ import { Button } from "primeng/button";
   templateUrl: './articles.html'
 })
 export class Articles implements OnInit {
+  private injector = inject(Injector);
   articles: Article[] = [];
   
   // Article Dialog State
@@ -37,11 +38,15 @@ export class Articles implements OnInit {
           author: ['', Validators.required],
           date: [new Date().toISOString().split('T')[0], Validators.required]
       });
+
+      // Reactively update articles whenever the signal changes
+      effect(() => {
+        this.articles = this.articleService.articles();
+      }, { injector: this.injector });
   }
 
   ngOnInit() {
-      // Logic to sync with service signal
-      this.articles = this.articleService.articles(); 
+      // Logic handled by effect now
   }
 
   // Getter to always have fresh data 

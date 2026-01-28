@@ -104,8 +104,20 @@ export class CertificationService {
           return; // Handle error appropriately
       }
 
-      // Reload to update UI
-      this.loadCertificates();
+      // Update local state immediately
+      const newCert: Certificate = {
+          id: data.certificate_id,
+          studentName: data.student_name,
+          courseId: data.course_id,
+          courseName: data.course_name,
+          issueDate: new Date(data.issue_date),
+          expiryDate: data.expiry_date ? new Date(data.expiry_date) : undefined,
+          status: data.status,
+          templateId: data.template_id
+      };
+      
+      const currentCerts = this.certificatesSubject.value;
+      this.certificatesSubject.next([newCert, ...currentCerts]);
   }
 
   async updateCertificate(cert: Certificate) {
@@ -129,7 +141,13 @@ export class CertificationService {
           return;
       }
 
-      this.loadCertificates();
+      // Update local state locally
+      const currentCerts = this.certificatesSubject.value;
+      const index = currentCerts.findIndex(c => c.id === cert.id);
+      if (index !== -1) {
+          currentCerts[index] = cert;
+          this.certificatesSubject.next([...currentCerts]);
+      }
   }
 
   async deleteCertificate(id: string) {
@@ -143,7 +161,9 @@ export class CertificationService {
           return;
       }
 
-      this.loadCertificates();
+      // Update local state
+      const currentCerts = this.certificatesSubject.value;
+      this.certificatesSubject.next(currentCerts.filter(c => c.id !== id));
   }
 
   private generateCertificateId(): string {

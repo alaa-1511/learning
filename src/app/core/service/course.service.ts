@@ -43,8 +43,18 @@ export class CourseService {
 
     // Map snake_case from DB to camelCase for App
     const mappedCourses: Course[] = data.map((c: any) => ({
-      ...c,
-      isFreeTrial: c.is_free_trial
+      id: c.id,
+      title: c.title,
+      category: c.category,
+      level: c.level,
+      image: c.image,
+      description: c.description,
+      details: c.details,
+      rating: c.rating,
+      students: c.students,
+      price: c.price,
+      isFreeTrial: c.is_free_trial,
+      type: c.type
     }));
 
     this.coursesSubject.next(mappedCourses);
@@ -78,8 +88,18 @@ export class CourseService {
     }
 
     const newCourse: Course = {
-      ...data,
-      isFreeTrial: data.is_free_trial
+      id: data.id,
+      title: data.title,
+      category: data.category,
+      level: data.level,
+      image: data.image,
+      description: data.description,
+      details: data.details,
+      rating: data.rating,
+      students: data.students,
+      price: data.price,
+      isFreeTrial: data.is_free_trial,
+      type: data.type
     };
 
     const currentCourses = this.coursesSubject.value;
