@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import { CourseService, Course } from '../../core/service/course.service';
+import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
 import { Router, RouterModule } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 
@@ -14,16 +14,6 @@ interface ExamQuestion extends Question {
   studentAnswer?: string; // For Essay questions
 }
 
-interface Exam {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  questions: ExamQuestion[];
-  image: string;
-  part: string; // P1, P2, P3
-  config?: ExamConfig;
-}
 
 @Component({
   selector: 'app-questions',
@@ -33,13 +23,21 @@ interface Exam {
   styleUrl: './questions.css',
 })
 export class Questions implements OnInit {
-  // State: 'list' | 'exam' | 'result'
-  currentView: string = 'list';
+  // State: 'categories' | 'list' | 'parts' | 'exam' | 'result'
+  currentView: 'categories' | 'list' | 'parts' | 'exam' | 'result' = 'list';
     @Input() mini: boolean = false;
 
   exams: Exam[] = [];
+  filteredExams: Exam[] = []; // Exams filtered by category
+  parts: ExamPart[] = [];
+  categories: { name: string, image: string, count: number, description?: string }[] = [];
 
+  selectedCategory: string | null = null;
   selectedExam: Exam | null = null;
+  selectedPart: ExamPart | null = null;
+
+  filteredQuestions: ExamQuestion[] = []; // Questions for the selected part
+
   currentQuestionIndex: number = 0;
   score: number = 0;
   percentage: number = 0;
@@ -56,7 +54,7 @@ export class Questions implements OnInit {
 
   constructor(
     private questionService: QuestionService, 
-    private courseService: CourseService,
+    private examService: ExamService,
     private router: Router,
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer
@@ -67,59 +65,185 @@ export class Questions implements OnInit {
   }
 
   ngOnInit() {
-    this.questionService.questions$.subscribe(questions => {
-       // Filter for Active, Testbank Questions (Default targetPage is 'testbank' if undefined?)
-       // We assume strict 'testbank' or undefined/null defaults to testbank? 
-       // Based on form, it's required 'testbank' or 'free-trial'.
-       const testbankQuestions = questions.filter(q => q.status === 'Active' && q.targetPage !== 'free-trial').map(q => ({
+    this.loadData();
+  }
+
+  loadData() {
+      this.questionService.questions$.subscribe(questions => {
+       // Filter for Active, Testbank Questions (or default where no targetPage is set)
+       const testbankQuestions = questions.filter(q => q.status === 'Active' && (!q.targetPage || q.targetPage === 'testbank')).map(q => ({
            ...q,
            type: q.type.toLowerCase() as any
        })) as ExamQuestion[];
 
-       const testbankCourseIds = new Set(testbankQuestions.map(q => q.courseId));
-
-       this.courseService.courses$.subscribe(courses => {
-           // Show course if it is standard exam (not free trial flag) OR has testbank questions
-           const visibleCourses = courses.filter(c => c.type === 'exam' && (!c.isFreeTrial || testbankCourseIds.has(c.id)));
-           
-           this.exams = visibleCourses.map(course => ({
-               id: course.id,
-               title: course.title,
-               category: course.category,
-               description: course.description,
-               image: course.image,
-               part: 'P1',
-               config: this.questionService.getExamConfig(course.id),
-               questions: testbankQuestions.filter(q => q.courseId === course.id)
+       // Fetch Exams
+       this.examService.exams$.subscribe(exams => {
+           this.exams = exams.map(exam => ({
+               id: exam.id,
+               title: exam.title,
+               category: exam.level || 'General', // Use Level as Category
+               description: exam.description || '',
+               image: exam.image || '',
+               part: 'All Parts', 
+               config: this.questionService.getExamConfig(exam.id),
+               questions: testbankQuestions.filter(q => q.examId === exam.id),
+               partCount: new Set(testbankQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
            }));
+           
+           this.extractCategories();
+           
+           this.filteredExams = this.exams;
+           this.currentView = 'list';
        });
     });
   }
   
+  extractCategories() {
+      const catMap = new Map<string, number>();
+      this.exams.forEach(e => {
+          const cat = e.category || 'General';
+          catMap.set(cat, (catMap.get(cat) || 0) + 1);
+      });
+
+      this.categories = Array.from(catMap.entries()).map(([name, count]) => ({
+          name,
+          count,
+          image: this.getCategoryImage(name),
+          description: `Explore ${count} courses in ${name}`
+      }));
+  }
+
+  getCategoryImage(category: string): string {
+      // Return a default image or map specific names if you have assets
+      // For now, consistent placeholders
+      switch(category.toLowerCase()) {
+          case 'math': return 'assets/images/categories/math.png'; // Example
+          case 'science': return 'assets/images/categories/science.png';
+          default: return ''; // Will allow fallback in template
+      }
+  }
+
   ngOnDestroy() {
       this.stopTimer();
   }
 
-  // Actions
-  enroll(exam: Exam) {
-    if (exam.questions.length === 0) {
-        this.showAlert('No questions available for this exam yet.', 'Notice');
+  // Navigation Logic
+  
+  selectCategory(categoryName: string) {
+      this.selectedCategory = categoryName;
+      this.filteredExams = this.exams.filter(e => e.category === categoryName);
+      this.currentView = 'list';
+      window.scrollTo(0,0);
+  }
+
+  backToCategories() {
+      this.selectedCategory = null;
+      this.currentView = 'categories';
+  }
+
+  async selectExam(exam: Exam) {
+    if (this.mini) {
+        this.router.navigate(['/questions']);
         return;
     }
+
+    if (!exam.questions || exam.questions.length === 0) {
+        this.showAlert('No questions available for this course yet.', 'Coming Soon');
+         return;
+    }
+    
     this.selectedExam = exam;
+    this.parts = await this.examService.getParts(exam.id);
+    
+    // Check for orphaned questions (no part) in this exam
+    // Use fallback to empty array safely
+    const currentQuestions = exam.questions || [];
+    const orphans = currentQuestions.filter((q: any) => !q.partId);
+    
+    if (orphans.length > 0) {
+        this.parts.push({
+            id: -1,
+            examId: exam.id,
+            title: 'General Review',
+            description: 'Comprehensive questions for this course.',
+            image: '' 
+        });
+    }
+
+    // Calculate metadata for parts
+    this.parts.forEach(p => {
+        let count = 0;
+        if (p.id === -1) {
+            count = orphans.length;
+        } else {
+            count = currentQuestions.filter((q: any) => q.partId === p.id).length;
+        }
+        p.questionCount = count;
+        // Estimate time: e.g., 1.5 minute per question OR use manual duration
+        p.durationLabel = p.duration ? p.duration + ' Mins' : Math.ceil(count * 1.5) + ' Mins';
+    });
+
+    if (this.parts.length === 0 && orphans.length === 0) {
+         this.showAlert('No parts or questions defined for this course yet.', 'Notice');
+         return;
+    }
+
+    this.currentView = 'parts';
+    window.scrollTo(0,0);
+  }
+
+  selectPart(part: ExamPart) {
+    this.selectedPart = part;
+    // Safely access questions
+    const allQuestions = this.selectedExam?.questions || [];
+    
+    if (part.id === -1) {
+        // Orphans
+        this.filteredQuestions = allQuestions.filter((q: any) => !q.partId);
+    } else {
+        this.filteredQuestions = allQuestions.filter((q: any) => q.partId === part.id);
+    }
+
+      if (this.filteredQuestions.length === 0) {
+          this.showAlert('No questions in this part.', 'Notice');
+          return;
+      }
+      
+      this.startExam(this.filteredQuestions);
+  }
+
+  backToExams() {
+      this.selectedExam = null;
+      this.parts = [];
+      this.currentView = 'list';
+      this.stopTimer();
+  }
+
+  backToParts() {
+      this.selectedPart = null;
+      this.currentView = 'parts';
+      this.stopTimer();
+      this.reviewMode = false;
+  }
+
+  startExam(questions: ExamQuestion[]) {
     this.currentView = 'exam';
     this.currentQuestionIndex = 0;
     this.reviewMode = false;
     
-    // Reset selections
-    this.selectedExam.questions.forEach(q => q.selectedAnswer = undefined);
+    // Reset answers
+    questions.forEach(q => q.selectedAnswer = undefined);
 
     // Initialize Timer
-    if (this.selectedExam.config?.durationMinutes) {
-        this.remainingTime = Math.floor(Number(this.selectedExam.config.durationMinutes) * 60);
+    if (this.selectedPart && this.selectedPart.duration) {
+        // defined part duration
+        this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
         this.startTimer();
     } else {
-        this.remainingTime = 0;
+        // Fallback: 1.5 mins per question
+        const calculatedMinutes = Math.ceil(questions.length * 1.5);
+        this.remainingTime = calculatedMinutes * 60;
+        this.startTimer();
     }
   }
 
@@ -155,8 +279,8 @@ export class Questions implements OnInit {
   }
 
   selectAnswer(optionIndex: number) {
-    if (this.selectedExam && !this.reviewMode) {
-      this.selectedExam.questions[this.currentQuestionIndex].selectedAnswer = optionIndex;
+    if (!this.reviewMode && this.filteredQuestions.length > 0) {
+      this.filteredQuestions[this.currentQuestionIndex].selectedAnswer = optionIndex;
     }
   }
 
@@ -165,7 +289,7 @@ export class Questions implements OnInit {
   }
 
   nextQuestion() {
-    if (this.selectedExam && this.currentQuestionIndex < this.selectedExam.questions.length - 1) {
+    if (this.currentQuestionIndex < this.filteredQuestions.length - 1) {
       this.currentQuestionIndex++;
     }
   }
@@ -177,7 +301,6 @@ export class Questions implements OnInit {
   }
 
   submitExam(timeUp: boolean = false) {
-    if (!this.selectedExam) return;
     this.stopTimer();
 
     if (timeUp) {
@@ -185,15 +308,15 @@ export class Questions implements OnInit {
     }
 
     let correctCount = 0;
-    this.selectedExam.questions.forEach(q => {
+    this.filteredQuestions.forEach(q => {
       if (q.selectedAnswer === q.correctAnswer) {
         correctCount++;
       }
     });
 
     this.score = correctCount;
-    this.percentage = Math.round((correctCount / this.selectedExam.questions.length) * 100);
-    this.passed = this.percentage >= 70; // 70% passing grade
+    this.percentage = Math.round((correctCount / this.filteredQuestions.length) * 100);
+    this.passed = this.percentage >= 70; 
     this.currentView = 'result';
   }
 
@@ -204,11 +327,9 @@ export class Questions implements OnInit {
   }
 
   reset() {
-    this.stopTimer();
-    this.selectedExam = null;
-    this.currentView = 'list';
-    this.score = 0;
-    this.percentage = 0;
-    this.reviewMode = false;
+    this.selectedPart = null;
+    // Go back to Parts view logic or stay in parts?
+    // Let's go back to parts selection
+    this.backToParts();
   }
 }

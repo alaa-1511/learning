@@ -1,7 +1,7 @@
 
 <div *ngIf="mini">
   <div class="grid grid-cols-3 gap-4">
-    <div *ngFor="let exam of exams.slice(0, 6)" class="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 flex flex-col group cursor-pointer" (click)="enroll(exam)">
+    <div *ngFor="let exam of exams.slice(0, 6)" class="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 flex flex-col group cursor-pointer" (click)="selectExam(exam)">
       <div class="h-28 overflow-hidden relative rounded-t-xl">
           <img [src]="exam.image" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <span class="absolute top-2 left-2 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -26,6 +26,17 @@
 <div *ngIf="!mini" class="min-h-screen bg-gray-50 py-36 px-6">
   <div class="max-w-6xl mx-auto">
 
+    <!-- Breadcrumbs -->
+    <div *ngIf="!mini && (currentView === 'parts' || currentView === 'exam' || currentView === 'result')" class="mb-6 flex items-center gap-2 text-sm">
+        <button (click)="backToExams()" class="text-gray-500 hover:text-blue-600 transition-colors">Exams</button>
+        <span class="text-gray-400">/</span>
+        <span *ngIf="currentView === 'parts'" class="font-bold text-gray-800">{{ selectedExam?.title | translate }}</span>
+        <button *ngIf="currentView !== 'parts'" (click)="backToParts()" class="text-gray-500 hover:text-blue-600 transition-colors">{{ selectedExam?.title | translate }}</button>
+        
+        <span *ngIf="selectedPart" class="text-gray-400">/</span>
+        <span *ngIf="selectedPart" class="font-bold text-gray-800">{{ selectedPart.title }}</span>
+    </div>
+
     <!-- VIEW 1: EXAM LIST -->
     <div *ngIf="currentView === 'list'" class="animate-fade-in">
       <div class="text-center mb-12">
@@ -35,39 +46,81 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Exam Card -->
-        <div *ngFor="let exam of exams" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col">
-          <div class="h-48 overflow-hidden relative">
-             <img [src]="exam.image" class="w-full h-full object-cover">
-             <div class="absolute inset-0 bg-black/40"></div>
-             <span class="absolute top-4 left-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+        <div *ngFor="let exam of filteredExams" class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-col cursor-pointer" (click)="selectExam(exam)">
+          <div class="h-56 overflow-hidden relative">
+             <img [src]="exam.image || 'assets/images/default-course.jpg'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+             
+             <span class="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                {{ exam.category | translate }}
              </span>
           </div>
-          <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-xl font-bold text-primary mb-2">{{ exam.title | translate }}</h3>
-            <!-- <p class="text-sm text-gray-500 mb-6 flex-grow">{{ exam.description | translate }}</p> -->
-            
-            <div class="flex items-center justify-between text-sm text-gray-400 mb-6">
-               <span><i class="pi pi-list"></i> {{ exam.questions.length }} {{ 'QUESTIONS.QUESTIONS_COUNT' | translate }}</span>
-                     <span *ngIf="exam.config?.durationMinutes"><i class="pi pi-clock"></i> {{ exam.config?.durationMinutes }} {{ 'QUESTIONS.MINUTES' | translate }}</span>
-                     <span *ngIf="!exam.config?.durationMinutes"><i class="pi pi-clock"></i> {{ 'QUESTIONS.DURATION' | translate }}</span>
-                  </div>
+          <div class="p-6 flex flex-col flex-grow relative">
+            <h3 class="text-xl font-bold text-primary mb-2 line-clamp-1 group-hover:text-secondary transition-colors">{{ exam.title | translate }}</h3>
+             
+             <div class="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-gray-50">
+                <div class="flex gap-4">
+                 <span class="flex items-center gap-1"><i class="pi pi-briefcase text-secondary"></i> {{ exam.partCount || 0 }} Parts</span>
+                 <!-- <span class="flex items-center gap-1"><i class="pi pi-list text-secondary"></i> {{ exam.questions.length }} Questions</span> -->
+               </div>
+                <span class="text-secondary font-bold text-xs bg-blue-50 px-3 py-1 rounded-full group-hover:bg-secondary group-hover:text-white transition-colors">Start <i class="pi pi-arrow-right ml-1"></i></span>
+             </div>
+           </div>
+         </div>
+       </div>
+       
+        <div *ngIf="filteredExams.length === 0" class="text-center py-12">
+           <p class="text-gray-500 text-lg">No active exams with questions found.</p>
+        </div>
+    </div>
 
-                  <button (click)="enroll(exam)" class="w-full py-3 bg-primary hover:bg-secondary text-white font-bold rounded-xl transition-colors">
-                    {{ 'QUESTIONS.START_PRACTICE' | translate }}
-                  </button>
-                </div>
-              </div>
+    <!-- VIEW 2: PARTS LIST -->
+    <div *ngIf="currentView === 'parts' && selectedExam" class="animate-fade-in">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Select a Part</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             <div *ngFor="let part of parts" 
+                  class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col group"
+                  (click)="selectPart(part)">
+                 
+                 <!-- Part Image -->
+                 <div class="h-40 bg-gray-100 relative overflow-hidden">
+                     <ng-container *ngIf="part.image; else defaultPartIcon">
+                        <img [src]="part.image" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                     </ng-container>
+                     <ng-template #defaultPartIcon>
+                        <div class="w-full h-full flex items-center justify-center bg-blue-50 text-blue-400">
+                            <i class="pi pi-book text-4xl"></i>
+                        </div>
+                     </ng-template>
+                     <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+                 </div>
+
+                 <div class="p-6 flex flex-col flex-grow">
+          <div class="p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors">{{ part.title }}</h3>
+            <p class="text-gray-500 mb-6 line-clamp-2">{{ part.description }}</p>
+            
+            <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                <span class="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full"><i class="pi pi-list"></i> {{ part.questionCount || 0 }} Questions</span>
+                <span class="flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full"><i class="pi pi-clock"></i> {{ part.durationLabel || 'N/A' }}</span>
+            </div>
+
+            <div class="flex items-center text-blue-600 font-bold group-hover:translate-x-2 transition-transform">
+                Start Now <i class="pi pi-arrow-right ml-2"></i>
             </div>
           </div>
+                 </div>
+             </div>
+        </div>
+    </div>
 
-
-          <!-- VIEW 2: EXAM INTERFACE -->
+          <!-- VIEW 3: EXAM INTERFACE (QUESTION PLAYER) -->
           <div *ngIf="currentView === 'exam' && selectedExam" class="animate-fade-in max-w-3xl mx-auto">
             
             <!-- Timer & Stats Header -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <!-- Timer (Only visible in exam mode with duration) -->
+                <!-- Timer -->
                 <div *ngIf="remainingTime > 0 && !reviewMode" class="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-2 animate-fade-in">
                     <i class="pi pi-clock text-blue-600"></i>
                     <span class="text-sm font-semibold text-gray-500 hidden sm:inline">{{ 'QUESTIONS.TIME_REMAINING' | translate }}:</span>
@@ -76,16 +129,16 @@
                 
                 <!-- Progress Stats -->
                 <div class="flex items-center gap-4 text-sm font-medium text-gray-500 ml-auto">
-                     <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: selectedExam.questions.length} }}</span>
+                     <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: filteredQuestions.length} }}</span>
                      <span class="hidden sm:inline">•</span>
-                     <span>{{ ((currentQuestionIndex + 1) / selectedExam.questions.length) * 100 | number:'1.0-0' }}%</span>
+                     <span>{{ ((currentQuestionIndex + 1) / filteredQuestions.length) * 100 | number:'1.0-0' }}%</span>
                 </div>
             </div>
 
             <!-- Progress Bar -->
             <div class="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
                 <div class="bg-secondary h-full transition-all duration-500" 
-                     [style.width.%]="((currentQuestionIndex + 1) / selectedExam.questions.length) * 100">
+                     [style.width.%]="((currentQuestionIndex + 1) / filteredQuestions.length) * 100">
                 </div>
             </div>
 
@@ -93,7 +146,7 @@
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
               <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">{{ 'QUESTIONS.NAVIGATOR' | translate }}</h4>
               <div class="flex flex-wrap gap-2">
-                  <button *ngFor="let q of selectedExam.questions; let i = index"
+                  <button *ngFor="let q of filteredQuestions; let i = index"
                           (click)="goToQuestion(i)"
                           [class.bg-primary]="currentQuestionIndex === i"
                           [class.text-white]="currentQuestionIndex === i"
@@ -109,27 +162,27 @@
 
             <!-- Question Card -->
             <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100 break-words max-w-full">
-              <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed break-words" [innerHTML]="safeHtml(selectedExam.questions[currentQuestionIndex].text | translate)">
+              <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed break-words" [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].text | translate)">
               </h3>
 
               <!-- Options (Multiple Choice & True/False) -->
-              <div *ngIf="selectedExam.questions[currentQuestionIndex].type !== 'essay'" class="space-y-4 mb-10">
-                  <div *ngFor="let option of selectedExam.questions[currentQuestionIndex].options; let i = index" 
+              <div *ngIf="filteredQuestions[currentQuestionIndex].type !== 'essay'" class="space-y-4 mb-10">
+                  <div *ngFor="let option of filteredQuestions[currentQuestionIndex].options; let i = index" 
                        (click)="!reviewMode && selectAnswer(i)"
-                       [class.bg-blue-50]="!reviewMode && selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
-                       [class.border-secondary]="!reviewMode && selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
-                       [class.bg-green-100]="reviewMode && i === selectedExam.questions[currentQuestionIndex].correctAnswer"
-                       [class.border-green-500]="reviewMode && i === selectedExam.questions[currentQuestionIndex].correctAnswer"
-                       [class.bg-red-100]="reviewMode && selectedExam.questions[currentQuestionIndex].selectedAnswer === i && i !== selectedExam.questions[currentQuestionIndex].correctAnswer"
-                       [class.border-red-500]="reviewMode && selectedExam.questions[currentQuestionIndex].selectedAnswer === i && i !== selectedExam.questions[currentQuestionIndex].correctAnswer"
+                       [class.bg-blue-50]="!reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                       [class.border-secondary]="!reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                       [class.bg-green-100]="reviewMode && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-green-500]="reviewMode && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.bg-red-100]="reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-red-500]="reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
                        [class.cursor-default]="reviewMode"
                        [class.cursor-pointer]="!reviewMode"
                        class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl transition-colors group">
                       
-                      <div [class.bg-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
-                           [class.border-secondary]="selectedExam.questions[currentQuestionIndex].selectedAnswer === i"
+                      <div [class.bg-secondary]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                           [class.border-secondary]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
                            class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors group-hover:border-secondary">
-                           <i *ngIf="selectedExam.questions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
+                           <i *ngIf="filteredQuestions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
                       </div>
                       
                       <span class="font-semibold text-primary text-lg break-words" [innerHTML]="safeHtml(option | translate)"></span>
@@ -137,10 +190,10 @@
               </div>
 
                <!-- Essay Answer -->
-               <div *ngIf="selectedExam.questions[currentQuestionIndex].type === 'essay'" class="mb-10">
+               <div *ngIf="filteredQuestions[currentQuestionIndex].type === 'essay'" class="mb-10">
                    <textarea 
-                       [(ngModel)]="selectedExam.questions[currentQuestionIndex].studentAnswer" 
-                       (ngModelChange)="selectedExam.questions[currentQuestionIndex].selectedAnswer = 0" 
+                       [(ngModel)]="filteredQuestions[currentQuestionIndex].studentAnswer" 
+                       (ngModelChange)="filteredQuestions[currentQuestionIndex].selectedAnswer = 0" 
                        rows="6" 
                        [readonly]="reviewMode"
                        class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent resize-none disabled:bg-gray-100 disabled:text-gray-500"
@@ -149,13 +202,13 @@
                </div>
 
                <!-- Explanation Div (Only in Review Mode) -->
-                <div *ngIf="reviewMode && selectedExam.questions[currentQuestionIndex].answerExplanation" class="mb-10 animate-fade-in break-words">
+                <div *ngIf="reviewMode && filteredQuestions[currentQuestionIndex].answerExplanation" class="mb-10 animate-fade-in break-words">
                     <div class="bg-blue-50 border-l-4 border-secondary p-6 rounded-r-xl">
                         <div class="flex items-start gap-3">
                             <i class="pi pi-info-circle text-secondary text-xl mt-1"></i>
                             <div>
                                 <h4 class="font-bold text-gray-800 mb-2">{{ 'QUESTIONS.EXPLANATION' | translate }}</h4>
-                                <p class="text-gray-600 leading-relaxed overflow-hidden" [innerHTML]="safeHtml(selectedExam.questions[currentQuestionIndex].answerExplanation)">
+                                <p class="text-gray-600 leading-relaxed overflow-hidden" [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].answerExplanation)">
                                 </p>
                             </div>
                         </div>
@@ -170,16 +223,16 @@
                      {{ 'QUESTIONS.PREVIOUS' | translate }}
                    </button>
 
-                   <button *ngIf="currentQuestionIndex < selectedExam.questions.length - 1"
+                   <button *ngIf="currentQuestionIndex < filteredQuestions.length - 1"
                            (click)="nextQuestion()"
-                           [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                           [disabled]="filteredQuestions[currentQuestionIndex].selectedAnswer === undefined"
                            class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                      {{ 'QUESTIONS.NEXT_QUESTION' | translate }}
                    </button>
 
-             <button *ngIf="currentQuestionIndex === selectedExam.questions.length - 1"
+             <button *ngIf="currentQuestionIndex === filteredQuestions.length - 1"
                      (click)="submitExam()"
-                     [disabled]="selectedExam.questions[currentQuestionIndex].selectedAnswer === undefined"
+                     [disabled]="filteredQuestions[currentQuestionIndex].selectedAnswer === undefined"
                      class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                {{ 'QUESTIONS.SUBMIT_EXAM' | translate }}
              </button>

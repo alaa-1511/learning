@@ -9,18 +9,22 @@ export interface Question {
   options: string[];
   correctAnswer: number; 
   answerExplanation?: string; 
-  ciaPart?: 'P1' | 'P2' | 'P3';
   topic: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   status: 'Active' | 'Draft' | 'Archived';
+  // New Exam Entity Links
   examId?: number; 
-  category?: string;
-  courseId?: number;
+  partId?: number; 
+  
   targetPage?: 'testbank' | 'free-trial';
+  
+  // Legacy / Optional
+  courseId?: number; 
+  ciaPart?: 'P1' | 'P2' | 'P3';
 }
 
 export interface ExamConfig {
-  courseId: number;
+  examId: number; // Linked to Exam, not course
   durationMinutes: number;
   questionCount: number; 
   passingScore: number;
@@ -34,7 +38,7 @@ export class QuestionService {
   private questionsSubject = new BehaviorSubject<Question[]>([]);
   public questions$ = this.questionsSubject.asObservable();
 
-  // Exam Config Management (kept in LocalStorage for simplicity as per current scope)
+  // Exam Config Management
   private examConfigs: Record<string, ExamConfig> = {};
 
   constructor(private supabaseService: SupabaseService) {
@@ -63,6 +67,8 @@ export class QuestionService {
       answerExplanation: q.answer_explanation,
       ciaPart: q.cia_part, // if column exists, or ignore
       courseId: q.course_id,
+      examId: q.exam_id, // New
+      partId: q.part_id, 
       targetPage: q.target_page,
       // options comes as JSON array, automatically parsed by Supabase JS client usually
       options: q.options || [] 
@@ -85,8 +91,13 @@ export class QuestionService {
       topic: question.topic,
       difficulty: question.difficulty,
       status: question.status,
-      course_id: question.courseId,
+      // Link to Exam
+      exam_id: question.examId,
+      part_id: question.partId,
+      
       target_page: question.targetPage,
+      // Legacy or Optional
+      course_id: question.courseId,
       // cia_part: question.ciaPart // Add column if needed in schema
     };
 
@@ -105,6 +116,8 @@ export class QuestionService {
         ...data,
         correctAnswer: data.correct_answer,
         answerExplanation: data.answer_explanation,
+        examId: data.exam_id,
+        partId: data.part_id,
         courseId: data.course_id,
         targetPage: data.target_page,
         options: data.options
@@ -124,6 +137,8 @@ export class QuestionService {
       topic: updatedQuestion.topic,
       difficulty: updatedQuestion.difficulty,
       status: updatedQuestion.status,
+      exam_id: updatedQuestion.examId,
+      part_id: updatedQuestion.partId,
       course_id: updatedQuestion.courseId,
       target_page: updatedQuestion.targetPage
     };
@@ -161,19 +176,19 @@ export class QuestionService {
     this.questionsSubject.next(current.filter(q => q.id !== id));
   }
 
-  getExamConfig(courseId: number): ExamConfig {
-    return this.examConfigs[courseId] || {
-        courseId: courseId,
-        durationMinutes: 120,
-        questionCount: 100,
-        passingScore: 75,
-        randomize: true,
-        // ciaPart: 'P1' 
-    }; 
+  saveExamConfig(config: ExamConfig) {
+      if (!config.examId) return;
+      this.examConfigs[config.examId] = config;
+      localStorage.setItem('examConfigs', JSON.stringify(this.examConfigs));
   }
 
-  saveExamConfig(config: ExamConfig) {
-    this.examConfigs[config.courseId] = config;
-    localStorage.setItem('examConfigs', JSON.stringify(this.examConfigs));
+  getExamConfig(examId: number): ExamConfig {
+      return this.examConfigs[examId] || {
+          examId,
+          durationMinutes: 120,
+          questionCount: 100,
+          passingScore: 75,
+          randomize: true
+      };
   }
 }

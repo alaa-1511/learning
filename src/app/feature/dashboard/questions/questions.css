@@ -2,6 +2,74 @@
     display: block;
     width: 100%;
 }
+
 textarea {
     resize: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Card Hover Effects */
+.group:hover .group-hover\:scale-105 {
+    transform: scale(1.05); /* Native tailwind might not catch all custom group interactions sometimes */
+}
+
+/* Custom Scrollbar for heavy content if needed */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #c1c1c1; 
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8; 
+}
+
+/* Ensure editor content is visible */
+::ng-deep .ql-editor {
+    min-height: 150px;
+    font-size: 1rem;
+    color: #374151;
+}
+
+/* Pagination Customization */
+::ng-deep .custom-pagination .ngx-pagination {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+::ng-deep .custom-pagination .ngx-pagination li a,
+::ng-deep .custom-pagination .ngx-pagination li span {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    background: white;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+::ng-deep .custom-pagination .ngx-pagination li.current {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+    border-color: #2563eb;
+}
+
+::ng-deep .custom-pagination .ngx-pagination li a:hover {
+    background-color: #f3f4f6;
 }

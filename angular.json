@@ -31,6 +31,7 @@
                "node_modules/ngx-toastr/toastr.css",
                "node_modules/quill/dist/quill.core.css",
                "node_modules/quill/dist/quill.snow.css",
+              
               "src/styles.css"
             ],
             "server": "src/main.server.ts",

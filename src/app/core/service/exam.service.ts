@@ -1,0 +1,248 @@
+import { Injectable } from '@angular/core';
+import { SupabaseService } from './supabase.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+export interface Exam {
+  id: number;
+  title: string;
+  description?: string;
+  image?: string;
+  level?: string;
+  created_at?: string;
+  // View/Computed Properties
+  partCount?: number;
+  questions?: any[];
+  config?: any;
+  category?: string;
+  part?: string;
+}
+
+export interface ExamPart {
+  id: number;
+  examId: number;
+  title: string;
+  description?: string;
+  image?: string;
+  questionCount?: number;
+  durationLabel?: string;
+  duration?: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ExamService {
+  private examsSubject = new BehaviorSubject<Exam[]>([]);
+  public exams$ = this.examsSubject.asObservable();
+
+  constructor(private supabaseService: SupabaseService) {
+    this.loadExams();
+  }
+
+  private async loadExams() {
+    const { data, error } = await this.supabaseService.client
+      .from('exams')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error loading exams:', error);
+      return;
+    }
+
+    const mappedExams: Exam[] = data.map((e: any) => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      image: e.image,
+      level: e.level,
+      created_at: e.created_at
+    }));
+
+    this.examsSubject.next(mappedExams);
+  }
+
+  // --- Exam CRUD ---
+
+  async addExam(exam: Omit<Exam, 'id'>): Promise<number> {
+    const dbExam = {
+      title: exam.title,
+      description: exam.description,
+      image: exam.image,
+      level: exam.level
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('exams')
+      .insert(dbExam)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding exam:', error);
+      throw error;
+    }
+
+    const newExam: Exam = {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      image: data.image,
+      level: data.level,
+      created_at: data.created_at
+    };
+
+    const currentExams = this.examsSubject.value;
+    this.examsSubject.next([newExam, ...currentExams]);
+    return newExam.id;
+  }
+
+  async updateExam(exam: Exam): Promise<void> {
+    const dbExam = {
+      title: exam.title,
+      description: exam.description,
+      image: exam.image,
+      level: exam.level
+    };
+
+    const { error } = await this.supabaseService.client
+      .from('exams')
+      .update(dbExam)
+      .eq('id', exam.id);
+
+    if (error) {
+      console.error('Error updating exam:', error);
+      throw error;
+    }
+
+    const currentExams = this.examsSubject.value;
+    const index = currentExams.findIndex(e => e.id === exam.id);
+    if (index !== -1) {
+      currentExams[index] = exam;
+      this.examsSubject.next([...currentExams]);
+    }
+  }
+
+  async deleteExam(id: number): Promise<void> {
+    const { error } = await this.supabaseService.client
+      .from('exams')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting exam:', error);
+      throw error;
+    }
+
+    const currentExams = this.examsSubject.value;
+    this.examsSubject.next(currentExams.filter(e => e.id !== id));
+  }
+
+  async getExamById(id: number): Promise<Exam | null> {
+      // Check local first
+      const local = this.examsSubject.value.find(e => e.id === id);
+      if (local) return local;
+
+      const { data, error } = await this.supabaseService.client
+        .from('exams')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) return null;
+      
+      return {
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          level: data.level
+      };
+  }
+
+  // --- Part CRUD ---
+
+  async getParts(examId: number): Promise<ExamPart[]> {
+    const { data, error } = await this.supabaseService.client
+      .from('exam_parts')
+      .select('*')
+      .eq('exam_id', examId)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+       // Table might not exist if user didn't run SQL yet
+       console.error('Error loading exam parts:', error);
+       return [];
+    }
+
+    return data.map((p: any) => ({
+      id: p.id,
+      examId: p.exam_id,
+      title: p.title,
+      description: p.description,
+      image: p.image,
+      duration: p.duration
+    }));
+  }
+
+  async addPart(part: Omit<ExamPart, 'id'>): Promise<ExamPart> {
+    const dbPart = {
+      exam_id: part.examId,
+      title: part.title,
+      description: part.description,
+      image: part.image,
+      duration: part.duration
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('exam_parts')
+      .insert(dbPart)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding exam part:', error);
+      throw error;
+    }
+
+    return {
+      id: data.id,
+      examId: data.exam_id,
+      title: data.title,
+      description: data.description,
+      image: data.image,
+      duration: data.duration
+    };
+  }
+
+  async updatePart(part: ExamPart): Promise<void> {
+      const dbPart = {
+          title: part.title,
+          description: part.description,
+          image: part.image,
+          duration: part.duration
+      };
+
+      const { error } = await this.supabaseService.client
+        .from('exam_parts')
+        .update(dbPart)
+        .eq('id', part.id);
+
+      if (error) {
+          console.error('Error updating exam part:', error);
+          throw error;
+      }
+  }
+
+  async deletePart(id: number): Promise<void> {
+      const { error } = await this.supabaseService.client
+        .from('exam_parts')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+          console.error('Error deleting exam part:', error);
+          throw error;
+      }
+  }
+}

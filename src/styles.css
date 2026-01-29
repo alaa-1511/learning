@@ -59,8 +59,8 @@ html::-webkit-scrollbar {
         box-shadow: none !important;
         z-index: 9999;
         background-color: white;
-        overflow: hidden; /* Cut off anything that spills over to avoid 2nd page */
-        page-break-after: always; /* Or avoid, but usually 'overflow: hidden' on strict height handles it */
+        overflow: hidden; 
+        page-break-after: always; 
         page-break-inside: avoid;
         
         /* Layout to center */
