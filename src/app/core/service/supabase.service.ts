@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +9,13 @@ import { environment } from '../../../environments/environment';
 export class SupabaseService {
   public supabase: SupabaseClient;
 
-  constructor(private spinner: NgxSpinnerService) {
+  constructor(private busyService: BusyService) {
     const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      this.spinner.show();
+      this.busyService.busy();
       try {
         return await fetch(input, init);
       } finally {
-        this.spinner.hide();
+        this.busyService.idle();
       }
     };
 
@@ -25,7 +25,6 @@ export class SupabaseService {
       }
     });
   }
-
   get client() {
     return this.supabase;
   }

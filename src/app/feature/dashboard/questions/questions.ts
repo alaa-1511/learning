@@ -354,6 +354,7 @@ export class QuestionsManagement implements OnInit {
               await this.examService.addExam(newExam);
           }
           this.addExamDialog = false;
+          this.cd.markForCheck();
           // Refresh handled by subscription usually, but if not:
           // this.examService.loadExams(); (it's behavioral subject)
       } catch (err) {
@@ -436,6 +437,7 @@ export class QuestionsManagement implements OnInit {
           }
           await this.loadParts(this.selectedExam.id);
           this.partDialog = false;
+          this.cd.markForCheck();
       } catch (err) {
           console.error(err);
           this.showAlert('Failed to save part.');
@@ -457,6 +459,7 @@ export class QuestionsManagement implements OnInit {
           await this.loadParts(this.selectedExam.id);
           this.deletePartDialog = false;
           this.partToDelete = null;
+          this.cd.markForCheck();
       }
   }
 
@@ -554,10 +557,6 @@ export class QuestionsManagement implements OnInit {
         finalOptions = [];
     }
 
-    // Determine IDs
-    // If selectedPart is -1 (Virtual), partId is undefined or null? 
-    // Usually it means direct link to exam.
-    // If we support that, partId is null.
     const finalPartId = this.selectedPart.id === -1 ? undefined : this.selectedPart.id;
 
     const questionData: Question = {
@@ -571,47 +570,54 @@ export class QuestionsManagement implements OnInit {
       status: formValue.status,
       answerExplanation: formValue.answerExplanation,
       targetPage: formValue.targetPage,
-      examId: this.selectedExam.id, // NEW LINKAGE
+      examId: this.selectedExam.id,
       partId: finalPartId
     };
 
-    if (this.isEditMode) {
-      await this.questionService.updateQuestion(questionData);
-    } else {
-      await this.questionService.addQuestion(questionData);
-    }
+    try {
+        if (this.isEditMode) {
+          await this.questionService.updateQuestion(questionData);
+        } else {
+          await this.questionService.addQuestion(questionData);
+        }
 
-    if (addAnother) {
-        const context = {
-            topic: formValue.topic,
-            difficulty: formValue.difficulty,
-            targetPage: formValue.targetPage,
-            type: formValue.type
-        };
+        if (addAnother) {
+            const context = {
+                topic: formValue.topic,
+                difficulty: formValue.difficulty,
+                targetPage: formValue.targetPage,
+                type: formValue.type
+            };
 
-        this.submitted = false;
-        this.questionForm.reset();
-        
-        setTimeout(() => {
-             this.questionForm.patchValue({
-                ...context,
-                status: 'Active',
-                correctAnswer: 0,
-                answerExplanation: ''
+            this.submitted = false;
+            this.questionForm.reset();
+            
+            setTimeout(() => {
+                 this.questionForm.patchValue({
+                    ...context,
+                    status: 'Active',
+                    correctAnswer: 0,
+                    answerExplanation: ''
+                });
+                this.updateValidatorsForType(context.type, this.questionForm);
+                const optionsArray = this.questionForm.get('options') as FormArray;
+                optionsArray.clear();
+                if (context.type === 'multiple-choice') {
+                    for(let i=0; i<4; i++) optionsArray.push(this.createOptionControl());
+                }
             });
-            this.updateValidatorsForType(context.type, this.questionForm);
-            const optionsArray = this.questionForm.get('options') as FormArray;
-            optionsArray.clear();
-            if (context.type === 'multiple-choice') {
-                for(let i=0; i<4; i++) optionsArray.push(this.createOptionControl());
-            }
-        });
-        this.isEditMode = false;
-        this.currentQuestionId = null;
+            this.isEditMode = false;
+            this.currentQuestionId = null;
 
-    } else {
-        this.questionDialog = false;
-        this.questionForm.reset();
+        } else {
+            this.questionDialog = false;
+            this.questionForm.reset();
+            this.submitted = false;
+        }
+        this.cd.markForCheck(); // Ensure UI updates
+    } catch (error) {
+        console.error(error);
+        this.showAlert('Failed to save question.');
     }
   }
 

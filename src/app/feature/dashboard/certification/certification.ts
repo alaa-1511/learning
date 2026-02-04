@@ -76,7 +76,7 @@ export class Certification implements OnInit {
       });
   }
 
-  saveCertificate() {
+  async saveCertificate() {
       if (this.issueForm.valid) {
           const val = this.issueForm.value;
           const selectedCourse = this.courses.find(c => c.id == val.courseId);
@@ -85,7 +85,7 @@ export class Certification implements OnInit {
               // Update
               const existing = this.certificates.find(c => c.id === this.editingId);
               if (existing) {
-                  this.certService.updateCertificate({
+                  await this.certService.updateCertificate({
                       ...existing,
                       studentName: val.studentName,
                       courseId: Number(val.courseId),
@@ -95,7 +95,7 @@ export class Certification implements OnInit {
               }
           } else {
               // Create
-              this.certService.issueCertificate({
+              await this.certService.issueCertificate({
                   studentName: val.studentName,
                   courseId: Number(val.courseId),
                   courseName: selectedCourse ? selectedCourse.title : 'Unknown Course',

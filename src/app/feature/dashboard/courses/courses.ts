@@ -162,35 +162,21 @@ export class CoursesManagement implements OnInit {
 
   async confirmDelete() {
     if (this.courseToDelete) {
-        
-        // OPTIMISTIC UI: Close the dialog IMMEDIATELY
-        this.deleteDialog = false;
-
         this.isLoading = true;
         try {
-            // Timeout protection
-            const timeout = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Delete request timed out')), 15000)
-            );
-
-            const deleteOperation = (async () => {
-                if (this.activeTab === 'courses') {
-                    await this.courseService.deleteCourse(this.courseToDelete!.id);
-                } else {
-                    await this.courseService.deleteCourse2(this.courseToDelete!.id);
-                }
-            })();
-
-            await Promise.race([deleteOperation, timeout]);
-
+            if (this.activeTab === 'courses') {
+                await this.courseService.deleteCourse(this.courseToDelete.id);
+            } else {
+                await this.courseService.deleteCourse2(this.courseToDelete.id);
+            }
+            this.deleteDialog = false;
             this.courseToDelete = null;
-
         } catch (error) {
             console.error('Error deleting course:', error);
-            // Only alert on error, not success
             this.showAlert('Failed to delete course (check network).', 'Error');
         } finally {
             this.isLoading = false;
+            this.cdr.markForCheck();
         }
     }
   }
@@ -219,50 +205,33 @@ export class CoursesManagement implements OnInit {
         type: 'standard' 
     };
 
-    // OPTIMISTIC UI: Close the dialog IMMEDIATELY
-    this.courseDialog = false;
-
-    // Start background process (don't await in UI thread blocking way)
     this.isLoading = true;
     
     try {
-        // Create a timeout promise to prevent hanging
-        const timeout = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Request timed out (Network is slow or file is too big)')), 15000)
-        );
-
-        const saveOperation = (async () => {
-            if (this.activeTab === 'courses') {
-                if (this.isEditMode) {
-                    await this.courseService.updateCourse(courseData);
-                } else {
-                    await this.courseService.addCourse(courseData);
-                }
+        if (this.activeTab === 'courses') {
+            if (this.isEditMode) {
+                await this.courseService.updateCourse(courseData);
             } else {
-                 if (this.isEditMode) {
-                    await this.courseService.updateCourse2(courseData);
-                } else {
-                    await this.courseService.addCourse2(courseData);
-                }
+                await this.courseService.addCourse(courseData);
             }
-        })();
-
-        // Race between save and timeout
-        await Promise.race([saveOperation, timeout]);
+        } else {
+              if (this.isEditMode) {
+                await this.courseService.updateCourse2(courseData);
+            } else {
+                await this.courseService.addCourse2(courseData);
+            }
+        }
         
-        // Success: Do nothing (Modal is already closed)
+        // Success: Close Modal
+        this.courseDialog = false;
 
     } catch (error: any) {
         console.error('Error saving course:', error);
-        
-        // Error: Show alert since we optimistically closed the modal
         const msg = error.message || error.error_description || error.details || JSON.stringify(error);
         this.showAlert('Failed to save course (check network): ' + msg, 'Error');
-        
-        // Re-open modal so they can fix/retry?
-        // this.courseDialog = true; // Optional: Decide if we want to re-open
     } finally {
         this.isLoading = false;
+        this.cdr.markForCheck();
     }
   }
 

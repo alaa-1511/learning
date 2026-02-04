@@ -90,17 +90,17 @@ export class Articles implements OnInit {
       }
   }
 
-  saveArticle() {
+  async saveArticle() {
       if (this.articleForm.valid) {
           const val = this.articleForm.value;
           
           if (this.editingId) {
-              this.articleService.updateArticle({
+              await this.articleService.updateArticle({
                   id: this.editingId,
                   ...val
               });
           } else {
-              this.articleService.addArticle(val);
+              await this.articleService.addArticle(val);
           }
           this.articleDialog = false;
       }
