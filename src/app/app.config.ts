@@ -5,10 +5,13 @@ import Material from '@primeuix/themes/material';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideToastr } from 'ngx-toastr';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { loadingInterceptor } from './core/interceptor/loading-interceptor';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,11 +19,12 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes,withInMemoryScrolling({scrollPositionRestoration:'top'})),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([loadingInterceptor])),
     provideTranslateService({
       defaultLanguage: 'en', 
     }),
        provideToastr(),
+       importProvidersFrom(NgxSpinnerModule),
 
     provideTranslateHttpLoader({
       prefix: '/i18n/',

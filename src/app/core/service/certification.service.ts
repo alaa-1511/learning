@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Certificate {
   id: string; 
@@ -20,7 +21,10 @@ export class CertificationService {
   private certificatesSubject = new BehaviorSubject<Certificate[]>([]);
   public certificates$ = this.certificatesSubject.asObservable();
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private toastr: ToastrService
+  ) {
       this.loadCertificates();
   }
 
@@ -65,6 +69,7 @@ export class CertificationService {
 
     if (error) {
         console.error('Error loading certificates:', error);
+        this.toastr.error('Failed to load certificates');
         return;
     }
 
@@ -101,6 +106,7 @@ export class CertificationService {
 
       if (error) {
           console.error('Error issuing certificate:', error);
+          this.toastr.error('Failed to issue certificate');
           return; // Handle error appropriately
       }
 
@@ -118,6 +124,7 @@ export class CertificationService {
       
       const currentCerts = this.certificatesSubject.value;
       this.certificatesSubject.next([newCert, ...currentCerts]);
+      this.toastr.success('Certificate issued successfully');
   }
 
   async updateCertificate(cert: Certificate) {
@@ -138,6 +145,7 @@ export class CertificationService {
 
       if (error) {
           console.error('Error updating certificate:', error);
+          this.toastr.error('Failed to update certificate');
           return;
       }
 
@@ -148,6 +156,7 @@ export class CertificationService {
           currentCerts[index] = cert;
           this.certificatesSubject.next([...currentCerts]);
       }
+      this.toastr.success('Certificate updated successfully');
   }
 
   async deleteCertificate(id: string) {
@@ -158,12 +167,14 @@ export class CertificationService {
 
       if (error) {
           console.error('Error deleting certificate:', error);
+          this.toastr.error('Failed to delete certificate');
           return;
       }
 
       // Update local state
       const currentCerts = this.certificatesSubject.value;
       this.certificatesSubject.next(currentCerts.filter(c => c.id !== id));
+      this.toastr.success('Certificate deleted successfully');
   }
 
   private generateCertificateId(): string {

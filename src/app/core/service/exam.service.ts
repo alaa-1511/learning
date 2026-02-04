@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Exam {
   id: number;
@@ -35,7 +36,10 @@ export class ExamService {
   private examsSubject = new BehaviorSubject<Exam[]>([]);
   public exams$ = this.examsSubject.asObservable();
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private toastr: ToastrService
+  ) {
     this.loadExams();
   }
 
@@ -47,6 +51,7 @@ export class ExamService {
 
     if (error) {
       console.error('Error loading exams:', error);
+      this.toastr.error('Failed to load exams');
       return;
     }
 
@@ -80,6 +85,7 @@ export class ExamService {
 
     if (error) {
       console.error('Error adding exam:', error);
+      this.toastr.error('Failed to add exam');
       throw error;
     }
 
@@ -94,6 +100,7 @@ export class ExamService {
 
     const currentExams = this.examsSubject.value;
     this.examsSubject.next([newExam, ...currentExams]);
+    this.toastr.success('Exam added successfully');
     return newExam.id;
   }
 
@@ -112,6 +119,7 @@ export class ExamService {
 
     if (error) {
       console.error('Error updating exam:', error);
+      this.toastr.error('Failed to update exam');
       throw error;
     }
 
@@ -121,6 +129,7 @@ export class ExamService {
       currentExams[index] = exam;
       this.examsSubject.next([...currentExams]);
     }
+    this.toastr.success('Exam updated successfully');
   }
 
   async deleteExam(id: number): Promise<void> {
@@ -131,11 +140,13 @@ export class ExamService {
 
     if (error) {
       console.error('Error deleting exam:', error);
+      this.toastr.error('Failed to delete exam');
       throw error;
     }
 
     const currentExams = this.examsSubject.value;
     this.examsSubject.next(currentExams.filter(e => e.id !== id));
+    this.toastr.success('Exam deleted successfully');
   }
 
   async getExamById(id: number): Promise<Exam | null> {
@@ -172,6 +183,7 @@ export class ExamService {
     if (error) {
        // Table might not exist if user didn't run SQL yet
        console.error('Error loading exam parts:', error);
+       this.toastr.error('Failed to load exam parts');
        return [];
     }
 
@@ -202,8 +214,11 @@ export class ExamService {
 
     if (error) {
       console.error('Error adding exam part:', error);
+      this.toastr.error('Failed to add exam part');
       throw error;
     }
+
+    this.toastr.success('Exam part added successfully');
 
     return {
       id: data.id,
@@ -230,8 +245,10 @@ export class ExamService {
 
       if (error) {
           console.error('Error updating exam part:', error);
+          this.toastr.error('Failed to update exam part');
           throw error;
       }
+      this.toastr.success('Exam part updated successfully');
   }
 
   async deletePart(id: number): Promise<void> {
@@ -242,7 +259,9 @@ export class ExamService {
         
       if (error) {
           console.error('Error deleting exam part:', error);
+          this.toastr.error('Failed to delete exam part');
           throw error;
       }
+      this.toastr.success('Exam part deleted successfully');
   }
 }

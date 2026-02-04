@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { SupabaseService } from './supabase.service';
 
 export interface Course {
@@ -24,7 +25,10 @@ export class CourseService {
   private coursesSubject = new BehaviorSubject<Course[]>([]);
   courses$ = this.coursesSubject.asObservable();
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private toastr: ToastrService
+  ) {
     this.loadCourses();
     this.loadCourses2();
   }
@@ -38,6 +42,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error loading courses:', error);
+      this.toastr.error('Failed to load courses');
       return;
     }
 
@@ -84,6 +89,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error adding course:', error);
+      this.toastr.error('Failed to add course');
       throw error;
     }
 
@@ -105,6 +111,7 @@ export class CourseService {
     const currentCourses = this.coursesSubject.value;
     this.coursesSubject.next([newCourse, ...currentCourses]);
     
+    this.toastr.success('Course added successfully');
     return newCourse.id;
   }
 
@@ -130,6 +137,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error updating course:', error);
+      this.toastr.error('Failed to update course');
       throw error;
     }
 
@@ -139,6 +147,7 @@ export class CourseService {
       currentCourses[index] = updatedCourse;
       this.coursesSubject.next([...currentCourses]);
     }
+    this.toastr.success('Course updated successfully');
   }
 
   async deleteCourse(id: number) {
@@ -149,12 +158,14 @@ export class CourseService {
 
     if (error) {
        console.error('Error deleting course:', error);
+       this.toastr.error('Failed to delete course');
        throw error;
     }
 
     const currentCourses = this.coursesSubject.value;
     const updatedCourses = currentCourses.filter(c => c.id !== id);
     this.coursesSubject.next(updatedCourses);
+    this.toastr.success('Course deleted successfully');
   }
   // Courses 2 Support
   private courses2Subject = new BehaviorSubject<Course[]>([]);
@@ -171,6 +182,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error loading courses 2:', error);
+      this.toastr.error('Failed to load courses 2');
       return;
     }
 
@@ -201,12 +213,14 @@ export class CourseService {
 
     if (error) {
       console.error('Error adding course 2:', error);
+      this.toastr.error('Failed to add course 2');
       throw error;
     }
 
     const newCourse: Course = { ...data };
     const current = this.courses2Subject.value;
     this.courses2Subject.next([newCourse, ...current]);
+    this.toastr.success('Course 2 added successfully');
     return newCourse.id;
   }
 
@@ -228,6 +242,7 @@ export class CourseService {
 
     if (error) {
       console.error('Error updating course 2:', error);
+      this.toastr.error('Failed to update course 2');
       throw error;
     }
 
@@ -237,6 +252,7 @@ export class CourseService {
       current[index] = course;
       this.courses2Subject.next([...current]);
     }
+    this.toastr.success('Course 2 updated successfully');
   }
 
   async deleteCourse2(id: number) {
@@ -247,11 +263,13 @@ export class CourseService {
 
     if (error) {
        console.error('Error deleting course 2:', error);
+       this.toastr.error('Failed to delete course 2');
        throw error;
     }
 
     const current = this.courses2Subject.value;
     this.courses2Subject.next(current.filter(c => c.id !== id));
+    this.toastr.success('Course 2 deleted successfully');
   }
 
   async getCourseById(id: number): Promise<Course | null> {

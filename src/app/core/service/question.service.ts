@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { SupabaseService } from './supabase.service';
 
 export interface Question {
@@ -41,7 +42,10 @@ export class QuestionService {
   // Exam Config Management
   private examConfigs: Record<string, ExamConfig> = {};
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private toastr: ToastrService
+  ) {
     this.loadQuestions();
     const storedConfigs = localStorage.getItem('examConfigs');
     if (storedConfigs) {
@@ -57,6 +61,7 @@ export class QuestionService {
 
     if (error) {
       console.error('Error loading questions:', error);
+      this.toastr.error('Failed to load questions');
       return;
     }
 
@@ -109,6 +114,7 @@ export class QuestionService {
 
     if (error) {
         console.error('Error adding question:', error);
+        this.toastr.error('Failed to add question');
         return;
     }
 
@@ -125,6 +131,7 @@ export class QuestionService {
 
     const current = this.questionsSubject.value;
     this.questionsSubject.next([newQuestion, ...current]);
+    this.toastr.success('Question added successfully');
   }
 
   async updateQuestion(updatedQuestion: Question) {
@@ -150,6 +157,7 @@ export class QuestionService {
 
     if (error) {
         console.error('Error updating question:', error);
+        this.toastr.error('Failed to update question');
         return;
     }
 
@@ -159,6 +167,7 @@ export class QuestionService {
         current[index] = updatedQuestion;
         this.questionsSubject.next([...current]);
     }
+    this.toastr.success('Question updated successfully');
   }
 
   async deleteQuestion(id: number) {
@@ -169,11 +178,13 @@ export class QuestionService {
 
     if (error) {
         console.error('Error deleting question:', error);
+        this.toastr.error('Failed to delete question');
         return;
     }
 
     const current = this.questionsSubject.value;
     this.questionsSubject.next(current.filter(q => q.id !== id));
+    this.toastr.success('Question deleted successfully');
   }
 
   saveExamConfig(config: ExamConfig) {

@@ -24,7 +24,7 @@ export class Navbar {
   private readonly authService = inject(Authservice);
   private readonly router = inject(Router);
   private readonly specialEmail = inject(SpecailEmail);
-
+isLogin = signal<boolean>(false);
   isAdmin = signal<boolean>(false);
   showQuestionsSelector = signal<boolean>(false);
   showFreeTrialSelector = signal<boolean>(false);

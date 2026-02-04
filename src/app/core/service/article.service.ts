@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { SupabaseService } from './supabase.service';
 
 export interface Article {
@@ -18,7 +19,10 @@ export interface Article {
 export class ArticleService {
   private articlesSignal = signal<Article[]>([]);
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(
+    private supabaseService: SupabaseService,
+    private toastr: ToastrService
+  ) {
     this.loadArticles();
   }
 
@@ -34,6 +38,7 @@ export class ArticleService {
 
     if (error) {
       console.error('Error loading articles:', error);
+      this.toastr.error('Failed to load articles');
       return;
     }
 
@@ -53,10 +58,12 @@ export class ArticleService {
 
     if (error) {
       console.error('Error adding article:', error);
+      this.toastr.error('Failed to add article');
       return;
     }
 
     this.articlesSignal.update(list => [data, ...list]);
+    this.toastr.success('Article added successfully');
   }
 
   async updateArticle(updatedArticle: Article) {
@@ -67,12 +74,14 @@ export class ArticleService {
 
     if (error) {
       console.error('Error updating article:', error);
+      this.toastr.error('Failed to update article');
       return;
     }
 
     this.articlesSignal.update(list => 
       list.map(a => a.id === updatedArticle.id ? updatedArticle : a)
     );
+    this.toastr.success('Article updated successfully');
   }
 
   async deleteArticle(id: number) {
@@ -83,9 +92,11 @@ export class ArticleService {
 
     if (error) {
        console.error('Error deleting article:', error);
+       this.toastr.error('Failed to delete article');
        return;
     }
 
     this.articlesSignal.update(list => list.filter(a => a.id !== id));
+    this.toastr.success('Article deleted successfully');
   }
 }

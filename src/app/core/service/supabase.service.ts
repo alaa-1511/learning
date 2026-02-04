@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -8,8 +9,21 @@ import { environment } from '../../../environments/environment';
 export class SupabaseService {
   public supabase: SupabaseClient;
 
-  constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  constructor(private spinner: NgxSpinnerService) {
+    const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      this.spinner.show();
+      try {
+        return await fetch(input, init);
+      } finally {
+        this.spinner.hide();
+      }
+    };
+
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      global: {
+        fetch: customFetch
+      }
+    });
   }
 
   get client() {

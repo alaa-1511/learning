@@ -1,10 +1,11 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Translate } from './core/service/translate';
+import { NgxSpinnerComponent } from "ngx-spinner";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NgxSpinnerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
