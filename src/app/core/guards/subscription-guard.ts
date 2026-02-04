@@ -23,28 +23,8 @@ export const subscriptionGuard: CanActivateFn = (route, state) => {
          subService.openModal();
          return of(false);
       }
-
-      if (subService.isSubscribed(user)) {
-        return of(true);
-      }
-
-      if (user.email) {
-          return specialEmail.isSpecialEmail(user.email).pipe(
-              map(isSpecial => {
-                  if (isSpecial) return true;
-                  
-                  
-                  router.navigate(['/']); 
-                  subService.openModal();
-                  return false;
-              })
-          );
-      }
-
-      // Default block
-      router.navigate(['/']);
-      subService.openModal();
-      return of(false);
+      
+      return of(true);
     })
   );
 };
