@@ -1,0 +1,113 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">{{ 'ASSIGN_CONTENT.TITLE' | translate }}</h1>
+      <!-- <p class="mt-2 text-gray-600">{{ 'ASSIGN_CONTENT.SUBTITLE' | translate }}</p> -->
+    </div>
+
+    <div class="space-y-8">
+      <!-- Student Selection -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'ASSIGN_CONTENT.SELECT_STUDENT' | translate }}</label>
+        
+        <div class="flex flex-col gap-4">
+            <!-- Dropdown to Add -->
+            <select 
+              [ngModel]="null" 
+              (ngModelChange)="addStudent($event)"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+              <option [ngValue]="null" disabled selected>{{ 'ASSIGN_CONTENT.CHOOSE_STUDENT_PLACEHOLDER' | translate }}</option>
+              <option *ngFor="let student of students" [ngValue]="student">
+                {{ student.displayName }}
+              </option>
+            </select>
+
+            <!-- Selected Students List -->
+            <div *ngIf="selectedStudents.length > 0" class="flex flex-wrap gap-2">
+                <div *ngFor="let student of selectedStudents" 
+                     class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full border border-blue-100 text-sm">
+                    <span class="font-medium">{{ student.displayName }}</span>
+                    <button (click)="removeStudent(student)" class="hover:text-red-500 focus:outline-none transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div *ngIf="selectedStudents.length === 0" class="text-sm text-gray-500 italic">
+                No students selected.
+            </div>
+        </div>
+      </div>
+
+      <!-- Course Selection -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <label class="block text-sm font-medium text-gray-700 mb-4">{{ 'ASSIGN_CONTENT.SELECT_COURSES' | translate }}</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div *ngFor="let course of courses" 
+               (click)="onCourseSelect(course)"
+               [class.ring-2]="isCourseSelected(course.id)"
+               [class.ring-blue-500]="isCourseSelected(course.id)"
+               class="cursor-pointer group relative bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200">
+            <div class="aspect-video bg-gray-100 relative overflow-hidden">
+                <img [src]="course.image || 'assets/default-course.jpg'" alt="{{ course.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-2">{{ course.title }}</h3>
+            </div>
+            <!-- Checkmark badge if selected -->
+            <div *ngIf="isCourseSelected(course.id)" class="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parts Selection (Grouped by Course) -->
+      <div *ngIf="selectedCourses.length > 0" class="space-y-6 animate-fade-in">
+        <div *ngFor="let course of selectedCourses" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+             <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                 <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
+                 {{ course.title }} - {{ 'ASSIGN_CONTENT.PARTS_SUFFIX' | translate }}
+             </h3>
+             
+             <div *ngIf="partsByCourse[course.id]?.length === 0" class="text-gray-500 italic ml-4">
+                 {{ 'ASSIGN_CONTENT.NO_PARTS' | translate }}
+             </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div *ngFor="let part of partsByCourse[course.id]" 
+                     (click)="togglePartSelection(part.id)"
+                     [class.border-blue-500]="selectedParts.includes(part.id)"
+                     [class.bg-blue-50]="selectedParts.includes(part.id)"
+                     class="cursor-pointer flex items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-all">
+                    <div class="flex items-center h-5">
+                        <input type="checkbox" 
+                               [checked]="selectedParts.includes(part.id)"
+                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 pointer-events-none">
+                    </div>
+                    <div class="ml-3 select-none">
+                        <h4 class="text-sm font-medium text-gray-900">{{ part.title }}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{{ part.description }}</p>
+                    </div>
+                </div>
+             </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end pt-6">
+        <button 
+          (click)="assignContent()"
+          [disabled]="selectedStudents.length === 0 || selectedCourses.length === 0 || selectedParts.length === 0"
+          class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg shadow-blue-500/30 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:-translate-y-0.5">
+          {{ 'ASSIGN_CONTENT.ASSIGN_BTN' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

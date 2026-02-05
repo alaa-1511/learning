@@ -95,10 +95,10 @@
                 <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{exam.description || 'No description provided.'}}</p>
                 
                 <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
-                    <div class="text-xs font-medium text-gray-500 flex items-center gap-1">
-                         <i class="fas fa-question-circle text-blue-400"></i>
-                         {{ getQuestionCount(exam.id) }} Questions
-                    </div>
+                     <div class="text-xs font-medium text-gray-500 flex items-center gap-1">
+                          <i class="fas fa-layer-group text-blue-400"></i>
+                          {{ exam.partCount || 0 }} Parts
+                     </div>
                     
                     <div class="flex items-center gap-2 mt-3">
                          <!-- Add Part -->
@@ -344,17 +344,12 @@
             </div>
             
             <div class="field">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Category / Level</label>
-                <input type="text" formControlName="level" list="categoryOptions" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. Math, Science, Grade 1...">
-                <datalist id="categoryOptions">
-                    <option value="Math">
-                    <option value="Science">
-                    <option value="Arabic">
-                    <option value="English">
-                    <option value="History">
-                    <option value="Certificate">
-                    <option value="Programming">
-                </datalist>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'MANAGE_COURSES.MODAL.LEVEL' | translate }}</label>
+                <select formControlName="level" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="COURSES.LEVELS.BEGINNER">Beginner</option>
+                    <option value="COURSES.LEVELS.INTERMEDIATE">Intermediate</option>
+                    <option value="COURSES.LEVELS.ADVANCED">Advanced</option>
+                </select>
             </div>
         </form>
     </ng-template>
@@ -455,13 +450,13 @@
            <!-- Right Column: Answers & Explanations -->
            <div class="space-y-4">
                 <div class="field">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Question Type</label>
-                    <select formControlName="type" class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50">
-                        <option value="multiple-choice">Multiple Choice</option>
-                        <option value="true-false">True / False</option>
-                        <option value="essay">Essay</option>
-                    </select>
-                </div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'MANAGE_QUESTIONS.MODAL.QUESTION_TYPE' | translate }}</label>
+                <select formControlName="type" class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50">
+                    <option value="multiple-choice">{{ 'QUESTIONS.TYPES.MULTIPLE_CHOICE' | translate }}</option>
+                    <option value="true-false">{{ 'QUESTIONS.TYPES.TRUE_FALSE' | translate }}</option>
+                    <option value="essay">{{ 'QUESTIONS.TYPES.ESSAY' | translate }}</option>
+                </select>
+            </div>
 
                 <!-- Multiple Choice Options -->
                 <div *ngIf="questionForm.get('type')?.value === 'multiple-choice'" class="space-y-2">

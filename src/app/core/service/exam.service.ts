@@ -46,7 +46,7 @@ export class ExamService {
   private async loadExams() {
     const { data, error } = await this.supabaseService.client
       .from('exams')
-      .select('*')
+      .select('*, exam_parts(count)')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -61,7 +61,8 @@ export class ExamService {
       description: e.description,
       image: e.image,
       level: e.level,
-      created_at: e.created_at
+      created_at: e.created_at,
+      partCount: e.exam_parts ? e.exam_parts[0]?.count : 0
     }));
 
     this.examsSubject.next(mappedExams);
@@ -265,5 +266,34 @@ export class ExamService {
           throw error;
       }
       this.toastr.success('Exam part deleted successfully');
+  }
+
+  // --- Assignments ---
+
+  // Cache for assignments
+  private assignmentsCache: Map<string, any[]> = new Map();
+
+  async getStudentAssignments(email: string): Promise<any[]> {
+    if (this.assignmentsCache.has(email)) {
+        return this.assignmentsCache.get(email) || [];
+    }
+
+    const { data, error } = await this.supabaseService.client
+        .from('student_assignments')
+        .select('*')
+        .eq('student_email', email);
+
+    if (error) {
+        console.error('Error fetching student assignments:', error);
+        return [];
+    }
+    
+    const assignments = data || [];
+    this.assignmentsCache.set(email, assignments);
+    return assignments;
+  }
+
+  clearAssignmentCache() {
+      this.assignmentsCache.clear();
   }
 }

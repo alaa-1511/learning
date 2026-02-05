@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { combineLatest } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SupabaseService } from '../../core/service/supabase.service'; // Added import
 
 import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
 import { Router, RouterModule } from '@angular/router';
@@ -52,12 +54,17 @@ export class Questions implements OnInit {
   alertMessage: string = '';
   alertHeader: string = 'Notification';
 
+  // User Data
+  currentUser: any = null;
+  userAssignments: any[] = [];
+
   constructor(
     private questionService: QuestionService, 
     private examService: ExamService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private supabaseService: SupabaseService // Injected service
   ) {}
 
   safeHtml(content: string | undefined): SafeHtml {
@@ -68,20 +75,37 @@ export class Questions implements OnInit {
     this.loadData();
   }
 
-  loadData() {
-      this.questionService.questions$.subscribe(questions => {
-       // Filter for Active, Testbank Questions (or default where no targetPage is set)
-       const testbankQuestions = questions.filter(q => q.status === 'Active' && (!q.targetPage || q.targetPage === 'testbank')).map(q => ({
-           ...q,
-           type: q.type.toLowerCase() as any
-       })) as ExamQuestion[];
+  async loadData() {
+      // 1. Get Current User (Local Session is faster/no spinner)
+      const { data: { session } } = await this.supabaseService.client.auth.getSession();
+      this.currentUser = session?.user || null;
 
-       // Fetch Exams
-       this.examService.exams$.subscribe(exams => {
-           this.exams = exams.map(exam => ({
+      // 2. Fetch assignments if user exists
+      if (this.currentUser && this.currentUser.email) {
+          // Check if we already have assignments loaded? For now, fetch fresh to be safe but maybe we can optimize later.
+          // Still, getSession() saved one fetch.
+          const assignments = await this.examService.getStudentAssignments(this.currentUser.email);
+          this.userAssignments = assignments || [];
+          console.log('User Assignments:', this.userAssignments);
+      }
+
+      // 3. Combine Streams
+      combineLatest([
+        this.questionService.questions$,
+        this.examService.exams$
+      ]).subscribe(([questions, exams]) => {
+          // Filter for Active, Testbank Questions
+          const testbankQuestions = questions
+            .filter(q => q.status === 'Active' && (!q.targetPage || q.targetPage === 'testbank'))
+            .map(q => ({
+                ...q,
+                type: q.type.toLowerCase() as any
+            })) as ExamQuestion[];
+
+          this.exams = exams.map(exam => ({
                id: exam.id,
                title: exam.title,
-               category: exam.level || 'General', // Use Level as Category
+               category: exam.level || 'General',
                description: exam.description || '',
                image: exam.image || '',
                part: 'All Parts', 
@@ -89,13 +113,20 @@ export class Questions implements OnInit {
                questions: testbankQuestions.filter(q => q.examId === exam.id),
                partCount: new Set(testbankQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
            }));
+
+           // Filter Exams: Show assigned ones if user has assignments
+           let visibleExams = this.exams;
+           if (this.currentUser && this.userAssignments.length > 0) {
+               const assignedCourseIds = new Set(this.userAssignments.map(a => a.course_id));
+               visibleExams = this.exams.filter(e => assignedCourseIds.has(e.id));
+           }
+           this.exams = visibleExams;
            
            this.extractCategories();
            
            this.filteredExams = this.exams;
            this.currentView = 'list';
-       });
-    });
+      });
   }
   
   extractCategories() {
@@ -154,6 +185,29 @@ export class Questions implements OnInit {
     
     this.selectedExam = exam;
     this.parts = await this.examService.getParts(exam.id);
+
+    // Filter Parts based on assignments (Using cached data from init)
+    if (this.currentUser) {
+        if (this.userAssignments.length > 0) {
+            // Filter parts that are in the assignment list for this course
+            // ID Comparison: Ensure types match (db might be string/number)
+            const assignedPartIds = new Set(
+                this.userAssignments
+                    .filter(a => Number(a.course_id) === Number(exam.id)) 
+                    .map(a => Number(a.part_id))
+            );
+            
+            if (assignedPartIds.size > 0) {
+                // Also use Number for filtering parts
+                this.parts = this.parts.filter(p => assignedPartIds.has(Number(p.id)));
+            } else {
+                this.parts = [];
+            }
+        } else {
+            // Logged in but no assignments at all
+            this.parts = [];
+        }
+    }
     
     // Check for orphaned questions (no part) in this exam
     // Use fallback to empty array safely

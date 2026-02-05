@@ -264,6 +264,11 @@
                  "Q2": "Which standard covers Revenue from Contracts with Customers?",
                  "Q2_OPT": ["IFRS 9", "IFRS 15", "IFRS 16", "IAS 1"]
             }
+        },
+        "TYPES": {
+            "MULTIPLE_CHOICE": "Multiple Choice",
+            "TRUE_FALSE": "True / False",
+            "ESSAY": "Essay"
         }
     },
     "FREE_TRIAL_PAGE": {
@@ -307,6 +312,7 @@
         "MODAL": {
             "ADD_TITLE": "Add New Question",
             "EDIT_TITLE": "Edit Question",
+            "QUESTION_TYPE": "Question Type",
             "QUESTION_TEXT": "Question Text",
             "ENTER_QUESTION": "Enter your question here...",
             "QUESTION_REQUIRED": "Question text is required.",
@@ -671,6 +677,28 @@
                     "Administration of Trusts"
                 ]
             }
+        }
+    },
+    "ASSIGN_CONTENT": {
+        "TITLE": "Assign Courses & Parts to Students",
+        "SUBTITLE": "Select a student, choose a course, and assign specific parts to enhance their learning journey.",
+        "SELECT_STUDENT": "Select Student",
+        "CHOOSE_STUDENT_PLACEHOLDER": "Choose a student...",
+        "SELECT_COURSES": "Select Course(s)",
+        "SELECT_PARTS": "Select Parts for This Student",
+        "NO_PARTS": "No parts found for this course.",
+        "PARTS_SUFFIX": "Parts",
+        "ASSIGN_BTN": "Assign to Student",
+        "MESSAGES": {
+            "NO_STUDENTS": "No students found.",
+            "NO_PROFILES": "No student profiles found in database.",
+            "LOAD_ERROR": "System error while loading students.",
+            "PARTS_ERROR": "Could not load course parts.",
+            "SELECT_WARNING": "Please select student, at least one course, and assignment parts.",
+            "NO_VALID_PARTS": "No valid parts selected for the chosen courses.",
+            "SYSTEM_ERROR": "System Error: Assignments table missing.",
+            "ASSIGN_ERROR": "Failed to assign content",
+            "SUCCESS": "Assigned {{count}} items successfully."
         }
     }
 }
