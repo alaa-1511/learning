@@ -181,7 +181,8 @@ export class FreeTrail implements OnInit {
             count = currentQuestions.filter((q: any) => q.partId === p.id).length;
         }
         p.questionCount = count;
-        p.durationLabel = p.duration ? p.duration + ' Mins' : Math.ceil(count * 1.5) + ' Mins';
+        // Strict Priority: Use manual duration if set (>0), otherwise fallback
+        p.durationLabel = (p.duration && p.duration > 0) ? p.duration + ' Mins' : Math.ceil(count * 1.5) + ' Mins';
     });
 
     if (this.parts.length === 0 && orphans.length === 0) {
@@ -244,7 +245,7 @@ export class FreeTrail implements OnInit {
       this.filteredQuestions.forEach(q => q.selectedAnswer = undefined);
   
       // Initialize Timer
-      if (this.selectedPart && this.selectedPart.duration) {
+      if (this.selectedPart && this.selectedPart.duration && this.selectedPart.duration > 0) {
           this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
           this.startTimer();
       } else {

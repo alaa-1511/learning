@@ -186,6 +186,8 @@ export class ExamService {
        this.toastr.error('Failed to load exam parts');
        return [];
     }
+    
+    console.log('Raw DB Parts:', data); // DEBUG
 
     return data.map((p: any) => ({
       id: p.id,
@@ -193,7 +195,7 @@ export class ExamService {
       title: p.title,
       description: p.description,
       image: p.image,
-      duration: p.duration
+      duration: p.duration ? Number(p.duration) : 0
     }));
   }
 
@@ -203,7 +205,7 @@ export class ExamService {
       title: part.title,
       description: part.description,
       image: part.image,
-      duration: part.duration
+      duration: part.duration ? Number(part.duration) : null
     };
 
     const { data, error } = await this.supabaseService.client
@@ -226,7 +228,7 @@ export class ExamService {
       title: data.title,
       description: data.description,
       image: data.image,
-      duration: data.duration
+      duration: data.duration ? Number(data.duration) : 0
     };
   }
 
@@ -235,7 +237,7 @@ export class ExamService {
           title: part.title,
           description: part.description,
           image: part.image,
-          duration: part.duration
+          duration: part.duration ? Number(part.duration) : null
       };
 
       const { error } = await this.supabaseService.client

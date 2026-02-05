@@ -148,7 +148,8 @@ export class QuestionsManagement implements OnInit {
       return this.fb.group({
           title: ['', Validators.required],
           description: [''],
-          image: ['']
+          image: [''],
+          duration: ['']
       });
   }
 
@@ -422,7 +423,7 @@ export class QuestionsManagement implements OnInit {
                  title: formValue.title,
                  description: formValue.description,
                  image: formValue.image,
-                 duration: formValue.duration ? Number(formValue.duration) : undefined
+                 duration: formValue.duration ? parseInt(formValue.duration, 10) : undefined
              };
              await this.examService.updatePart(updatedPart);
           } else {
@@ -431,7 +432,7 @@ export class QuestionsManagement implements OnInit {
                  title: formValue.title,
                  description: formValue.description,
                  image: formValue.image,
-                 duration: formValue.duration ? Number(formValue.duration) : undefined
+                 duration: formValue.duration ? parseInt(formValue.duration, 10) : undefined
              };
              await this.examService.addPart(newPart);
           }
