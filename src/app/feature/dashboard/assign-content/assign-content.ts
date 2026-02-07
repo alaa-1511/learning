@@ -2,6 +2,7 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SelectModule } from 'primeng/select';
 import { ExamService, Exam, ExamPart } from '../../../core/service/exam.service';
 import { SupabaseService } from '../../../core/service/supabase.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +11,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-assign-content',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, SelectModule],
   templateUrl: './assign-content.html',
   styleUrl: './assign-content.css'
 })
@@ -24,6 +25,7 @@ export class AssignContentComponent implements OnInit {
     students: any[] = [];
     courses: Exam[] = [];
     selectedStudents: any[] = [];
+    selectedStudentToAdd: any = null;
     
     // Multi-selection support
     selectedCourses: Exam[] = [];

@@ -13,15 +13,18 @@
         
         <div class="flex flex-col gap-4">
             <!-- Dropdown to Add -->
-            <select 
-              [ngModel]="null" 
-              (ngModelChange)="addStudent($event)"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
-              <option [ngValue]="null" disabled selected>{{ 'ASSIGN_CONTENT.CHOOSE_STUDENT_PLACEHOLDER' | translate }}</option>
-              <option *ngFor="let student of students" [ngValue]="student">
-                {{ student.displayName }}
-              </option>
-            </select>
+            <p-select 
+              [options]="students" 
+              [(ngModel)]="selectedStudentToAdd"
+              (onChange)="addStudent($event.value); selectedStudentToAdd = null;" 
+              optionLabel="displayName" 
+              [filter]="true" 
+              filterBy="displayName" 
+              [showClear]="true"
+              placeholder="{{ 'ASSIGN_CONTENT.CHOOSE_STUDENT_PLACEHOLDER' | translate }}"
+              styleClass="w-full"
+              [style]="{'width':'100%'}">
+            </p-select>
 
             <!-- Selected Students List -->
             <div *ngIf="selectedStudents.length > 0" class="flex flex-wrap gap-2">
