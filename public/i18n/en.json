@@ -199,7 +199,13 @@
         "FORGOT_PASSWORD": "Forgot Password?",
         "LOGIN_BUTTON": "Login",
         "REGISTER_BUTTON": "Sign Up",
-        "TERMS_AGREE": "I agree to receive a brief summary of recent exam questions, updates, and study materials via WhatsApp or my email"
+        "TERMS_AGREE": "I agree to receive a brief summary of recent exam questions, updates, and study materials via WhatsApp or my email",
+        "RETYPE_PASSWORD": "Retype Password",
+        "ERROR": {
+            "TOO_MANY_ATTEMPTS": "Too many registration attempts. Please wait 1 hour before trying again.",
+            "UNEXPECTED": "An unexpected error occurred. Please try again."
+        },
+        "REGISTRATION_SUCCESS": "Registration successful! Please check your email to confirm your account before logging in."
     },
     "COMMON": {
         "LOADING": "Loading...",
@@ -210,7 +216,8 @@
         "REQUIRED": "{{label}} is required.",
         "INVALID_EMAIL": "Invalid email format.",
         "MIN_LENGTH": "{{label}} must be at least {{length}} characters.",
-        "PASSWORD_PATTERN": "Password must contain at least 1 number and 1 special char."
+        "PASSWORD_PATTERN": "Password must contain at least 1 number and 1 special char.",
+        "PASSWORD_MISMATCH": "Passwords do not match."
     },
     "QUESTIONS": {
         "TIME_REMAINING": "Time Remaining",

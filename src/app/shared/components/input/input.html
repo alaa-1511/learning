@@ -36,6 +36,8 @@
         }
         @if (controlInput().hasError('pattern')) {
         <p>{{ 'COMMON.PASSWORD_PATTERN' | translate }}</p>
+        }@if(controlInput().hasError('conformpassword')){
+            <p>{{ 'COMMON.PASSWORD_MISMATCH' | translate }}</p>
         }
     </div>
     }

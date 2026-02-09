@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Authservice } from '../auth/authservice';
 import { Router, RouterLink } from '@angular/router';
 import { Input } from '../../../shared/components/input/input';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
@@ -14,26 +14,50 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class Register {
   
-   private readonly authservice = inject(Authservice);
+  private readonly authservice = inject(Authservice);
   private readonly fb = inject(FormBuilder);
-  private readonly route=inject(Router)
+  private readonly route = inject(Router);
   private readonly toastr = inject(ToastrService);
+  private readonly translate = inject(TranslateService);
 
 
-isLoading = signal<boolean>(false);
+  isLoading = signal<boolean>(false);
   
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   
   formRegisterData = signal<FormGroup>(this.fb.group({
-   firstName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+    firstName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     lastName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     email: [null, [Validators.required, Validators.email]],
     phone: [null, [Validators.required, Validators.pattern(/^(01)(0|1|2|5)[0-9]{8}$/)]],
-    password: [null, [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/)
-]],
+    password: [null, [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{8,}$/)]],
+    retypePassword: [null, [Validators.required, Validators.minLength(8)]],
     
-  }));
+  },{validator: this.conformpassword})
+
+
+);
+
+
+  conformpassword(group: AbstractControl) {
+    const password = group.get('password')?.value;
+    const retypePassword = group.get('retypePassword')?.value;
+    const retypeControl = group.get('retypePassword');
+
+    if (password !== retypePassword) {
+      retypeControl?.setErrors({ ...retypeControl.errors, conformpassword: true });
+      return { conformpassword: true };
+    }
+
+    if (retypeControl?.hasError('conformpassword')) {
+      const errors = { ...retypeControl.errors };
+      delete errors['conformpassword'];
+      retypeControl.setErrors(Object.keys(errors).length > 0 ? errors : null);
+    }
+
+    return null;
+  }
 
 
   formRegister(): void {
@@ -41,7 +65,7 @@ isLoading = signal<boolean>(false);
         this.errorMessage.set(null);
         this.successMessage.set(null);
         this.isLoading.set(true);
-        this.toastr.success('Registration successful! Please check your email to confirm your account before logging in.');
+        // Toastr for immediate feedback (optional, maybe remove if redundant with successMessage)
         
         this.authservice.register(this.formRegisterData().value).subscribe({
             next: (res) => {
@@ -50,7 +74,8 @@ isLoading = signal<boolean>(false);
                 
                 if (res.error) {
                     if (res.error.message.includes('rate limit')) {
-                        this.errorMessage.set('Too many registration attempts. Please wait 1 hour before trying again.');
+                        const msg = this.translate.instant('AUTH.ERROR.TOO_MANY_ATTEMPTS');
+                        this.errorMessage.set(msg);
                     } else {
                         this.errorMessage.set(res.error.message);
                     }
@@ -58,20 +83,24 @@ isLoading = signal<boolean>(false);
                 }
 
                 if (res.data.user && !res.data.session) {
-                    this.successMessage.set('Registration successful! Please check your email to confirm your account before logging in.');
+                    const msg = this.translate.instant('AUTH.REGISTRATION_SUCCESS');
+                    this.successMessage.set(msg);
+                    this.toastr.success(msg);
                     this.formRegisterData().reset();
                 } else if (res.data.session) {
                      localStorage.setItem('token', res.data.session.access_token);
                      this.formRegisterData().reset();
                      this.route.navigate(['/login']);
-                     this.toastr.success('Registration successful! Please check your email to confirm your account before logging in.');
+                     const msg = this.translate.instant('AUTH.REGISTRATION_SUCCESS');
+                     this.toastr.success(msg);
                 }
             },
             error: (err) => {
                 this.isLoading.set(false);
                 console.log(err);
-                this.errorMessage.set('An unexpected error occurred. Please try again.');
-                this.toastr.error('An unexpected error occurred. Please try again.');
+                const msg = this.translate.instant('AUTH.ERROR.UNEXPECTED');
+                this.errorMessage.set(msg);
+                this.toastr.error(msg);
             },
         });
     } else {

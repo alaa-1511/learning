@@ -52,6 +52,13 @@
             [controlInput]="formRegisterData().get('password')"
             [placeholderInput]="'AUTH.PASSWORD'"
             ></app-input>
+            <app-input
+            [typeInput]="'password'"
+            [labelInput]="'AUTH.RETYPE_PASSWORD'"
+            [idInput]="'retype-password'"
+            [controlInput]="formRegisterData().get('retypePassword')"
+            [placeholderInput]="'AUTH.RETYPE_PASSWORD'"
+            ></app-input>
             <div class="flex items-center mb-4">
                 <input id="default-checkbox" type="checkbox" value="" class="w-5 h-5 text-primary border border-gray-300  rounded-md bg-gray-50 focus:ring-3 focus:ring-primary">
                 <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-gray-500">{{ 'AUTH.TERMS_AGREE' | translate }}</label>
