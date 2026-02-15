@@ -10,7 +10,6 @@
       </div>
       <div class="p-3">
           <h3 class="text-sm font-bold text-primary mb-1 line-clamp-1 group-hover:text-secondary transition-colors">{{ exam.title | translate }}</h3>
-          <!-- <p class="text-xs text-gray-500 line-clamp-2 mb-2 min-h-[2.5em]">{{ exam.description | translate }}</p> -->
       </div>
     </div>
   </div>
@@ -27,14 +26,11 @@
   <div class="max-w-6xl mx-auto">
 
     <!-- Breadcrumbs -->
-    <div *ngIf="!mini && (currentView === 'parts' || currentView === 'exam' || currentView === 'result')" class="mb-6 flex items-center gap-2 text-sm">
-        <button (click)="backToExams()" class="text-gray-500 hover:text-blue-600 transition-colors">Exams</button>
+    <div *ngIf="!mini && (currentView === 'parts' || currentView === 'exam' || currentView === 'result')" class="mb-6 flex items-center gap-2 text-sm bg-white px-4 py-2 rounded-lg shadow-sm w-fit">
+        <button (click)="backToExams()" class="text-gray-500 hover:text-blue-600 transition-colors bg-transparent border-0 cursor-pointer">Exams</button>
         <span class="text-gray-400">/</span>
         <span *ngIf="currentView === 'parts'" class="font-bold text-gray-800">{{ selectedExam?.title | translate }}</span>
-        <button *ngIf="currentView !== 'parts'" (click)="backToParts()" class="text-gray-500 hover:text-blue-600 transition-colors">{{ selectedExam?.title | translate }}</button>
-        
-        <span *ngIf="selectedPart" class="text-gray-400">/</span>
-        <span *ngIf="selectedPart" class="font-bold text-gray-800">{{ selectedPart.title }}</span>
+        <button *ngIf="currentView !== 'parts'" (click)="backToParts()" class="text-gray-500 hover:text-blue-600 transition-colors bg-transparent border-0 cursor-pointer">{{ selectedExam?.title | translate }}</button>
     </div>
 
     <!-- VIEW 1: EXAM LIST -->
@@ -61,7 +57,6 @@
              <div class="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-gray-50">
                 <div class="flex gap-4">
                  <span class="flex items-center gap-1"><i class="pi pi-briefcase text-secondary"></i> {{ exam.partCount || 0 }} Parts</span>
-                 <!-- <span class="flex items-center gap-1"><i class="pi pi-list text-secondary"></i> {{ exam.questions.length }} Questions</span> -->
                </div>
                 <span class="text-secondary font-bold text-xs bg-blue-50 px-3 py-1 rounded-full group-hover:bg-secondary group-hover:text-white transition-colors">Start <i class="pi pi-arrow-right ml-1"></i></span>
              </div>
@@ -75,14 +70,118 @@
     </div>
 
     <!-- VIEW 2: PARTS LIST -->
-    <div *ngIf="currentView === 'parts' && selectedExam" class="animate-fade-in">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Select a Part</h2>
+    <div *ngIf="currentView === 'parts' && selectedExam" class="animate-fade-in relative pb-24">
+        
+        <!-- Practice Config Overlay -->
+        <div *ngIf="configView" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in">
+                 <!-- Header -->
+                 <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                     <div>
+                         <h3 class="text-xl font-bold text-gray-800">Customize Practice Session</h3>
+                         <p class="text-sm text-gray-500 mt-1">
+                             Selected Parts: {{ selectedParts.size }}
+                         </p>
+                     </div>
+                     <button (click)="cancelConfig()" class="text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-0 cursor-pointer">
+                         <i class="fas fa-times text-xl"></i>
+                     </button>
+                 </div>
+
+                 <!-- Scrollable Content -->
+                 <div class="p-6 overflow-y-auto space-y-8 custom-scrollbar">
+                     
+                     <!-- 1. Topic Selection -->
+                     <div class="space-y-3">
+                         <div class="flex items-center justify-between">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Select Lessons</label>
+                             <button (click)="selectAllTopics()" class="text-xs text-blue-600 hover:underline font-medium bg-transparent border-0 cursor-pointer">Select All</button>
+                         </div>
+                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                             <div *ngFor="let topic of availableTopics" 
+                                  (click)="toggleTopic(topic)"
+                                  [class.border-blue-500]="selectedTopics.has(topic)"
+                                  [class.bg-blue-50]="selectedTopics.has(topic)"
+                                  class="cursor-pointer border border-gray-200 rounded-lg p-3 flex items-center justify-between hover:border-blue-300 transition-all">
+                                  <span class="text-sm text-gray-700 font-medium">{{topic}}</span>
+                                  <div [class.bg-blue-500]="selectedTopics.has(topic)"
+                                       [class.border-blue-500]="selectedTopics.has(topic)" 
+                                       class="w-5 h-5 rounded border border-gray-300 flex items-center justify-center transition-colors">
+                                      <i *ngIf="selectedTopics.has(topic)" class="fas fa-check text-white text-xs"></i>
+                                  </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- 2. Settings Grid -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <!-- Question Count -->
+                         <div class="space-y-3">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Number of Questions</label>
+                             <div class="flex items-center gap-4">
+                                 <input type="range" 
+                                        [(ngModel)]="configQuestionCount" 
+                                        [max]="maxQuestionsAvailable" 
+                                        min="1" 
+                                        class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                                 <input type="number" 
+                                        [(ngModel)]="configQuestionCount" 
+                                        [max]="maxQuestionsAvailable" 
+                                        min="1"
+                                        class="w-20 p-2 border border-gray-300 rounded-lg text-center font-bold text-gray-700 focus:ring-2 focus:ring-blue-500">
+                             </div>
+                             <p class="text-xs text-gray-500 text-right">Max available: {{maxQuestionsAvailable}}</p>
+                         </div>
+
+                         <!-- Preferences -->
+                         <div class="space-y-3">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Preferences</label>
+                             
+                             <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                 <div class="relative inline-flex items-center cursor-pointer">
+                                     <input type="checkbox" [(ngModel)]="configTimerEnabled" class="sr-only peer">
+                                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                 </div>
+                                 <span class="text-sm font-medium text-gray-700">Enable Timer</span>
+                             </label>
+
+                             <!-- Removed Immediate Feedback Checkbox as requested -->
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Footer -->
+                 <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                     <button (click)="cancelConfig()" class="px-6 py-2.5 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition-colors bg-white border border-gray-300 cursor-pointer">Cancel</button>
+                     <button (click)="startCustomPractice()" 
+                             class="px-8 py-2.5 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all border-0 cursor-pointer">
+                         Start Practice
+                     </button>
+                 </div>
+             </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Select Lessons</h2>
+            <button (click)="toggleAllParts()" class="text-blue-600 hover:text-blue-800 font-medium text-sm bg-transparent border-0 cursor-pointer">
+                {{ selectedParts.size === parts.length ? 'Deselect All' : 'Select All' }}
+            </button>
+        </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              <div *ngFor="let part of parts" 
-                  class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col group"
-                  (click)="selectPart(part)">
+                  class="bg-white rounded-xl border shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex flex-col group relative"
+                  [ngClass]="{'border-blue-500 ring-2 ring-blue-500/20': selectedParts.has(part.id), 'border-gray-200 hover:-translate-y-1': !selectedParts.has(part.id)}"
+                  (click)="togglePartSelection(part)">
                  
+                  <!-- Checkbox Overlay -->
+                  <div class="absolute top-3 right-3 z-10">
+                      <div class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all shadow-sm"
+                           [ngClass]="selectedParts.has(part.id) ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-300 group-hover:border-blue-400'">
+                          <i class="fas fa-check text-white text-xs" *ngIf="selectedParts.has(part.id)"></i>
+                      </div>
+                  </div>
+
                  <!-- Part Image -->
                  <div class="h-40 bg-gray-100 relative overflow-hidden">
                      <ng-container *ngIf="part.image; else defaultPartIcon">
@@ -97,148 +196,188 @@
                  </div>
 
                  <div class="p-6 flex flex-col flex-grow">
-          <div class="p-8">
-            <h3 class="text-2xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors">{{ part.title }}</h3>
-            <p class="text-gray-500 mb-6 line-clamp-2">{{ part.description }}</p>
-            
-            <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
-                <span class="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full"><i class="pi pi-list"></i> {{ part.questionCount || 0 }} Questions</span>
-                <span class="flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full"><i class="pi pi-clock"></i> {{ part.durationLabel || 'N/A' }}</span>
-            </div>
-
-            <div class="flex items-center text-blue-600 font-bold group-hover:translate-x-2 transition-transform">
-                Start Now <i class="pi pi-arrow-right ml-2"></i>
-            </div>
-          </div>
+                  <div class="p-1">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{ part.title }}</h3>
+                    <p class="text-gray-500 mb-4 line-clamp-2 text-sm">{{ part.description }}</p>
+                    
+                    <div class="flex items-center gap-4 text-xs text-gray-500">
+                        <span class="flex items-center gap-1 bg-green-50 text-green-700 px-2.5 py-1 rounded-full"><i class="pi pi-list"></i> {{ part.questionCount || 0 }} Qs</span>
+                        <span class="flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full"><i class="pi pi-clock"></i> {{ part.durationLabel || 'N/A' }}</span>
+                    </div>
+                  </div>
                  </div>
              </div>
         </div>
+
+        <!-- Floating Action Bar for Selection -->
+        <div *ngIf="selectedParts.size > 0" class="fixed bottom-6 left-0 right-0 flex justify-center z-40 animate-slide-up">
+            <div class="bg-gray-900/90 text-white backdrop-blur-md shadow-2xl rounded-full px-6 py-3 flex items-center gap-6 border border-gray-700">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Selected</span>
+                    <span class="font-bold text-lg leading-none">{{ selectedParts.size }} Part<span *ngIf="selectedParts.size > 1">s</span></span>
+                </div>
+                <div class="h-8 w-px bg-gray-700"></div>
+                <button (click)="proceedToConfig()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:shadow-blue-600/50 transition-all flex items-center gap-2 border-0 cursor-pointer">
+                    Start Practice <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
-          <!-- VIEW 3: EXAM INTERFACE (QUESTION PLAYER) -->
-          <div *ngIf="currentView === 'exam' && selectedExam" class="animate-fade-in max-w-3xl mx-auto">
-            
-            <!-- Timer & Stats Header -->
-            <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <!-- Timer -->
-                <div *ngIf="remainingTime > 0 && !reviewMode" class="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex items-center gap-2 animate-fade-in">
-                    <i class="pi pi-clock text-blue-600"></i>
-                    <span class="text-sm font-semibold text-gray-500 hidden sm:inline">{{ 'QUESTIONS.TIME_REMAINING' | translate }}:</span>
-                    <span class="font-mono font-bold text-xl text-gray-900" [class.text-red-500]="remainingTime < 60">{{ formattedTime }}</span>
-                </div>
-                
-                <!-- Progress Stats -->
-                <div class="flex items-center gap-4 text-sm font-medium text-gray-500 ml-auto">
-                     <span>{{ 'QUESTIONS.QUESTION_OF' | translate:{current: currentQuestionIndex + 1, total: filteredQuestions.length} }}</span>
-                     <span class="hidden sm:inline">•</span>
-                     <span>{{ ((currentQuestionIndex + 1) / filteredQuestions.length) * 100 | number:'1.0-0' }}%</span>
-                </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
-                <div class="bg-secondary h-full transition-all duration-500" 
-                     [style.width.%]="((currentQuestionIndex + 1) / filteredQuestions.length) * 100">
-                </div>
-            </div>
-
-            <!-- Question Navigator Grid -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-              <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">{{ 'QUESTIONS.NAVIGATOR' | translate }}</h4>
-              <div class="flex flex-wrap gap-2">
-                  <button *ngFor="let q of filteredQuestions; let i = index"
-                          (click)="goToQuestion(i)"
-                          [class.bg-primary]="currentQuestionIndex === i"
-                          [class.text-white]="currentQuestionIndex === i"
-                          [class.bg-secondary]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
-                          [class.text-white]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
-                          [class.bg-gray-100]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
-                          [class.text-gray-600]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
-                          class="w-10 h-10 rounded-lg font-bold text-sm transition-all hover:scale-105 hover:shadow-md flex items-center justify-center">
-                      {{ i + 1 }}
-                  </button>
-              </div>
-            </div>
-
-            <!-- Question Card -->
-            <div class="bg-white p-8 md:p-12 rounded-3xl shadow-lg border border-gray-100 break-words max-w-full">
-              <h3 class="text-2xl font-bold text-primary mb-8 leading-relaxed break-words" [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].text | translate)">
-              </h3>
-
-              <!-- Options (Multiple Choice & True/False) -->
-              <div *ngIf="filteredQuestions[currentQuestionIndex].type !== 'essay'" class="space-y-4 mb-10">
-                  <div *ngFor="let option of filteredQuestions[currentQuestionIndex].options; let i = index" 
-                       (click)="!reviewMode && selectAnswer(i)"
-                       [class.bg-blue-50]="!reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                       [class.border-secondary]="!reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                       [class.bg-green-100]="reviewMode && i === filteredQuestions[currentQuestionIndex].correctAnswer"
-                       [class.border-green-500]="reviewMode && i === filteredQuestions[currentQuestionIndex].correctAnswer"
-                       [class.bg-red-100]="reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
-                       [class.border-red-500]="reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
-                       [class.cursor-default]="reviewMode"
-                       [class.cursor-pointer]="!reviewMode"
-                       class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl transition-colors group">
-                      
-                      <div [class.bg-secondary]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                           [class.border-secondary]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                           class="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors group-hover:border-secondary">
-                           <i *ngIf="filteredQuestions[currentQuestionIndex].selectedAnswer === i" class="pi pi-check text-white text-xs"></i>
-                      </div>
-                      
-                      <span class="font-semibold text-primary text-lg break-words" [innerHTML]="safeHtml(option | translate)"></span>
+    <!-- VIEW 3: EXAM INTERFACE -->
+    <div *ngIf="currentView === 'exam' && selectedExam" class="max-w-4xl mx-auto animate-fade-in relative pb-24">
+        
+        <!-- Header / Status Bar -->
+        <div class="sticky  bg-white/95 backdrop-blur shadow-sm border-b border-gray-200 -mx-4 px-4 py-3 mb-6 flex items-center justify-between sm:rounded-b-xl sm:mx-0">
+             <div class="flex items-center gap-4">
+                 <button (click)="backToParts()" class="text-gray-400 hover:text-gray-700 transition-colors">
+                     <i class="fas fa-arrow-left"></i>
+                 </button>
+                 <div>
+                     <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold block">Question</span>
+                     <span class="text-lg font-bold text-gray-800">{{currentQuestionIndex + 1}} <span class="text-gray-400 text-sm font-normal">/ {{filteredQuestions.length}}</span></span>
                  </div>
-              </div>
+             </div>
+    
+             <div class="flex items-center gap-4">
+                 <!-- Timer -->
+                 <div *ngIf="remainingTime > 0" class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg font-mono font-bold">
+                     <i class="far fa-clock"></i>
+                     <span>{{ formattedTime }}</span>
+                 </div>
+                 
+                 <button (click)="submitExam()" class="hidden sm:block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition-all border-0 cursor-pointer">
+                     Finish Exam
+                 </button>
+             </div>
+        </div>
+    
+        <!-- Question Navigator Grid -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Question Navigator</h4>
+          <div class="flex flex-wrap gap-2">
+             <button *ngFor="let q of filteredQuestions; let i = index"
+                     (click)="goToQuestion(i)"
+                     [disabled]="!reviewMode && q.selectedAnswer === undefined && i > currentQuestionIndex"
+                     [class.bg-blue-600]="currentQuestionIndex === i"
+                     [class.text-white]="currentQuestionIndex === i"
+                     [class.ring-2]="currentQuestionIndex === i"
+                     [class.ring-blue-100]="currentQuestionIndex === i"
+                     [class.bg-blue-50]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                     [class.text-blue-700]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                     [class.border-blue-200]="currentQuestionIndex !== i && q.selectedAnswer !== undefined"
+                     [class.bg-gray-50]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                     [class.text-gray-400]="currentQuestionIndex !== i && q.selectedAnswer === undefined"
+                     [class.cursor-not-allowed]="!reviewMode && q.selectedAnswer === undefined && i > currentQuestionIndex"
+                     class="w-10 h-10 rounded-lg font-bold text-sm transition-all border border-transparent flex items-center justify-center relative">
+                 {{ i + 1 }}
+                 <div *ngIf="q.selectedAnswer !== undefined" class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+             </button>
+         </div>
+       </div>
 
-               <!-- Essay Answer -->
-               <div *ngIf="filteredQuestions[currentQuestionIndex].type === 'essay'" class="mb-10">
-                   <textarea 
-                       [(ngModel)]="filteredQuestions[currentQuestionIndex].studentAnswer" 
-                       (ngModelChange)="filteredQuestions[currentQuestionIndex].selectedAnswer = 0" 
-                       rows="6" 
-                       [readonly]="reviewMode"
-                       class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent resize-none disabled:bg-gray-100 disabled:text-gray-500"
-                       [placeholder]="'QUESTIONS.ENTER_ANSWER' | translate">
-                   </textarea>
-               </div>
+        <!-- Question Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
+             <!-- Question Header Info -->
+             <div class="flex justify-between items-start mb-6">
+                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                     {{filteredQuestions[currentQuestionIndex].topic || 'General'}}
+                 </span>
+                 <span class="text-xs text-gray-400">ID: #{{filteredQuestions[currentQuestionIndex].id}}</span>
+             </div>
 
-               <!-- Explanation Div (Only in Review Mode) -->
-                <div *ngIf="reviewMode && filteredQuestions[currentQuestionIndex].answerExplanation" class="mb-10 animate-fade-in break-words">
-                    <div class="bg-blue-50 border-l-4 border-secondary p-6 rounded-r-xl">
-                        <div class="flex items-start gap-3">
-                            <i class="pi pi-info-circle text-secondary text-xl mt-1"></i>
-                            <div>
-                                <h4 class="font-bold text-gray-800 mb-2">{{ 'QUESTIONS.EXPLANATION' | translate }}</h4>
-                                <p class="text-gray-600 leading-relaxed overflow-hidden" [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].answerExplanation)">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+             <!-- Rich Text Question Body -->
+             <div class="prose prose-blue max-w-none mb-8 text-gray-800 text-lg leading-relaxed select-none"
+                  [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].text)">
+             </div>
+    
+             <!-- Options List -->
+             <div class="space-y-3">
+                 <div *ngFor="let option of filteredQuestions[currentQuestionIndex].options; let i = index" 
+                      (click)="selectAnswer(i)"
+                      [class.border-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.bg-blue-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-1]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      class="group relative border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-300 hover:bg-gray-50 transition-all duration-200">
+                     
+                     <div class="flex items-start gap-3">
+                         <!-- Radio Circle -->
+                         <div [class.bg-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              [class.border-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              class="mt-1 w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0 transition-all group-hover:border-blue-400">
+                             <div class="w-2 h-2 bg-white rounded-full"></div>
+                         </div>
+                         
+                         <!-- Option Text -->
+                         <div class="text-gray-700 font-medium select-none text-[15px] pt-0.5"
+                              [innerHTML]="safeHtml(option)">
+                         </div>
+                     </div>
+                 </div>
+             </div>
 
-              <!-- Navigation -->
-              <div class="flex justify-between items-center">
-                   <button (click)="previousQuestion()" 
-                           [disabled]="currentQuestionIndex === 0"
-                           class="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-100 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
-                     {{ 'QUESTIONS.PREVIOUS' | translate }}
-                   </button>
+             <!-- IMMEDIATE FEEDBACK REMOVED/HIDDEN during exam. ONLY SHOWN IN REVIEW MODE -->
+             <div *ngIf="reviewMode" class="mt-8 animate-fade-in">
+                  
+                  <div [class.bg-green-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-green-200]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.bg-red-50]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-red-200]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                       class="border rounded-xl p-5">
+                      
+                      <div class="flex items-center gap-2 mb-3 font-bold"
+                           [class.text-green-700]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                           [class.text-red-700]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer">
+                           <i class="fas" 
+                              [class.fa-check-circle]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                              [class.fa-times-circle]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"></i>
+                           <span>
+                               {{ filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer ? 'Correct Answer' : 'Incorrect' }}
+                           </span>
+                      </div>
 
-                   <button *ngIf="currentQuestionIndex < filteredQuestions.length - 1"
-                           (click)="nextQuestion()"
-                           [disabled]="filteredQuestions[currentQuestionIndex].selectedAnswer === undefined"
-                           class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                     {{ 'QUESTIONS.NEXT_QUESTION' | translate }}
-                   </button>
-
-             <button *ngIf="currentQuestionIndex === filteredQuestions.length - 1"
-                     (click)="submitExam()"
+                      <!-- Explanation -->
+                      <div *ngIf="filteredQuestions[currentQuestionIndex].answerExplanation" class="prose prose-sm max-w-none text-gray-700 mt-2">
+                           <p class="font-semibold text-gray-900 mb-1">Explanation:</p>
+                           <div [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].answerExplanation)"></div>
+                      </div>
+                      <div *ngIf="!filteredQuestions[currentQuestionIndex].answerExplanation" class="text-sm text-gray-500 italic">
+                          No explanation provided for this question.
+                      </div>
+                  </div>
+             </div>
+        </div>
+    
+        <!-- Navigation Buttons -->
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 sm:static sm:bg-transparent sm:border-0 sm:p-0 flex items-center justify-between gap-4">
+             <button (click)="previousQuestion()" 
+                     [disabled]="currentQuestionIndex === 0"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-all cursor-pointer">
+                 <i class="fas fa-arrow-left mr-2"></i> Prev
+             </button>
+             
+             <!-- Disable Next if no answer selected (and not in review mode) -->
+             <button (click)="nextQuestion()" 
+                     *ngIf="currentQuestionIndex < filteredQuestions.length - 1"
+                     [disabled]="!reviewMode && filteredQuestions[currentQuestionIndex].selectedAnswer === undefined"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all disabled:bg-gray-300 disabled:shadow-none disabled:transform-none disabled:cursor-not-allowed border-0 cursor-pointer">
+                 Next <i class="fas fa-arrow-right ml-2"></i>
+             </button>
+             
+             <button (click)="submitExam()" 
+                     *ngIf="currentQuestionIndex === filteredQuestions.length - 1 && !reviewMode"
                      [disabled]="filteredQuestions[currentQuestionIndex].selectedAnswer === undefined"
-                     class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-               {{ 'QUESTIONS.SUBMIT_EXAM' | translate }}
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all disabled:bg-gray-300 disabled:shadow-none disabled:transform-none disabled:cursor-not-allowed border-0 cursor-pointer">
+                 Finish <i class="fas fa-flag-checkered ml-2"></i>
+             </button>
+
+             <button (click)="currentView = 'result'" 
+                     *ngIf="reviewMode"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all border-0 cursor-pointer">
+                 Back to Results
              </button>
         </div>
-
-      </div>
     </div>
 
 
@@ -264,17 +403,17 @@
              </div>
              <div class="bg-gray-50 p-4 rounded-xl">
                 <span class="block text-gray-400 text-xs uppercase tracking-wider">{{ 'QUESTIONS.TOTAL' | translate }}</span>
-                <span class="text-2xl font-bold text-primary">{{ selectedExam?.questions?.length }}</span>
+                <span class="text-2xl font-bold text-primary">{{ filteredQuestions.length }}</span>
              </div>
           </div>
 
-           <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4">
+           <button (click)="reset()" class="w-full py-4 bg-secondary hover:bg-secondary/90 text-white font-bold rounded-xl transition shadow-lg shadow-secondary/20 mb-4 cursor-pointer border-0">
               {{ 'QUESTIONS.TRY_ANOTHER' | translate }}
            </button>
-           <button (click)="startReview()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg mb-4">
+           <button (click)="startReview()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg mb-4 cursor-pointer border-0">
               {{ 'QUESTIONS.REVIEW_ANSWERS' | translate }}
            </button>
-           <button (click)="currentView = 'exam'; currentQuestionIndex = 0; score = 0" class="w-full py-4 bg-white border-2 border-gray-100 hover:bg-gray-50 text-gray-600 font-bold rounded-xl transition">
+           <button (click)="currentView = 'exam'; currentQuestionIndex = 0; score = 0" class="w-full py-4 bg-white border-2 border-gray-100 hover:bg-gray-50 text-gray-600 font-bold rounded-xl transition cursor-pointer">
               {{ 'QUESTIONS.RETAKE' | translate }}
            </button>
 
@@ -290,7 +429,7 @@
             <p class="text-gray-700 leading-relaxed">{{ alertMessage }}</p>
         </div>
         <ng-template pTemplate="footer">
-            <button (click)="alertDialogVisible=false" type="button" class="w-full px-5 py-3 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">
+            <button (click)="alertDialogVisible=false" type="button" class="w-full px-5 py-3 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 border-0 cursor-pointer">
                 OK
             </button>
         </ng-template>

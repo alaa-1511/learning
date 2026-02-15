@@ -36,9 +36,13 @@ export class Questions implements OnInit {
 
   selectedCategory: string | null = null;
   selectedExam: Exam | null = null;
-  selectedPart: ExamPart | null = null;
+  
+  // Multi-select parts
+  selectedParts: Set<number> = new Set(); 
+  // We still keep selectedPart for single-part logic or just as a reference, 
+  // but main logic will shift to selectedParts.
 
-  filteredQuestions: ExamQuestion[] = []; // Questions for the selected part
+  filteredQuestions: ExamQuestion[] = []; // Questions for the selected part(s)
 
   currentQuestionIndex: number = 0;
   score: number = 0;
@@ -64,7 +68,7 @@ export class Questions implements OnInit {
   selectedTopics: Set<string> = new Set();
   configQuestionCount: number = 10;
   configTimerEnabled: boolean = false;
-  configShowFeedbackImmediate: boolean = false;
+  // configShowFeedbackImmediate: boolean = false; // FINALLY REMOVED/DISABLED for strict mode
   maxQuestionsAvailable: number = 0;
 
   constructor(
@@ -73,7 +77,7 @@ export class Questions implements OnInit {
     private router: Router,
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private supabaseService: SupabaseService // Injected service
+    private supabaseService: SupabaseService
   ) {}
 
   safeHtml(content: string | undefined): SafeHtml {
@@ -91,8 +95,6 @@ export class Questions implements OnInit {
 
       // 2. Fetch assignments if user exists
       if (this.currentUser && this.currentUser.email) {
-          // Check if we already have assignments loaded? For now, fetch fresh to be safe but maybe we can optimize later.
-          // Still, getSession() saved one fetch.
           const assignments = await this.examService.getStudentAssignments(this.currentUser.email);
           this.userAssignments = assignments || [];
           console.log('User Assignments:', this.userAssignments);
@@ -154,12 +156,10 @@ export class Questions implements OnInit {
   }
 
   getCategoryImage(category: string): string {
-      // Return a default image or map specific names if you have assets
-      // For now, consistent placeholders
       switch(category.toLowerCase()) {
-          case 'math': return 'assets/images/categories/math.png'; // Example
+          case 'math': return 'assets/images/categories/math.png';
           case 'science': return 'assets/images/categories/science.png';
-          default: return ''; // Will allow fallback in template
+          default: return '';
       }
   }
 
@@ -194,12 +194,11 @@ export class Questions implements OnInit {
     
     this.selectedExam = exam;
     this.parts = await this.examService.getParts(exam.id);
+    this.selectedParts.clear(); // Reset selection
 
     // Filter Parts based on assignments (Using cached data from init)
     if (this.currentUser) {
         if (this.userAssignments.length > 0) {
-            // Filter parts that are in the assignment list for this course
-            // ID Comparison: Ensure types match (db might be string/number)
             const assignedPartIds = new Set(
                 this.userAssignments
                     .filter(a => Number(a.course_id) === Number(exam.id)) 
@@ -207,19 +206,16 @@ export class Questions implements OnInit {
             );
             
             if (assignedPartIds.size > 0) {
-                // Also use Number for filtering parts
                 this.parts = this.parts.filter(p => assignedPartIds.has(Number(p.id)));
             } else {
                 this.parts = [];
             }
         } else {
-            // Logged in but no assignments at all
             this.parts = [];
         }
     }
     
     // Check for orphaned questions (no part) in this exam
-    // Use fallback to empty array safely
     const currentQuestions = exam.questions || [];
     const orphans = currentQuestions.filter((q: any) => !q.partId);
     
@@ -242,7 +238,6 @@ export class Questions implements OnInit {
             count = currentQuestions.filter((q: any) => q.partId === p.id).length;
         }
         p.questionCount = count;
-        // Strict Priority: Use manual duration if set (>0), otherwise fallback
         p.durationLabel = (p.duration && p.duration > 0) ? p.duration + ' Mins' : Math.ceil(count * 1.5) + ' Mins';
     });
 
@@ -255,34 +250,54 @@ export class Questions implements OnInit {
     window.scrollTo(0,0);
   }
 
-  selectPart(part: ExamPart) {
-    this.selectedPart = part;
-    // Safely access questions
-    const allQuestions = this.selectedExam?.questions || [];
-    
-    if (part.id === -1) {
-        // Orphans
-        this.filteredQuestions = allQuestions.filter((q: any) => !q.partId);
-    } else {
-        this.filteredQuestions = allQuestions.filter((q: any) => q.partId === part.id);
-    }
+  // Toggle selection of a part
+  togglePartSelection(part: ExamPart) {
+      if (this.selectedParts.has(part.id)) {
+          this.selectedParts.delete(part.id);
+      } else {
+          this.selectedParts.add(part.id);
+      }
+  }
 
-      if (this.filteredQuestions.length === 0) {
-          this.showAlert('No questions in this part.', 'Notice');
+  // Select all or deselect all
+  toggleAllParts() {
+      if (this.selectedParts.size === this.parts.length) {
+          this.selectedParts.clear();
+      } else {
+          this.parts.forEach(p => this.selectedParts.add(p.id));
+      }
+  }
+
+  // Proceed to configuration with selected parts
+  proceedToConfig() {
+      if (this.selectedParts.size === 0) {
+          this.showAlert('Please select at least one part to proceed.', 'Selection Required');
           return;
       }
       
-      // Go to Config View instead of immediate start
+      // Determine Questions from Selected Parts
+      const allQuestions = this.selectedExam?.questions || [];
+      this.filteredQuestions = allQuestions.filter(q => {
+          const pId = q.partId || -1; // Handle orphans map to -1
+          // If partId is missing (undefined/null), treat as -1 for comparison if our orphan part is -1
+          const effectivePartId = q.partId ? q.partId : -1; 
+          return this.selectedParts.has(effectivePartId);
+      });
+
+      if (this.filteredQuestions.length === 0) {
+          this.showAlert('No questions available in the selected parts.', 'Empty Selection');
+          return;
+      }
+
       this.extractTopics();
       this.configView = true;
-      this.currentView = 'parts'; // Stay in parts view effectively, but show config overlay/section
+      this.currentView = 'parts';
       this.maxQuestionsAvailable = this.filteredQuestions.length;
       this.configQuestionCount = Math.min(10, this.maxQuestionsAvailable);
       this.selectAllTopics();
   }
 
   extractTopics() {
-      // Extract unique topics from filteredQuestions
       const topics = new Set(this.filteredQuestions.map(q => q.topic || 'General').filter(t => t));
       this.availableTopics = Array.from(topics).sort();
   }
@@ -302,7 +317,6 @@ export class Questions implements OnInit {
   }
 
   updateMaxQuestions() {
-      // Count questions that match selected topics
       const count = this.filteredQuestions.filter(q => this.selectedTopics.has(q.topic || 'General')).length;
       this.maxQuestionsAvailable = count;
       if (this.configQuestionCount > count) {
@@ -336,18 +350,19 @@ export class Questions implements OnInit {
 
   cancelConfig() {
       this.configView = false;
-      this.selectedPart = null;
+      // Don't clear selectedParts so user can adjust config without re-selecting
   }
 
   backToExams() {
       this.selectedExam = null;
       this.parts = [];
+      this.selectedParts.clear();
       this.currentView = 'list';
       this.stopTimer();
   }
 
   backToParts() {
-      this.selectedPart = null;
+      // this.selectedPart = null; // No longer primary driver
       this.currentView = 'parts';
       this.stopTimer();
       this.reviewMode = false;
@@ -361,23 +376,16 @@ export class Questions implements OnInit {
     // Reset answers
     questions.forEach(q => q.selectedAnswer = undefined);
 
+    this.filteredQuestions = questions; // Ensure filteredQuestions is the active set
+
     // Initialize Timer
     if (this.configTimerEnabled) {
-        if (this.selectedPart && this.selectedPart.duration && this.selectedPart.duration > 0) {
-            // defined part duration - scale it if we selected fewer questions? 
-            // Better logic: if partial set, maybe 1.5 min per question or prorated?
-            // Let's use 1.5 min per question for custom sets to be safe, or full duration if taking all.
-            if (questions.length < this.filteredQuestions.length || !this.selectedPart.duration) {
-                 this.remainingTime = Math.ceil(questions.length * 1.5 * 60);
-            } else {
-                 this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
-            }
-        } else {
-            // Fallback: 1.5 mins per question
-            const calculatedMinutes = Math.ceil(questions.length * 1.5);
-            this.remainingTime = calculatedMinutes * 60;
-        }
-        this.startTimer();
+         // Calculate duration based on aggregated parts or default
+         // If multiple parts, sum up their durations? Or just use question count rule?
+         // Simplest: 1.5 mins per question
+         const calculatedMinutes = Math.ceil(questions.length * 1.5);
+         this.remainingTime = calculatedMinutes * 60;
+         this.startTimer();
     } else {
         this.stopTimer();
         this.remainingTime = 0;
@@ -422,10 +430,32 @@ export class Questions implements OnInit {
   }
 
   goToQuestion(index: number) {
-    this.currentQuestionIndex = index;
+      if (this.reviewMode) {
+          this.currentQuestionIndex = index;
+          return;
+      }
+
+      // Strict Mode: Can only go back or to the immediately next question if current is answered
+      // Better yet: Allow navigation to any *already visited/answered* question OR the first unanswered one.
+      
+      let firstUnanswered = this.filteredQuestions.findIndex(q => q.selectedAnswer === undefined);
+      if (firstUnanswered === -1) firstUnanswered = this.filteredQuestions.length - 1;
+
+      if (index <= firstUnanswered) {
+           this.currentQuestionIndex = index;
+      } else {
+           this.showAlert('You must answer previous questions before proceeding.', 'Navigation Locked');
+      }
   }
 
   nextQuestion() {
+    // STRICT MODE: Block if no answer selected
+    const currentQ = this.filteredQuestions[this.currentQuestionIndex];
+    if (currentQ.selectedAnswer === undefined && !this.reviewMode) {
+        this.showAlert('Please select an answer before proceeding.', 'Answer Required');
+        return;
+    }
+
     if (this.currentQuestionIndex < this.filteredQuestions.length - 1) {
       this.currentQuestionIndex++;
     }
@@ -438,6 +468,15 @@ export class Questions implements OnInit {
   }
 
   submitExam(timeUp: boolean = false) {
+    // Final check for last question if manual submit
+    if (!timeUp && !this.reviewMode) {
+        const currentQ = this.filteredQuestions[this.currentQuestionIndex];
+        if (currentQ.selectedAnswer === undefined) {
+             this.showAlert('Please answer the last question before submitting.', 'Answer Required');
+             return;
+        }
+    }
+
     this.stopTimer();
 
     if (timeUp) {
@@ -464,9 +503,7 @@ export class Questions implements OnInit {
   }
 
   reset() {
-    this.selectedPart = null;
-    // Go back to Parts view logic or stay in parts?
-    // Let's go back to parts selection
+    this.selectedParts.clear();
     this.backToParts();
   }
 }

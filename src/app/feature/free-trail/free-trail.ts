@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,6 @@ interface ExamQuestion extends Question {
   studentAnswer?: string;
 }
 
-
 @Component({
   selector: 'app-free-trail',
   standalone: true,
@@ -21,7 +20,7 @@ interface ExamQuestion extends Question {
   templateUrl: './free-trail.html',
   styleUrl: './free-trail.css',
 })
-export class FreeTrail implements OnInit {
+export class FreeTrail implements OnInit, OnDestroy {
    @Input() minii: boolean = false;
   // State: 'categories' | 'list' | 'parts' | 'exam' | 'result'
   currentView: 'categories' | 'list' | 'parts' | 'exam' | 'result' = 'list';
@@ -34,6 +33,9 @@ export class FreeTrail implements OnInit {
   selectedCategory: string | null = null;
   selectedExam: Exam | null = null;
   selectedPart: ExamPart | null = null;
+
+  // Multi-selection support for Parts
+  selectedParts: Set<number> = new Set();
   
   filteredQuestions: ExamQuestion[] = [];
 
@@ -64,15 +66,12 @@ export class FreeTrail implements OnInit {
   }
 
   ngOnInit() {
-    // Subscribe to questions first to see which exams have content
     this.questionService.questions$.subscribe(questions => {
-       // Filter for Active, Free Trial Questions
        const freeQuestions = questions.filter(q => q.status === 'Active' && q.targetPage === 'free-trial').map(q => ({
            ...q,
            type: q.type.toLowerCase() as any
        })) as ExamQuestion[];
 
-       // Fetch Exams from new ExamService
        this.examService.exams$.subscribe(exams => {
            this.exams = exams.map(exam => ({
                id: exam.id,
@@ -86,11 +85,9 @@ export class FreeTrail implements OnInit {
                partCount: new Set(freeQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
            }));
            
-           // Only show exams that have Free Trial content
            this.exams = this.exams.filter(e => (e.questions?.length || 0) > 0);
            
            this.extractCategories();
-
            this.filteredExams = this.exams;
            this.currentView = 'list';
        });
@@ -113,12 +110,10 @@ export class FreeTrail implements OnInit {
   }
   
   getCategoryImage(category: string): string {
-      // Return a default image or map specific names if you have assets
-      // For now, consistent placeholders
       switch(category.toLowerCase()) {
-          case 'math': return 'assets/images/categories/math.png'; // Example
+          case 'math': return 'assets/images/categories/math.png';
           case 'science': return 'assets/images/categories/science.png';
-          default: return ''; // Will allow fallback in template
+          default: return '';
       }
   }
 
@@ -126,7 +121,6 @@ export class FreeTrail implements OnInit {
       this.stopTimer();
   }
 
-  // Called from Mini View (Landing Page)
   enroll(exam: Exam) {
       this.router.navigate(['/free-trial']);
   }
@@ -143,7 +137,6 @@ export class FreeTrail implements OnInit {
       this.currentView = 'categories';
   }
 
-  // Navigation Logic
   async selectExam(exam: Exam) {
     if (this.minii) {
         this.router.navigate(['/free-trial']);
@@ -156,9 +149,9 @@ export class FreeTrail implements OnInit {
     }
     
     this.selectedExam = exam;
+    this.selectedParts.clear(); // Clear previous selections
     this.parts = await this.examService.getParts(exam.id);
     
-    // Check for current flow
     const currentQuestions = exam.questions || [];
     const orphans = currentQuestions.filter((q: any) => !q.partId);
     
@@ -172,7 +165,6 @@ export class FreeTrail implements OnInit {
         });
     }
 
-    // Calculate metadata for parts
     this.parts.forEach(p => {
         let count = 0;
         if (p.id === -1) {
@@ -181,7 +173,7 @@ export class FreeTrail implements OnInit {
             count = currentQuestions.filter((q: any) => q.partId === p.id).length;
         }
         p.questionCount = count;
-        // Strict Priority: Use manual duration if set (>0), otherwise fallback
+        // Logic similar to Questions component
         p.durationLabel = (p.duration && p.duration > 0) ? p.duration + ' Mins' : Math.ceil(count * 1.5) + ' Mins';
     });
 
@@ -194,23 +186,47 @@ export class FreeTrail implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  selectPart(part: ExamPart) {
-      this.selectedPart = part;
-      const allQuestions = this.selectedExam?.questions || [];
-      
-      // Filter questions for this part
-      if (part.id === -1) {
-          this.filteredQuestions = allQuestions.filter((q: any) => !q.partId);
+  togglePartSelection(part: ExamPart) {
+      if (this.selectedParts.has(part.id)) {
+          this.selectedParts.delete(part.id);
       } else {
-          this.filteredQuestions = allQuestions.filter((q: any) => q.partId === part.id);
+          this.selectedParts.add(part.id);
       }
+  }
 
-      if (this.filteredQuestions.length === 0) {
-          this.showAlert('No questions in this part.', 'Notice');
+  toggleAllParts() {
+      if (this.selectedParts.size === this.parts.length) {
+          this.selectedParts.clear();
+      } else {
+          this.parts.forEach(p => this.selectedParts.add(p.id));
+      }
+  }
+
+  proceedToExam() {
+      if(this.selectedParts.size === 0) {
+          this.showAlert('Please select at least one part to start.', 'Selection Required');
           return;
       }
       
-      this.startExam(this.filteredQuestions);
+      const allSelectedQuestions: ExamQuestion[] = [];
+      const examQuestions = this.selectedExam?.questions || [];
+
+      this.selectedParts.forEach(partId => {
+          let questionsForPart = [];
+          if(partId === -1) {
+               questionsForPart = examQuestions.filter((q: any) => !q.partId);
+          } else {
+               questionsForPart = examQuestions.filter((q: any) => q.partId === partId);
+          }
+          allSelectedQuestions.push(...questionsForPart);
+      });
+      
+      this.startExam(allSelectedQuestions);
+  }
+
+  // Legacy support if selectPart is called directly from template (though updated template should use toggle)
+  selectPart(part: ExamPart) {
+      this.togglePartSelection(part);
   }
 
   backToExams() {
@@ -227,8 +243,6 @@ export class FreeTrail implements OnInit {
       this.reviewMode = false;
   }
 
-
-
   showAlert(message: string, header: string = 'Notification') {
       this.alertMessage = message;
       this.alertHeader = header;
@@ -241,20 +255,24 @@ export class FreeTrail implements OnInit {
       this.reviewMode = false;
       this.filteredQuestions = questions;
       
-      // Reset answers
       this.filteredQuestions.forEach(q => q.selectedAnswer = undefined);
   
-      // Initialize Timer
-      if (this.selectedPart && this.selectedPart.duration && this.selectedPart.duration > 0) {
-          this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
-          this.startTimer();
-      } else {
-          // Fallback
-          const calculatedMinutes = Math.ceil(questions.length * 1.5);
-          this.remainingTime = calculatedMinutes * 60;
-          this.startTimer();
-      }
+      // Calculate total duration based on selected parts
+      let totalDuration = 0;
 
+      this.selectedParts.forEach(partId => {
+          const part = this.parts.find(p => p.id === partId);
+          if (part && part.duration && part.duration > 0) {
+              totalDuration += Number(part.duration);
+          } else {
+              // Fallback per part question count if no duration set on that part
+              const pCount = this.parts.find(p => p.id === partId)?.questionCount || 0;
+              totalDuration += Math.ceil(pCount * 1.5);
+          }
+      });
+
+      this.remainingTime = totalDuration * 60;
+      this.startTimer();
     }
 
   startTimer() {
@@ -289,10 +307,29 @@ export class FreeTrail implements OnInit {
   }
 
   goToQuestion(index: number) {
-    this.currentQuestionIndex = index;
+      if (this.reviewMode) {
+          this.currentQuestionIndex = index;
+          return;
+      }
+
+      // Strict Mode Logic
+      let firstUnanswered = this.filteredQuestions.findIndex(q => q.selectedAnswer === undefined);
+      if (firstUnanswered === -1) firstUnanswered = this.filteredQuestions.length - 1;
+
+      if (index <= firstUnanswered) {
+           this.currentQuestionIndex = index;
+      } else {
+           this.showAlert('You must answer previous questions before proceeding.', 'Navigation Locked');
+      }
   }
 
   nextQuestion() {
+    const currentQ = this.filteredQuestions[this.currentQuestionIndex];
+    if (currentQ.selectedAnswer === undefined && !this.reviewMode) {
+        this.showAlert('Please select an answer before proceeding.', 'Answer Required');
+        return;
+    }
+
     if (this.currentQuestionIndex < this.filteredQuestions.length - 1) {
       this.currentQuestionIndex++;
     }
@@ -305,6 +342,14 @@ export class FreeTrail implements OnInit {
   }
 
   submitExam(timeUp: boolean = false) {
+    if (!timeUp && !this.reviewMode) {
+        const currentQ = this.filteredQuestions[this.currentQuestionIndex];
+        if (currentQ.selectedAnswer === undefined) {
+             this.showAlert('Please answer the last question before submitting.', 'Answer Required');
+             return;
+        }
+    }
+
     this.stopTimer();
 
     if (timeUp) {
@@ -333,6 +378,7 @@ export class FreeTrail implements OnInit {
   reset() {
     this.stopTimer();
     this.selectedPart = null;
+    this.selectedParts.clear();
     this.backToParts();
   }
 }
