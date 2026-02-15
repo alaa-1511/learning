@@ -136,54 +136,300 @@
         </div>
     </div>
 
-    <!-- VIEW 2: PARTS LIST (Cards) -->
-    <div *ngIf="viewMode === 'parts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-        <!-- Empty State -->
-        <div *ngIf="parts.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
-             <p class="text-gray-500 mb-4">No parts defined for this exam yet.</p>
-             <button (click)="openAddPart()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
-                Add First Part
-             </button>
+<!-- VIEW 2: PARTS LIST (Cards) -->
+    <div *ngIf="viewMode === 'parts'" class="relative animate-fade-in">
+        
+        <!-- Practice Config Overlay -->
+        <div *ngIf="configView" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in">
+                 <!-- Header -->
+                 <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                     <div>
+                         <h3 class="text-xl font-bold text-gray-800">Customize Practice Session</h3>
+                         <p class="text-sm text-gray-500 mt-1">{{selectedPart?.title}}</p>
+                     </div>
+                     <button (click)="cancelConfig()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                         <i class="fas fa-times text-xl"></i>
+                     </button>
+                 </div>
+
+                 <!-- Scrollable Content -->
+                 <div class="p-6 overflow-y-auto space-y-8 custom-scrollbar">
+                     
+                     <!-- 1. Topic Selection -->
+                     <div class="space-y-3">
+                         <div class="flex items-center justify-between">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Select Topics</label>
+                             <button (click)="selectAllTopics()" class="text-xs text-blue-600 hover:underline font-medium">Select All</button>
+                         </div>
+                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                             <div *ngFor="let topic of availableTopics" 
+                                  (click)="toggleTopic(topic)"
+                                  [class.border-blue-500]="selectedTopics.has(topic)"
+                                  [class.bg-blue-50]="selectedTopics.has(topic)"
+                                  class="cursor-pointer border border-gray-200 rounded-lg p-3 flex items-center justify-between hover:border-blue-300 transition-all">
+                                  <span class="text-sm text-gray-700 font-medium">{{topic}}</span>
+                                  <div [class.bg-blue-500]="selectedTopics.has(topic)"
+                                       [class.border-blue-500]="selectedTopics.has(topic)" 
+                                       class="w-5 h-5 rounded border border-gray-300 flex items-center justify-center transition-colors">
+                                      <i *ngIf="selectedTopics.has(topic)" class="fas fa-check text-white text-xs"></i>
+                                  </div>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- 2. Settings Grid -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <!-- Question Count -->
+                         <div class="space-y-3">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Number of Questions</label>
+                             <div class="flex items-center gap-4">
+                                 <input type="range" 
+                                        [(ngModel)]="configQuestionCount" 
+                                        [max]="maxQuestionsAvailable" 
+                                        min="1" 
+                                        class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                                 <input type="number" 
+                                        [(ngModel)]="configQuestionCount" 
+                                        [max]="maxQuestionsAvailable" 
+                                        min="1"
+                                        class="w-20 p-2 border border-gray-300 rounded-lg text-center font-bold text-gray-700 focus:ring-2 focus:ring-blue-500">
+                             </div>
+                             <p class="text-xs text-gray-500 text-right">Max available: {{maxQuestionsAvailable}}</p>
+                         </div>
+
+                         <!-- Preferences -->
+                         <div class="space-y-3">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Preferences</label>
+                             
+                             <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                 <div class="relative inline-flex items-center cursor-pointer">
+                                     <input type="checkbox" [(ngModel)]="configTimerEnabled" class="sr-only peer">
+                                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                 </div>
+                                 <span class="text-sm font-medium text-gray-700">Enable Timer</span>
+                             </label>
+
+                             <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                 <div class="relative inline-flex items-center cursor-pointer">
+                                     <input type="checkbox" [(ngModel)]="configShowFeedbackImmediate" class="sr-only peer">
+                                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                 </div>
+                                 <span class="text-sm font-medium text-gray-700">Immediate Feedback</span>
+                             </label>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Footer -->
+                 <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                     <button (click)="cancelConfig()" class="px-6 py-2.5 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+                     <button (click)="startCustomPractice()" 
+                             class="px-8 py-2.5 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+                         Start Practice
+                     </button>
+                 </div>
+             </div>
         </div>
 
-        <div *ngFor="let part of parts" 
-             class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col">
-            
-            <div class="flex items-start gap-4 mb-4">
-                 <div class="w-16 h-16 rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0 overflow-hidden">
-                     <img [src]="part.image || 'assets/images/placeholder-part.png'" 
-                          class="w-full h-full object-cover opacity-80"
-                          alt="Part Icon">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            <!-- Empty State -->
+            <div *ngIf="parts.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+                 <p class="text-gray-500 mb-4">No parts available for this exam yet.</p>
+                 <button (click)="backToExams()" class="text-blue-600 hover:underline">Go Back</button>
+            </div>
+    
+            <div *ngFor="let part of parts" 
+                 class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col group relative overflow-hidden">
+                 
+                 <div class="flex items-start gap-4 mb-4 relative z-10">
+                      <div class="w-16 h-16 rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0 overflow-hidden">
+                          <img [src]="part.image || 'assets/images/placeholder-part.png'" 
+                               class="w-full h-full object-cover opacity-80"
+                               alt="Part Icon">
+                      </div>
+                      <div>
+                          <h3 class="font-bold text-gray-800 text-lg leading-tight mb-1">{{part.title}}</h3>
+                          <p class="text-xs text-gray-500">{{part.questionCount}} questions available</p>
+                      </div>
                  </div>
+                 
+                 <p class="text-sm text-gray-600 mb-6 flex-1 line-clamp-3 relative z-10">
+                     {{part.description || 'Practice questions for this section.'}}
+                 </p>
+    
+                 <div class="flex items-center gap-2 text-xs text-gray-500 mb-4 relative z-10">
+                     <span *ngIf="part.duration" class="bg-blue-50 text-blue-600 px-2 py-1 rounded font-medium">
+                         <i class="pi pi-clock mr-1"></i> ~{{ part.duration }} mins
+                     </span>
+                 </div>
+    
+                 <button (click)="selectPart(part)" 
+                         class="w-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white py-2.5 rounded-lg text-sm font-bold transition-all duration-200 shadow-sm relative z-10">
+                     Start Practice
+                 </button>
+
+                 <!-- Decorative Blob -->
+                 <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl group-hover:bg-blue-400/20 transition-all duration-500"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- VIEW 4: EXAM INTERFACE -->
+    <div *ngIf="currentView === 'exam'" class="max-w-4xl mx-auto animate-fade-in relative pb-24">
+        
+        <!-- Header / Status Bar -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur shadow-sm border-b border-gray-200 -mx-4 px-4 py-3 mb-6 flex items-center justify-between sm:rounded-b-xl sm:mx-0">
+             <div class="flex items-center gap-4">
+                 <button (click)="backToParts()" class="text-gray-400 hover:text-gray-700 transition-colors">
+                     <i class="fas fa-arrow-left"></i>
+                 </button>
                  <div>
-                     <h3 class="font-bold text-gray-800 text-lg leading-tight mb-1">{{part.title}}</h3>
-                     <p class="text-xs text-gray-500">{{getPartQuestionCount(part.id)}} questions</p>
+                     <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold block">Question</span>
+                     <span class="text-lg font-bold text-gray-800">{{currentQuestionIndex + 1}} <span class="text-gray-400 text-sm font-normal">/ {{filteredQuestions.length}}</span></span>
                  </div>
+             </div>
+    
+             <div class="flex items-center gap-4">
+                 <!-- Timer -->
+                 <div *ngIf="remainingTime > 0" class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg font-mono font-bold">
+                     <i class="far fa-clock"></i>
+                     <span>{{ formattedTime }}</span>
+                 </div>
+                 
+                 <button (click)="submitExam()" class="hidden sm:block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition-all">
+                     Finish Exam
+                 </button>
+             </div>
+        </div>
+    
+        <!-- Question Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
+             <!-- Question Header Info -->
+             <div class="flex justify-between items-start mb-6">
+                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                     {{filteredQuestions[currentQuestionIndex].topic || 'General'}}
+                 </span>
+                 <span class="text-xs text-gray-400">ID: #{{filteredQuestions[currentQuestionIndex].id}}</span>
+             </div>
+
+             <!-- Rich Text Question Body -->
+             <div class="prose prose-blue max-w-none mb-8 text-gray-800 text-lg leading-relaxed select-none"
+                  [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].text)">
+             </div>
+    
+             <!-- Options List -->
+             <div class="space-y-3">
+                 <div *ngFor="let option of filteredQuestions[currentQuestionIndex].options; let i = index" 
+                      (click)="selectAnswer(i)"
+                      [class.border-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.bg-blue-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-1]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      class="group relative border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-300 hover:bg-gray-50 transition-all duration-200">
+                     
+                     <div class="flex items-start gap-3">
+                         <!-- Radio Circle -->
+                         <div [class.bg-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              [class.border-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              class="mt-1 w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0 transition-all group-hover:border-blue-400">
+                             <div class="w-2 h-2 bg-white rounded-full"></div>
+                         </div>
+                         
+                         <!-- Option Text (Rich Content Support if needed, usually plain text for options but can be HTML) -->
+                         <div class="text-gray-700 font-medium select-none text-[15px] pt-0.5"
+                              [innerHTML]="safeHtml(option)">
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- IMMEDIATE FEEDBACK / EXPLANATION SECTION -->
+             <div *ngIf="(reviewMode || (configShowFeedbackImmediate && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined))" 
+                  class="mt-8 animate-fade-in">
+                  
+                  <div [class.bg-green-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-green-200]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.bg-red-50]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                       [class.border-red-200]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                       class="border rounded-xl p-5">
+                      
+                      <div class="flex items-center gap-2 mb-3 font-bold"
+                           [class.text-green-700]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                           [class.text-red-700]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer">
+                           <i class="fas" 
+                              [class.fa-check-circle]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
+                              [class.fa-times-circle]="filteredQuestions[currentQuestionIndex].selectedAnswer !== filteredQuestions[currentQuestionIndex].correctAnswer"></i>
+                           <span>
+                               {{ filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer ? 'Correct Answer' : 'Incorrect' }}
+                           </span>
+                      </div>
+
+                      <!-- Explanation -->
+                      <div *ngIf="filteredQuestions[currentQuestionIndex].answerExplanation" class="prose prose-sm max-w-none text-gray-700 mt-2">
+                           <p class="font-semibold text-gray-900 mb-1">Explanation:</p>
+                           <div [innerHTML]="safeHtml(filteredQuestions[currentQuestionIndex].answerExplanation)"></div>
+                      </div>
+                      <div *ngIf="!filteredQuestions[currentQuestionIndex].answerExplanation" class="text-sm text-gray-500 italic">
+                          No explanation provided for this question.
+                      </div>
+                  </div>
+             </div>
+        </div>
+    
+        <!-- Navigation Buttons (Bottom Fixed Mobile, regular Desktop) -->
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 sm:static sm:bg-transparent sm:border-0 sm:p-0 flex items-center justify-between gap-4">
+             <button (click)="previousQuestion()" 
+                     [disabled]="currentQuestionIndex === 0"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-all">
+                 <i class="fas fa-arrow-left mr-2"></i> Prev
+             </button>
+             
+             <button (click)="nextQuestion()" 
+                     *ngIf="currentQuestionIndex < filteredQuestions.length - 1"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                 Next <i class="fas fa-arrow-right ml-2"></i>
+             </button>
+             
+             <button (click)="submitExam()" 
+                     *ngIf="currentQuestionIndex === filteredQuestions.length - 1"
+                     class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                 Finish <i class="fas fa-flag-checkered ml-2"></i>
+             </button>
+        </div>
+    </div>
+    
+    <!-- VIEW 5: RESULTS (Simple view for now) -->
+    <div *ngIf="currentView === 'result'" class="max-w-2xl mx-auto text-center animate-fade-in py-12">
+        <div class="bg-white rounded-3xl shadow-xl p-8 sm:p-12 border border-gray-100">
+            <div [class.bg-green-100]="passed" [class.text-green-600]="passed"
+                 [class.bg-red-100]="!passed" [class.text-red-600]="!passed"
+                 class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner">
+                <i class="fas" [class.fa-trophy]="passed" [class.fa-times]="!passed"></i>
             </div>
             
-            <p class="text-sm text-gray-600 mb-4 flex-1 line-clamp-3">
-                {{part.description || 'Manage questions for this part.'}}
-            </p>
-
-            <div class="flex items-center gap-2 text-xs text-gray-500 mb-4">
-                <span *ngIf="part.duration" class="bg-blue-50 text-blue-600 px-2 py-1 rounded font-medium">
-                    <i class="pi pi-clock mr-1"></i> {{ part.duration }} mins
-                </span>
-                <span *ngIf="!part.duration" class="bg-gray-50 text-gray-500 px-2 py-1 rounded">
-                    <i class="pi pi-bolt mr-1"></i> Auto-Time
-                </span>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">{{ passed ? 'Great Job!' : 'Keep Practicing' }}</h2>
+            <p class="text-gray-500 mb-8">You have completed the {{selectedPart?.title}} practice session.</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-4 bg-gray-50 rounded-2xl">
+                    <div class="text-3xl font-bold text-gray-800 mb-1">{{score}} / {{filteredQuestions.length}}</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Score</div>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-2xl">
+                    <div class="text-3xl font-bold" [class.text-green-600]="passed" [class.text-red-600]="!passed">
+                        {{percentage}}%
+                    </div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Percentage</div>
+                </div>
             </div>
-
-            <div class="flex gap-2 mt-auto">
-                <button (click)="selectPart(part)" 
-                        class="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white py-2 rounded-lg text-sm font-medium transition-all duration-200">
-                    Manage Questions
+    
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button (click)="backToParts()" class="px-8 py-3 rounded-xl font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors">
+                    Back to Parts
                 </button>
-                <button *ngIf="part.id !== -1" (click)="editPart(part)" class="px-3 py-2 text-gray-400 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors">
-                    <i class="pi pi-pencil"></i>
-                </button>
-                <button *ngIf="part.id !== -1" (click)="confirmDeletePart(part)" class="px-3 py-2 text-gray-400 hover:text-red-600 hover:bg-gray-50 rounded-lg transition-colors">
-                    <i class="pi pi-trash"></i>
+                <button (click)="startReview()" class="px-8 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30 transition-all">
+                    Review Answers
                 </button>
             </div>
         </div>

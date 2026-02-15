@@ -58,6 +58,15 @@ export class Questions implements OnInit {
   currentUser: any = null;
   userAssignments: any[] = [];
 
+  // Practice Mode Config State
+  configView: boolean = false;
+  availableTopics: string[] = [];
+  selectedTopics: Set<string> = new Set();
+  configQuestionCount: number = 10;
+  configTimerEnabled: boolean = false;
+  configShowFeedbackImmediate: boolean = false;
+  maxQuestionsAvailable: number = 0;
+
   constructor(
     private questionService: QuestionService, 
     private examService: ExamService,
@@ -263,7 +272,71 @@ export class Questions implements OnInit {
           return;
       }
       
-      this.startExam(this.filteredQuestions);
+      // Go to Config View instead of immediate start
+      this.extractTopics();
+      this.configView = true;
+      this.currentView = 'parts'; // Stay in parts view effectively, but show config overlay/section
+      this.maxQuestionsAvailable = this.filteredQuestions.length;
+      this.configQuestionCount = Math.min(10, this.maxQuestionsAvailable);
+      this.selectAllTopics();
+  }
+
+  extractTopics() {
+      // Extract unique topics from filteredQuestions
+      const topics = new Set(this.filteredQuestions.map(q => q.topic || 'General').filter(t => t));
+      this.availableTopics = Array.from(topics).sort();
+  }
+
+  toggleTopic(topic: string) {
+      if (this.selectedTopics.has(topic)) {
+          this.selectedTopics.delete(topic);
+      } else {
+          this.selectedTopics.add(topic);
+      }
+      this.updateMaxQuestions();
+  }
+
+  selectAllTopics() {
+      this.selectedTopics = new Set(this.availableTopics);
+      this.updateMaxQuestions();
+  }
+
+  updateMaxQuestions() {
+      // Count questions that match selected topics
+      const count = this.filteredQuestions.filter(q => this.selectedTopics.has(q.topic || 'General')).length;
+      this.maxQuestionsAvailable = count;
+      if (this.configQuestionCount > count) {
+          this.configQuestionCount = count;
+      }
+  }
+
+  startCustomPractice() {
+      if (this.selectedTopics.size === 0) {
+          this.showAlert('Please select at least one topic.');
+          return;
+      }
+
+      if (this.configQuestionCount < 1) {
+          this.showAlert('Please select at least one question.');
+          return;
+      }
+
+      // Filter by Topic
+      let sessionQuestions = this.filteredQuestions.filter(q => this.selectedTopics.has(q.topic || 'General'));
+
+      // Shuffle (Simple Fisher-Yates or Sort)
+      sessionQuestions = sessionQuestions.sort(() => Math.random() - 0.5);
+
+      // Slice to count
+      sessionQuestions = sessionQuestions.slice(0, this.configQuestionCount);
+
+      this.configView = false;
+      this.startExam(sessionQuestions);
+  }
+
+  cancelConfig() {
+      this.configView = false;
+      this.selectedPart = null;
   }
 
   backToExams() {
@@ -289,15 +362,25 @@ export class Questions implements OnInit {
     questions.forEach(q => q.selectedAnswer = undefined);
 
     // Initialize Timer
-    if (this.selectedPart && this.selectedPart.duration && this.selectedPart.duration > 0) {
-        // defined part duration
-        this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
+    if (this.configTimerEnabled) {
+        if (this.selectedPart && this.selectedPart.duration && this.selectedPart.duration > 0) {
+            // defined part duration - scale it if we selected fewer questions? 
+            // Better logic: if partial set, maybe 1.5 min per question or prorated?
+            // Let's use 1.5 min per question for custom sets to be safe, or full duration if taking all.
+            if (questions.length < this.filteredQuestions.length || !this.selectedPart.duration) {
+                 this.remainingTime = Math.ceil(questions.length * 1.5 * 60);
+            } else {
+                 this.remainingTime = Math.floor(Number(this.selectedPart.duration) * 60);
+            }
+        } else {
+            // Fallback: 1.5 mins per question
+            const calculatedMinutes = Math.ceil(questions.length * 1.5);
+            this.remainingTime = calculatedMinutes * 60;
+        }
         this.startTimer();
     } else {
-        // Fallback: 1.5 mins per question
-        const calculatedMinutes = Math.ceil(questions.length * 1.5);
-        this.remainingTime = calculatedMinutes * 60;
-        this.startTimer();
+        this.stopTimer();
+        this.remainingTime = 0;
     }
   }
 

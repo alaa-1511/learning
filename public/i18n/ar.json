@@ -552,6 +552,8 @@
         "GUIDE_BTN": "تحميل دليل السوكبا"
     },
     "CONTACT": {
+        "CERTIFICATES_TITLE_MAIN": "أفضل منصة",
+        "CERTIFICATES_TITLE_SUB": "احترافية وكفاءة وموثوقية لمراجعة اختبارات الشهادات المهنية",
         "TITLE": "تواصل معنا",
         "MESSAGE": "الرسالة",
         "MESSAGE_PLACEHOLDER": "أدخل رسالتك هنا...",
@@ -567,7 +569,23 @@
             "CPA": "CPA",
             "DIPIFRS": "DipIFRS",
             "SOCPA": "SOCPA",
-            "STEP": "STEP"
+            "STEP": "STEP",
+            "FMVA": "FMVA",
+            "CIA_CHALLENGE": "CIA Challenge",
+            "EA": "EA (IRS)",
+            "FMAA": "FMAA",
+            "FRM": "FRM",
+            "PRM": "PRM",
+            "CFTE": "CFTe",
+            "IPSAS": "IPSAS",
+            "VAT": "VAT",
+            "FFE": "FFE",
+            "PMP": "PMP",
+            "CFE": "CFE",
+            "CISA": "CISA",
+            "IFRS_CERT": "IFRS",
+            "PFA": "PFA",
+            "IAP": "IAP"
         }
     },
     "CERTIFICATES_PAGE": {
@@ -687,7 +705,54 @@
                     "محاسبة الصناديق الاستئمانية والعقارات",
                     "إدارة الصناديق الاستئمانية"
                 ]
-            }
+                
+            },
+            "FMVA": { 
+                "TITLE": "FMVA", "SUBTITLE": "Financial Modeling & Valuation Analyst", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose FMVA Review?", "SUBTITLE": "Achieve top scores worldwide.",
+                    "FEATURES": [
+                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
+                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
+                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                    ]
+                }
+            },
+            "CIA_CHALLENGE": { 
+                "TITLE": "CIA Challenge", "SUBTITLE": "CIA Challenge Exam", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CIA Challenge?", "SUBTITLE": "Top exam preparation.",
+                    "FEATURES": [
+                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
+                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
+                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                    ]
+                }
+            },
+            "EA": { 
+                "TITLE": "EA", "SUBTITLE": "Enrolled Agent", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose EA Review?", "SUBTITLE": "Comprehensive study materials.",
+                    "FEATURES": [
+                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
+                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
+                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                    ]
+                }
+            },
+            "FMAA": { "TITLE": "FMAA", "SUBTITLE": "Financial and Managerial Accounting Associate", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FMAA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "FRM": { "TITLE": "FRM", "SUBTITLE": "Financial Risk Manager", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FRM?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "PRM": { "TITLE": "PRM", "SUBTITLE": "Professional Risk Manager", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PRM?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "CFTE": { "TITLE": "CFTe", "SUBTITLE": "Certified Financial Technician", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CFTe?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "IPSAS": { "TITLE": "IPSAS", "SUBTITLE": "International Public Sector Accounting Standards", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IPSAS?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "VAT": { "TITLE": "VAT", "SUBTITLE": "Value Added Tax Specialist", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose VAT?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "FFE": { "TITLE": "FFE", "SUBTITLE": "Forensic Finance Expert", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FFE?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "PMP": { "TITLE": "PMP", "SUBTITLE": "Project Management Professional", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PMP?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "CFE": { "TITLE": "CFE", "SUBTITLE": "Certified Fraud Examiner", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CFE?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "CISA": { "TITLE": "CISA", "SUBTITLE": "Certified Information Systems Auditor", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CISA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "IFRS_CERT": { "TITLE": "IFRS Certificate", "SUBTITLE": "International Financial Reporting Standards", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IFRS?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "PFA": { "TITLE": "PFA", "SUBTITLE": "Professional Financial Accountant", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PFA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
+            "IAP": { "TITLE": "IAP", "SUBTITLE": "Internal Audit Practitioner", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IAP?", "SUBTITLE": "Subtitle", "FEATURES": [] } }
         }
     },
     "ASSIGN_CONTENT": {

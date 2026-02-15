@@ -17,4 +17,5 @@ export class CertificateLayoutComponent {
   @Input() requirements: string = '';
   @Input() topics: string[] = [];
   @Input() image: string = '';
+  @Input() whyChooseData: any = null;
 }
