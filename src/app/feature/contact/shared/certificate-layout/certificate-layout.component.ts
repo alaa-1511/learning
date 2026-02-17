@@ -15,7 +15,18 @@ export class CertificateLayoutComponent {
   @Input() description: string = '';
   @Input() targetAudience: string = '';
   @Input() requirements: string = '';
-  @Input() topics: string[] = [];
+  _topics: string[] = [];
+  @Input() set topics(value: any) {
+    if (Array.isArray(value)) {
+      this._topics = value;
+    } else {
+      this._topics = [];
+    }
+  }
+  get topics(): string[] {
+    return this._topics;
+  }
   @Input() image: string = '';
   @Input() whyChooseData: any = null;
+  @Input() hasWhyChoose: boolean = false;
 }

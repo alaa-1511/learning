@@ -59,83 +59,67 @@ export const routes: Routes = [
       {path:'step', component: STEP},
       {
         path: 'fmva',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'FMVA' }
+        loadComponent: () => import('./feature/contact/fmva/fmva').then(m => m.FMVA)
       },
       {
         path: 'cia-challenge',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'CIA_CHALLENGE' }
+        loadComponent: () => import('./feature/contact/cia-challenge/cia-challenge').then(m => m.CiaChallenge)
       },
       {
         path: 'ea',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'EA' }
+        loadComponent: () => import('./feature/contact/ea/ea').then(m => m.EA)
       },
       {
         path: 'fmaa',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'FMAA' }
+        loadComponent: () => import('./feature/contact/fmaa/fmaa').then(m => m.FMAA)
       },
       {
         path: 'frm',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'FRM' }
+        loadComponent: () => import('./feature/contact/frm/frm').then(m => m.FRM)
       },
       {
         path: 'prm',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'PRM' }
+        loadComponent: () => import('./feature/contact/prm/prm').then(m => m.PRM)
       },
       {
         path: 'cfte',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'CFTE' }
+        loadComponent: () => import('./feature/contact/cfte/cfte').then(m => m.CFTE)
       },
       {
         path: 'ipsas',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'IPSAS' }
+        loadComponent: () => import('./feature/contact/ipsas/ipsas').then(m => m.IPSAS)
       },
       {
         path: 'vat',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'VAT' }
+        loadComponent: () => import('./feature/contact/vat/vat').then(m => m.VAT)
       },
       {
         path: 'ffe',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'FFE' }
+        loadComponent: () => import('./feature/contact/ffe/ffe').then(m => m.FFE)
       },
       {
         path: 'pmp',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'PMP' }
+        loadComponent: () => import('./feature/contact/pmp/pmp').then(m => m.PMP)
       },
       {
         path: 'cfe',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'CFE' }
+        loadComponent: () => import('./feature/contact/cfe/cfe').then(m => m.CFE)
       },
       {
         path: 'cisa',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'CISA' }
+        loadComponent: () => import('./feature/contact/cisa/cisa').then(m => m.CISA)
       },
       {
         path: 'ifrs',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'IFRS_CERT' }
+        loadComponent: () => import('./feature/contact/ifrs/ifrs').then(m => m.IFRS)
       },
       {
         path: 'pfa',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'PFA' }
+        loadComponent: () => import('./feature/contact/pfa/pfa').then(m => m.PFA)
       },
       {
         path: 'iap',
-        loadComponent: () => import('./feature/contact/shared/generic-certificate/generic-certificate.component').then(m => m.GenericCertificateComponent),
-        data: { type: 'IAP' }
+        loadComponent: () => import('./feature/contact/iap/iap').then(m => m.IAP)
       },
     
     ]

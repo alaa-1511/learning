@@ -589,165 +589,674 @@
             "CAT": {
                 "TITLE": "Certified Accounting Technician (CAT)",
                 "SUBTITLE": "A vocational qualification designed to give you the skills you need to support financial managers.",
-                "DESC": "The CAT qualification is internationally focused and structured mainly for those who wish to pursue a career in finance and accounting. It provides a solid foundation in all areas of accounting.",
-                "AUDIENCE": "Students, entry-level finance professionals, and those looking to start a career in accounting.",
-                "REQ": "No formal academic qualifications required. Open to anyone.",
+                "DESC": "The Certified Accounting Technician (CAT) qualification is a globally recognized credential that provides a strong foundation in all areas of accounting. It is designed to equip you with the necessary skills to support financial managers in any industry. By completing this program, you will master financial recording, cost accounting, and payroll management, positioning yourself for a successful career in finance.",
+                "AUDIENCE": "This course is ideal for students, entry-level finance professionals, and anyone looking to start a career in accounting without prior experience. It is also suitable for those working in support roles who wish to formalize their skills.",
+                "REQ": "There are no formal academic qualifications required to start the CAT qualification. It is open to anyone with a passion for numbers and a desire to build a career in finance.",
                 "TOPICS": [
-                    "Recording Financial Transactions",
-                    "Management Information",
-                    "Maintening Financial Records",
-                    "Managing Costs and Finance"
-                ]
+                    "Recording Financial Transactions (FA1)",
+                    "Management Information (MA1)",
+                    "Maintaining Financial Records (FA2)",
+                    "Managing Costs and Finance (MA2)",
+                    "Accountant in Business (FAB)",
+                    "Management Accounting (FMA)",
+                    "Financial Accounting (FFA)",
+                    "Foundations in Audit (FAU)",
+                    "Foundations in Taxation (FTX)",
+                    "Foundations in Financial Management (FFM)"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CAT?",
+                    "SUBTITLE": "Foundation for Finance Professionals",
+                    "FEATURES": [
+                        { "TITLE": "Solid Foundation", "SUBTITLE": "Core Skills", "DESC": "Build a comprehensive understanding of financial and management accounting principles." },
+                        { "TITLE": "Career Entry", "SUBTITLE": "Start Strong", "DESC": "A perfect launching pad for a career in finance, even with no prior experience." },
+                        { "TITLE": "ACCA Pathway", "SUBTITLE": "Fast Track", "DESC": "Gain exemptions from the first three Applied Knowledge exams of the ACCA Qualification." }
+                    ]
+                }
             },
             "CERT_IA": {
                 "TITLE": "Certificate in International Auditing (Cert IA)",
                 "SUBTITLE": "Gain a comprehensive understanding of International Standards on Auditing (ISAs).",
-                "DESC": "This certificate covers the principles of International Standards on Auditing (ISAs) and how to apply them. It is ideal for audit professionals who want to demonstrate their expertise in international auditing standards.",
-                "AUDIENCE": "Qualified accountants and auditors who need to update their knowledge of ISAs.",
-                "REQ": "Background in auditing or accounting is recommended.",
+                "DESC": "The Certificate in International Auditing (Cert IA) offers a deep dive into the International Standards on Auditing (ISAs). This qualification helps you understand how ISAs are applied in practice, ensuring you can conduct audits that meet global standards. It is an essential credential for auditors operating in an international environment.",
+                "AUDIENCE": "Designed for qualified accountants, auditors, and finance professionals who need to update their knowledge of ISAs or who are moving into an auditing role where ISAs are used.",
+                "REQ": "A background in auditing or accounting is highly recommended to get the most out of this course. It is suitable for ACCA members and non-members alike.",
                 "TOPICS": [
-                    "International Standards on Auditing (ISAs)",
-                    "Audit planning and risk assessment",
-                    "Internal control evaluation",
-                    "Audit evidence and reporting"
-                ]
+                    "International Standards on Auditing (ISAs) Overview",
+                    "Audit Planning and Risk Assessment",
+                    "Internal Control Evaluation",
+                    "Audit Evidence and Documentation",
+                    "Audit Conclusions and Reporting",
+                    "Ethics and Professional Conduct"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose Cert IA?",
+                    "SUBTITLE": "Master International Auditing",
+                    "FEATURES": [
+                        { "TITLE": "Global Standards", "SUBTITLE": "Up-to-date", "DESC": "Ensure your auditing practices are aligned with the latest international standards." },
+                        { "TITLE": "Professional Confidence", "SUBTITLE": "Quality Assurance", "DESC": "Demonstrate your competence and ability to apply ISAs in complex audit engagements." },
+                        { "TITLE": "Specialized Skill", "SUBTITLE": "Niche Expertise", "DESC": "Differentiate yourself with specialized knowledge that is in high demand globally." }
+                    ]
+                }
             },
             "CERT_IFR": {
                 "TITLE": "Certificate in International Financial Reporting (Cert IFR)",
                 "SUBTITLE": "Master the basics of International Financial Reporting Standards (IFRS).",
-                "DESC": "The Cert IFR offers a broad introduction to the field of International Financial Reporting and International Financial Reporting Standards. It traces the history of the International Accounting Standards Board (IASB) from its early roots to the present day.",
-                "AUDIENCE": "Professional accountants and auditors qualified in national accounting standards.",
-                "REQ": "Educational background in accounting.",
+                "DESC": "The Certificate in International Financial Reporting (Cert IFR) provides a broad introduction to the field of International Financial Reporting and IFRS Standards. It traces the history of the International Accounting Standards Board (IASB) and its roots to the present day. This course is designed to help you understand how IFRS Standards are used around the world.",
+                "AUDIENCE": "Professional accountants, auditors, and finance degree holders who want to understand IFRS Standards. It is also suitable for those working in multinational companies.",
+                "REQ": "An educational background in accounting or familiarity with financial reporting concepts is recommended.",
                 "TOPICS": [
-                    "Nature and operations of the IASB",
-                    "Status and use of IFRS standards",
-                    "Presentation and profit",
-                    "Accounting for assets and liabilities"
-                ]
+                    "The Nature and Operations of the IASB",
+                    "The Status and Use of IFRS Standards",
+                    "Presentation of Financial Statements and Profit",
+                    "Accounting for Assets and Liabilities",
+                    "Group Accounting and Disclosure Standards",
+                    "First-time Adoption of IFRS"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose Cert IFR?",
+                    "SUBTITLE": "Master International Reporting Standards",
+                    "FEATURES": [
+                        { "TITLE": "Global Language", "SUBTITLE": "Universal Business", "DESC": "Gain fluency in the financial reporting language used by over 140 jurisdictions." },
+                        { "TITLE": "Career Flexibility", "SUBTITLE": "Work Anywhere", "DESC": "Enhance your mobility and employability with multinational corporations worldwide." },
+                        { "TITLE": "Practical Application", "SUBTITLE": "Real Scenarios", "DESC": "Learn to apply IFRS principles to real-world financial statements and business scenarios." }
+                    ]
+                }
             },
             "CFA": {
                 "TITLE": "Chartered Financial Analyst (CFA)",
                 "SUBTITLE": "The gold standard in the investment industry.",
-                "DESC": "The CFA charter is a designation given to those who have completed the CFA Program and completed acceptable work experience requirements. It is one of the most respected designations in finance and acts as the gold standard for the industry.",
-                "AUDIENCE": "Investment professionals, portfolio managers, research analysts, and finance students.",
-                "REQ": "Bachelor's degree (or final year student) or professional work experience.",
+                "DESC": "The Chartered Financial Analyst (CFA) designation is the most respected and recognized investment credential in the world. It demonstrates a mastery of the skills needed for investment analysis and decision-making in today’s fast-evolving global financial industry. Earning the CFA charter places you among the elite in the finance profession.",
+                "AUDIENCE": "Investment professionals, portfolio managers, research analysts, wealth managers, and finance students who aspire to reach the top of the investment profession.",
+                "REQ": "To enroll, you must have a bachelor's degree (or be in your final year) or have a combination of professional work experience and education totaling four years.",
                 "TOPICS": [
                     "Ethical and Professional Standards",
                     "Quantitative Methods",
                     "Economics",
-                    "Financial Statement Analysis"
-                ]
+                    "Financial Statement Analysis",
+                    "Corporate Issuers",
+                    "Equity Investments",
+                    "Fixed Income",
+                    "Derivatives",
+                    "Alternative Investments",
+                    "Portfolio Management and Wealth Planning"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CFA?",
+                    "SUBTITLE": "Investment Gold Standard",
+                    "FEATURES": [
+                        { "TITLE": "Prestigious Designation", "SUBTITLE": "Elite Status", "DESC": "Join the most respected group of investment professionals and gain instant credibility." },
+                        { "TITLE": "Career Acceleration", "SUBTITLE": "Top Roles", "DESC": "Unlock access to high-level roles in portfolio management, analysis, and execution." },
+                        { "TITLE": "Global Network", "SUBTITLE": "Worldwide Access", "DESC": "Connect with a powerful network of over 170,000 CFA charterholders globally." }
+                    ]
+                }
             },
             "CIA": {
                 "TITLE": "Certified Internal Auditor (CIA)",
                 "SUBTITLE": "The only globally recognized internal audit certification.",
-                "DESC": "As the only globally recognized internal audit certification, becoming a Certified Internal Auditor® (CIA®) is the optimum way to communicate knowledge, skills, and competencies to effectively carry out professional responsibilities for any internal audit anywhere in the world.",
-                "AUDIENCE": "Internal auditors, risk management professionals, and compliance officers.",
-                "REQ": "Bachelor's degree and internal audit experience (varies by education level).",
+                "DESC": "The Certified Internal Auditor (CIA) designation is the only globally accepted certification for internal auditors and remains the standard by which individuals demonstrate their competency and professionalism in the internal audit field. It signifies that you possess the knowledge, skills, and competencies to effectively carry out professional responsibilities for any internal audit anywhere in the world.",
+                "AUDIENCE": "Internal auditors, risk management professionals, compliance officers, and anyone seeking to lead in the internal audit profession.",
+                "REQ": "Candidates must hold a Bachelor's degree (or equivalent). Alternatively, certain levels of internal audit experience can substitute for education.",
                 "TOPICS": [
-                    "Essentials of Internal Auditing",
-                    "Practice of Internal Auditing",
-                    "Business Knowledge for Internal Auditing"
-                ]
+                    "Foundations of Internal Auditing",
+                    "Independence and Objectivity",
+                    "Proficiency and Due Professional Care",
+                    "Quality Assurance and Improvement Program",
+                    "Managing the Internal Audit Activity",
+                    "Planning the Engagement",
+                    "Performing the Engagement",
+                    "Communicating Engagement Results",
+                    "Business Acumen",
+                    "Information Security",
+                    "Information Technology",
+                    "Financial Management"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CIA?",
+                    "SUBTITLE": "The Global Benchmark",
+                    "FEATURES": [
+                        { "TITLE": "Global Recognition", "SUBTITLE": "Worldwide Standard", "DESC": "The only globally recognized internal audit certification, valid in virtually every country." },
+                        { "TITLE": "Career Advancement", "SUBTITLE": "Higher Earning Potential", "DESC": "Certified professionals earn significantly more and are preferred for senior leadership roles." },
+                        { "TITLE": "Comprehensive Skills", "SUBTITLE": "Holistic Knowledge", "DESC": "Master governance, risk management, and control to become a strategic advisor to the board." }
+                    ]
+                }
             },
             "CMA": {
                 "TITLE": "What is CMA?",
                 "SUBTITLE": "Certified Management Accountant",
-                "DESC": "The Certified Management Accountant (CMA) credential is the advanced professional certification specifically designed to measure the accounting and financial management skills that drive business performance.",
-                "AUDIENCE": "Management accountants, financial analysts, and finance managers.",
-                "REQ": "Bachelor's degree and 2 years of professional experience in management accounting or financial management.",
-                "TOPICS": "Financial Planning, Performance, and Analytics; Strategic Financial Management."
+                "DESC": "The Certified Management Accountant (CMA) credential is the advanced professional certification specifically designed to measure the accounting and financial management skills that drive business performance. Achieving the CMA demonstrates your mastery of financial planning, analysis, control, decision support, and professional ethics.",
+                "AUDIENCE": "Management accountants, financial analysts, finance managers, controllers, and CFOs who want to prove their strategic value.",
+                "REQ": "A Bachelor's degree from an accredited college/university and two continuous years of professional experience in management accounting or financial management.",
+                "TOPICS": [
+                    "External Financial Reporting Decisions",
+                    "Planning, Budgeting, and Forecasting",
+                    "Performance Management",
+                    "Cost Management",
+                    "Internal Controls",
+                    "Technology and Analytics",
+                    "Financial Statement Analysis",
+                    "Corporate Finance",
+                    "Decision Analysis",
+                    "Risk Management",
+                    "Investment Decisions",
+                    "Professional Ethics"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CMA?",
+                    "SUBTITLE": "The Gold Standard in Management Accounting",
+                    "FEATURES": [
+                        { "TITLE": "Strategic Focus", "SUBTITLE": "Beyond Numbers", "DESC": "Learn to bridge the gap between finance and business strategy to drive value." },
+                        { "TITLE": "Global Demand", "SUBTITLE": "Highly Sought After", "DESC": "Top employers worldwide seek CMAs for critical decision-making roles." },
+                        { "TITLE": "Practical Expertise", "SUBTITLE": "Real-World Skills", "DESC": "Gain actionable skills in financial planning, analysis, and control that you can apply immediately." }
+                    ]
+                }
             },
             "CME": {
                 "TITLE": "What is CME?",
                 "SUBTITLE": "Capital Market Examination",
-                "DESC": "The CME examinations are regulatory exams for professionals working in the Saudi capital market. They ensure that individuals have the necessary knowledge of laws, regulations, and operations.",
-                "AUDIENCE": "Professionals working or intending to work in the Saudi Stock Exchange (Tadawul) and related financial sectors.",
-                "REQ": "Varies depending on the specific CME exam (CME-1, CME-2, etc.).",
-                "TOPICS": "Capital Market Law, Securities Operations, Compliance, Regulations."
+                "DESC": "The CME examinations are a set of regulatory exams mandated by the Capital Market Authority (CMA) of Saudi Arabia. They ensure that professionals working in the Saudi capital market possess the necessary technical knowledge, understanding of regulations, and ethical standards to perform their roles effectively.",
+                "AUDIENCE": "Professionals working or intending to work in the Saudi Stock Exchange (Tadawul), brokerage firms, asset management companies, and compliance roles.",
+                "REQ": "Requirements vary depending on the specific CME exam (CME-1, CME-2, CME-3, etc.). Generally, a background in finance or law is beneficial.",
+                "TOPICS": [
+                    "Capital Market Law and Implementing Regulations",
+                    "Securities Operations and Trading",
+                    "Investment Fund Regulations",
+                    "Compliance and Anti-Money Laundering (AML)",
+                    "Corporate Governance",
+                    "Code of Conduct and Ethics",
+                    "Wealth Management Regulations"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CME?",
+                    "SUBTITLE": "Gateway to Saudi Capital Market",
+                    "FEATURES": [
+                        { "TITLE": "Regulatory Requirement", "SUBTITLE": "Mandatory License", "DESC": "Essential for obtaining a license to work in authorized persons institutions in KSA." },
+                        { "TITLE": "Market Knowledge", "SUBTITLE": "Local Expertise", "DESC": "Gain a deep, practical understanding of Saudi market regulations and operations." },
+                        { "TITLE": "Career Opportunities", "SUBTITLE": "High Demand", "DESC": "Access to specialized roles in brokerage, asset management, and compliance within the Kingdom." }
+                    ]
+                }
             },
             "CPA": {
                 "TITLE": "What is CPA?",
                 "SUBTITLE": "Certified Public Accountant",
-                "DESC": "The Certified Public Accountant (CPA) is the statutory title of qualified accountants in the United States and other jurisdictions. It signifies the highest level of competence in accounting.",
-                "AUDIENCE": "Public accountants, auditors, tax consultants, and financial advisors.",
-                "REQ": "150 semester hours of education (Master's level), passing the Uniform CPA Exam, and work experience.",
-                "TOPICS": "Auditing and Attestation (AUD), Business Environment and Concepts (BEC), Financial Accounting and Reporting (FAR), Regulation (REG)."
+                "DESC": "The Certified Public Accountant (CPA) is the statutory title of qualified accountants in the United States and is recognized globally as the gold standard in accounting. It signifies the highest level of competence, integrity, and dedication to the public interest in the accounting profession.",
+                "AUDIENCE": "Public accountants, auditors, tax consultants, financial advisors, and professionals aiming for leadership roles in accounting firms or corporate finance.",
+                "REQ": "Typically 150 semester hours of education (Master's level), passing the four parts of the Uniform CPA Exam, and fulfilling work experience requirements (varies by state).",
+                "TOPICS": [
+                    "Auditing and Attestation (AUD)",
+                    "Business Environment and Concepts (BEC) - Evolving",
+                    "Financial Accounting and Reporting (FAR)",
+                    "Regulation (REG)",
+                    "Information Systems and Controls (ISC) - Discipline",
+                    "Business Analysis and Reporting (BAR) - Discipline",
+                    "Tax Compliance and Planning (TCP) - Discipline"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CPA?",
+                    "SUBTITLE": "The Pinnacle of Accounting Achievement",
+                    "FEATURES": [
+                        { "TITLE": "Maximum Prestige", "SUBTITLE": "Elite Status", "DESC": "The most respected credential in the accounting profession globally, commanding immediate trust." },
+                        { "TITLE": "Versatile Career", "SUBTITLE": "Limitless Options", "DESC": "Open doors to diverse fields: public accounting, corporate finance, government, forensic accounting, and more." },
+                        { "TITLE": "Highest Earnings", "SUBTITLE": "Top Compensation", "DESC": "CPAs consistently command the highest salaries, bonuses, and benefits in the financial sector." }
+                    ]
+                }
             },
             "DIPIFRS": {
                 "TITLE": "What is DipIFR?",
                 "SUBTITLE": "Diploma in International Financial Reporting",
-                "DESC": "The Diploma in International Financial Reporting (DipIFR) is for finance professionals who need to acquire a detailed knowledge of IFRS. It is a higher-level qualification than the Certificate.",
-                "AUDIENCE": "Accountants and auditors working in an IFRS environment.",
-                "REQ": "Professional accounting qualification or 3 years of relevant experience.",
-                "TOPICS": "International sources of authority, Elements of financial statements, Presentation of financial statements, Preparation of external financial reports."
+                "DESC": "The Diploma in International Financial Reporting (DipIFR) is an advanced international qualification developed by the ACCA. It is designed for finance professionals who need to acquire a detailed and practical knowledge of IFRS Standards. It goes beyond the basics to cover complex reporting issues.",
+                "AUDIENCE": "Professional accountants, auditors, and finance managers who are already qualified in national standards and need to transition to or master IFRS.",
+                "REQ": "A professional accounting qualification (e.g., CPA, CA) OR three years of relevant accounting experience.",
+                "TOPICS": [
+                    "International Sources of Authority",
+                    "Elements of Financial Statements",
+                    "Presentation of Financial Statements and Additional Disclosures",
+                    "Preparation of External Financial Reports for Combined Entities and Associates",
+                    "Share-based Payment",
+                    "Financial Instruments",
+                    "Revenue Recognition"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose DipIFR?",
+                    "SUBTITLE": "Advanced International Reporting",
+                    "FEATURES": [
+                        { "TITLE": "Advanced Proficiency", "SUBTITLE": "Complex Reporting", "DESC": "Gain the ability to handle complex international financial reporting issues with confidence." },
+                        { "TITLE": "Global Career", "SUBTITLE": "Worldwide Mobility", "DESC": "Validate your expertise with a qualification that is recognized and respected globally." },
+                        { "TITLE": "Strategic Value", "SUBTITLE": "Organizational Asset", "DESC": "Become a key resource for your organization's financial reporting and consolidation processes." }
+                    ]
+                }
             },
             "SOCPA": {
                 "TITLE": "What is SOCPA?",
                 "SUBTITLE": "Saudi Organization for Chartered and Professional Accountants",
-                "DESC": "The SOCPA fellowship is the premier accounting qualification in Saudi Arabia. It certifies that the holder has the professional competence to practice accounting and auditing in the Kingdom.",
-                "AUDIENCE": "Accountants and auditors wishing to practice in Saudi Arabia.",
-                "REQ": "Bachelor's degree in Accounting.",
-                "TOPICS": "Accounting, Auditing, Zakat and Tax, Commercial Law, Jurisprudence of Transactions."
+                "DESC": "The SOCPA fellowship is the premier professional accounting qualification in the Kingdom of Saudi Arabia. Administered by the Saudi Organization for Chartered and Professional Accountants, it certifies that the holder possesses the professional competence to practice accounting and auditing in accordance with Saudi laws and standards.",
+                "AUDIENCE": "Accountants and auditors who wish to practice publicly or hold senior accounting positions within Saudi Arabia.",
+                "REQ": "A Bachelor's degree in Accounting (or a related field with specific accounting credit hours) is required to sit for the exams.",
+                "TOPICS": [
+                    "Accounting (Financial Accounting & Reporting)",
+                    "Auditing",
+                    "Zakat and Tax",
+                    "Commercial Law",
+                    "Jurisprudence of Transactions (Fiqh Al-Muamalat)"
+                ],
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose SOCPA Fellowship?",
+                    "SUBTITLE": "The Key to Accounting in Saudi Arabia",
+                    "FEATURES": [
+                        { "TITLE": "Official Licensing", "SUBTITLE": "Practice Rights", "DESC": "Mandatory for signing audit reports and obtaining a license to practice public accounting in KSA." },
+                        { "TITLE": "Local Expertise", "SUBTITLE": "Saudi Regulations", "DESC": "Master the intricacies of local Zakat, Tax, and Commercial Law requirements unique to the Kingdom." },
+                        { "TITLE": "Vision 2030 Alignment", "SUBTITLE": "Future Ready", "DESC": "Align your professional skills with the high standards demanded by the Kingdom's growing financial sector." }
+                    ]
+                }
             },
             "STEP": {
-                "SUBTITLE": "Trusted estate practitioner.",
-                "DESC": "A certification for professionals specializing in family inheritance and succession planning.",
-                "AUDIENCE": "Lawyers, accountants, tax advisors, and trust specialists.",
-                "REQ": "Relevant professional qualification or experience.",
+                "TITLE": "What is STEP?",
+                "SUBTITLE": "Society of Trust and Estate Practitioners",
+                "DESC": "The STEP Certificate is the foundational qualification for professionals working in the field of trusts and estates. It provides a practical grounding in the laws and procedures involved in trust administration, estate planning, and inheritance.",
+                "AUDIENCE": "Lawyers, accountants, tax advisors, wealth managers, and trust officers specializing in family inheritance and succession planning.",
+                "REQ": "No formal prerequisites for the Foundation Certificate. Higher levels require professional experience or prior qualifications.",
                 "TOPICS": [
-                    "Trusts and Estates",
+                    "Introduction to Trusts and Estates",
                     "Taxation of Trusts and Estates",
                     "Trust and Estate Accounting",
-                    "Administration of Trusts"
-                ]
-            },
-            "FMVA": { 
-                "TITLE": "FMVA", "SUBTITLE": "Financial Modeling & Valuation Analyst", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                    "Administration of Trusts",
+                    "Wills and Probate Administration",
+                    "Ethics and Professional Standards"
+                ],
                 "WHY_CHOOSE": {
-                    "TITLE": "Why Choose FMVA Review?", "SUBTITLE": "Achieve top scores worldwide.",
+                    "TITLE": "Why Choose STEP?",
+                    "SUBTITLE": "Excellence in Trusteeship",
                     "FEATURES": [
-                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
-                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
-                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                        { "TITLE": "Elite Network", "SUBTITLE": "Professional Community", "DESC": "Join a global network of over 21,000 experts in family inheritance and succession." },
+                        { "TITLE": "Specialized Trust", "SUBTITLE": "Client Confidence", "DESC": "Signal your trustworthiness and expertise to clients handling complex family assets." },
+                        { "TITLE": "Career Distinction", "SUBTITLE": "Expert Status", "DESC": "Mark yourself as a specialist in the niche field of trusts and estates." }
+                    ]
+                }
+            },
+            "FMVA": {
+                "TITLE": "Financial Modeling & Valuation Analyst (FMVA)",
+                "SUBTITLE": "Build world-class financial models.",
+                "DESC": "The Financial Modeling & Valuation Analyst (FMVA) certification provides the practical skills to build robust financial models and use them to make strategic business decisions. It bridges the gap between theoretical finance and practical application in Excel.",
+                "AUDIENCE": "Financial analysts, investment bankers, corporate finance managers, equity research associates, and students aiming for these roles.",
+                "REQ": "No formal prerequisites, but basic knowledge of accounting (financial statements) and Excel proficiency is highly recommended.",
+                "TOPICS": [
+                    "Financial Modeling in Excel",
+                    "Business Valuation Techniques",
+                    "Budgeting & Forecasting",
+                    "Dashboard & Data Visualization",
+                    "Scenario & Sensitivity Analysis",
+                    "M&A Modeling",
+                    "Leveraged Buyout (LBO) Modeling",
+                    "Advanced Excel Formulas"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose FMVA?",
+                    "SUBTITLE": "Excel in Financial Analysis",
+                    "FEATURES": [
+                         { "TITLE": "Practical Skills", "SUBTITLE": "Immediate Application", "DESC": "Learn how to build real, dynamic financial models from scratch." },
+                         { "TITLE": "Competitive Edge", "SUBTITLE": "Job Market", "DESC": "Highly sought-after certification in investment banking, PE, and major corporations." },
+                         { "TITLE": "Modern Tools", "SUBTITLE": "Advanced Techniques", "DESC": "Master modern financial analysis tools, charts, and presentation techniques." }
                     ]
                 }
             },
             "CIA_CHALLENGE": { 
-                "TITLE": "CIA Challenge", "SUBTITLE": "CIA Challenge Exam", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                "TITLE": "CIA Challenge Exam",
+                "SUBTITLE": "Fast Track to CIA Certification",
+                "DESC": "The CIA Challenge Exam is a limited-time opportunity designed for active CPAs, CAs, and CISA holders to earn the highly respected Certified Internal Auditor (CIA) designation by passing a single exam instead of the traditional three parts. This expedited pathway acknowledges your existing professional achievements.",
+                "AUDIENCE": "Active CPAs, CAs, and CISA certification holders who want to add the CIA designation to their credentials.",
+                "REQ": "Must hold an active membership in a qualified accounting body (like AICPA, ICAEW, etc.) or hold an active CISA certification from ISACA.",
+                "TOPICS": [
+                    "Essentials of Internal Auditing",
+                    "Practice of Internal Auditing",
+                    "Business Knowledge for Internal Auditing",
+                    "IT Governance and Security",
+                    "Financial Management",
+                    "Strategic Management"
+                ],
+                "IMAGE": "/imgs/img mealify3.jfif",
                 "WHY_CHOOSE": {
-                    "TITLE": "Why Choose CIA Challenge?", "SUBTITLE": "Top exam preparation.",
+                    "TITLE": "Why Choose CIA Challenge?",
+                    "SUBTITLE": "Accelerate Your Career",
                     "FEATURES": [
-                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
-                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
-                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                        { "TITLE": "Save Time", "SUBTITLE": "One Exam", "DESC": "Earn the CIA designation by passing just one comprehensive exam instead of three." },
+                        { "TITLE": "Global Recognition", "SUBTITLE": "Elite Status", "DESC": "Join the global network of over 170,000 CIAs and enhance your professional standing." },
+                        { "TITLE": "Professional Growth", "SUBTITLE": "Add Value", "DESC": "Demonstrate your internal audit expertise to employers and open new career opportunities." }
                     ]
                 }
             },
             "EA": { 
-                "TITLE": "EA", "SUBTITLE": "Enrolled Agent", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f",
+                "TITLE": "Enrolled Agent (EA)", 
+                "SUBTITLE": "America's Tax Expert", 
+                "DESC": "An Enrolled Agent (EA) is a federally authorized tax practitioner empowered by the U.S. Department of the Treasury to represent taxpayers before the Internal Revenue Service (IRS). EAs are the only federally licensed tax practitioners who specialize in taxation and have unlimited rights to represent taxpayers.", 
+                "AUDIENCE": "Tax professionals, accountants, and individuals looking to specialize in U.S. taxation and IRS representation.", 
+                "REQ": "Pass the three-part Special Enrollment Examination (SEE) covering Individual, Business, and Representation/Process matters.", 
+                "TOPICS": [
+                    "Individuals (Income, Deductions, Estate Tax)",
+                    "Businesses (Partnerships, Corporations, Fiduciaries)",
+                    "Representation, Practices and Procedures"
+                ], 
+                "IMAGE": "/imgs/img mealify1.jfif",
                 "WHY_CHOOSE": {
-                    "TITLE": "Why Choose EA Review?", "SUBTITLE": "Comprehensive study materials.",
+                    "TITLE": "Why Choose EA?", "SUBTITLE": "The Highest Credential in Tax",
                     "FEATURES": [
-                        { "TITLE": "Feature 1", "SUBTITLE": "Subtitle 1", "DESC": "Description 1" },
-                        { "TITLE": "Feature 2", "SUBTITLE": "Subtitle 2", "DESC": "Description 2" },
-                        { "TITLE": "Feature 3", "SUBTITLE": "Subtitle 3", "DESC": "Description 3" }
+                        { "TITLE": "Federal License", "SUBTITLE": "IRS Recognition", "DESC": "The only federally licensed designation for tax with unlimited practice rights." },
+                        { "TITLE": "Recession Proof", "SUBTITLE": "Stable Career", "DESC": "Tax expertise is always in demand, regardless of the economic climate." },
+                        { "TITLE": "Expert Status", "SUBTITLE": "Tax Specialist", "DESC": "Position yourself as a true expert in the complex field of U.S. taxation." }
                     ]
                 }
             },
-            "FMAA": { "TITLE": "FMAA", "SUBTITLE": "Financial and Managerial Accounting Associate", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FMAA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "FRM": { "TITLE": "FRM", "SUBTITLE": "Financial Risk Manager", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FRM?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "PRM": { "TITLE": "PRM", "SUBTITLE": "Professional Risk Manager", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PRM?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "CFTE": { "TITLE": "CFTe", "SUBTITLE": "Certified Financial Technician", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CFTe?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "IPSAS": { "TITLE": "IPSAS", "SUBTITLE": "International Public Sector Accounting Standards", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IPSAS?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "VAT": { "TITLE": "VAT", "SUBTITLE": "Value Added Tax Specialist", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose VAT?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "FFE": { "TITLE": "FFE", "SUBTITLE": "Forensic Finance Expert", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose FFE?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "PMP": { "TITLE": "PMP", "SUBTITLE": "Project Management Professional", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PMP?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "CFE": { "TITLE": "CFE", "SUBTITLE": "Certified Fraud Examiner", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CFE?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "CISA": { "TITLE": "CISA", "SUBTITLE": "Certified Information Systems Auditor", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose CISA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "IFRS_CERT": { "TITLE": "IFRS Certificate", "SUBTITLE": "International Financial Reporting Standards", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IFRS?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "PFA": { "TITLE": "PFA", "SUBTITLE": "Professional Financial Accountant", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose PFA?", "SUBTITLE": "Subtitle", "FEATURES": [] } },
-            "IAP": { "TITLE": "IAP", "SUBTITLE": "Internal Audit Practitioner", "DESC": "TBD", "AUDIENCE": "TBD", "REQ": "TBD", "TOPICS": ["Topic 1", "Topic 2"], "IMAGE": "/imgs/img mealify1f", "WHY_CHOOSE": { "TITLE": "Why Choose IAP?", "SUBTITLE": "Subtitle", "FEATURES": [] } }
+            "FMAA": {
+                "TITLE": "Financial and Managerial Accounting Associate (FMAA)",
+                "SUBTITLE": "Start Your Journey in Management Accounting",
+                "DESC": "The Financial and Managerial Accounting Associate (FMAA) certification establishes your mastery of the fundamental accounting and finance skills needed to succeed in business. It is the perfect entry-level credential for students and early-career professionals.",
+                "AUDIENCE": "University students, recent graduates, and early-career professionals looking to prove their accounting knowledge.",
+                "REQ": "No degree or experience required. Open to anyone interested in accounting and finance.",
+                "TOPICS": [
+                    "General Accounting and Reporting",
+                    "Planning, Budgeting, and Forecasting",
+                    "Performance Management",
+                    "Cost Management",
+                    "Internal Controls"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose FMAA?",
+                    "SUBTITLE": "Start Your Finance Journey",
+                    "FEATURES": [
+                        { "TITLE": "Foundational Skills", "SUBTITLE": "Core Competency", "DESC": "Prove your knowledge in core accounting and finance concepts to employers." },
+                        { "TITLE": "Career Kickstart", "SUBTITLE": "Get Hired", "DESC": "Differentiate yourself early in your career and stand out in the job market." },
+                        { "TITLE": "Path to CMA", "SUBTITLE": "Stepping Stone", "DESC": "A great first step towards the advanced Certified Management Accountant (CMA) certification." }
+                    ]
+                }
+            },
+            "FRM": {
+                "TITLE": "Financial Risk Manager (FRM)",
+                "SUBTITLE": "The Global Standard for Risk Management",
+                "DESC": "The Financial Risk Manager (FRM) designation is the globally recognized gold standard for financial risk professionals. It certifies your ability to identify, analyze, and mitigate risk at a global level.",
+                "AUDIENCE": "Risk managers, credit risk analysts, market risk analysts, auditors, and traders.",
+                "REQ": "Pass Part I and Part II exams and demonstrate 2 years of relevant professional work experience.",
+                "TOPICS": [
+                    "Foundations of Risk Management",
+                    "Quantitative Analysis",
+                    "Financial Markets and Products",
+                    "Valuation and Risk Models",
+                    "Market Risk Measurement and Management",
+                    "Credit Risk Measurement and Management",
+                    "Operational Risk and Resiliency",
+                    "Liquidity and Treasury Risk Measurement and Management"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose FRM?",
+                    "SUBTITLE": "Lead in Risk Management",
+                    "FEATURES": [
+                        { "TITLE": "Risk Authority", "SUBTITLE": "Global Standard", "DESC": "The most globally recognized and respected certification for financial risk management." },
+                        { "TITLE": "Career Security", "SUBTITLE": "High Demand", "DESC": "Risk management is increasingly critical in today's volatile financial world." },
+                        { "TITLE": "Network Access", "SUBTITLE": "Elite Peers", "DESC": "Connect with a top-tier network of risk professionals globally." }
+                    ]
+                }
+            },
+            "PRM": {
+                "TITLE": "Professional Risk Manager (PRM)",
+                "SUBTITLE": "The Risk Management Specification",
+                "DESC": "The Professional Risk Manager (PRM) designation is a rigorous risk management credential endorsed by leading firms and universities. It focuses on the practical application of risk management theory and mathematical foundations.",
+                "AUDIENCE": "Risk management professionals, actuaries, and quantitative analysts.",
+                "REQ": "Requirements vary based on education level and professional experience. Generally requires passing 4 exams.",
+                "TOPICS": [
+                    "Finance Theory, Financial Instruments and Markets",
+                    "Mathematical Foundations of Risk Measurement",
+                    "Risk Management Practices",
+                    "Case Studies, Standards: Governance, Best Practices and Ethics"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose PRM?",
+                    "SUBTITLE": "Scientific Risk Management",
+                    "FEATURES": [
+                        { "TITLE": "Analytical Rigor", "SUBTITLE": "Deep Dive", "DESC": "Focuses heavily on the quantitative, mathematical, and scientific aspects of risk." },
+                        { "TITLE": "Flexibility", "SUBTITLE": "Modular Exams", "DESC": "Take the exams in any order and at your own pace to fit your schedule." },
+                        { "TITLE": "Industry Endorsed", "SUBTITLE": "Top Firms", "DESC": "Recognized and endorsed by major financial institutions worldwide." }
+                    ]
+                }
+            },
+            "CFTe": {
+                "TITLE": "Certified Financial Technician (CFTe)",
+                "SUBTITLE": "Master Technical Analysis",
+                "DESC": "The Certified Financial Technician (CFTe) is a global qualification in technical analysis. It demonstrates a mastery of technical analysis tools and concepts, enabling you to make better trading and investment decisions based on market trends.",
+                "AUDIENCE": "Technical analysts, traders, portfolio managers, and investment advisors.",
+                "REQ": "Pass CFTe Level I (multiple choice) and CFTe Level II (essay/practical) exams.",
+                "TOPICS": [
+                    "Technical Analysis Theory",
+                    "Chart Construction and Pattern Recognition",
+                    "Indicators and Oscillators",
+                    "Cycles and Wave Theory",
+                    "System Design and Testing",
+                    "Behavioral Finance"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CFTe?",
+                    "SUBTITLE": "Master Technical Analysis",
+                    "FEATURES": [
+                        { "TITLE": "Technical Expertise", "SUBTITLE": "Chart Mastery", "DESC": "Prove your skills in analyzing market trends, charts, and price action." },
+                        { "TITLE": "Global Credential", "SUBTITLE": "IFTA Member", "DESC": "Internationally recognized by the International Federation of Technical Analysts (IFTA)." },
+                        { "TITLE": "Trading Edge", "SUBTITLE": "Better Decisions", "DESC": "Enhance your trading strategies with technical precision and market timing." }
+                    ]
+                }
+            },
+            "IPSAS": {
+                "TITLE": "Cert IPSAS",
+                "SUBTITLE": "International Public Sector Accounting Standards",
+                "DESC": "The Certificate in International Public Sector Accounting Standards (Cert IPSAS) provides trainees with a comprehensive understanding of how to apply IPSAS to financial reporting in the public sector.",
+                "AUDIENCE": "Public sector accountants, auditors, and finance professionals working in government or public entities.",
+                "REQ": "No formal prerequisites, but a background in accounting is recommended.",
+                "TOPICS": [
+                    "Introduction to IPSAS",
+                    "Financial Reporting under IPSAS",
+                    "Assets and Liabilities in the Public Sector",
+                    "Revenues and Expenses",
+                    "Consolidation and Presentation",
+                    "First-time Adoption of IPSAS"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose IPSAS?",
+                    "SUBTITLE": "Public Sector Excellence",
+                    "FEATURES": [
+                        { "TITLE": "Public Sector Focus", "SUBTITLE": "Government Accounting", "DESC": "Specialized knowledge for government and public entity financial reporting." },
+                        { "TITLE": "Transparency", "SUBTITLE": "Accountability", "DESC": "Contribute to improved financial management and transparency in public funds." },
+                        { "TITLE": "Global Trend", "SUBTITLE": "Adoption", "DESC": "Detailed knowledge in a standard that many governments are moving towards." }
+                    ]
+                }
+            },
+            "VAT": {
+                "TITLE": "VAT Specialist",
+                "SUBTITLE": "Value Added Tax Compliance",
+                "DESC": "The VAT Specialist certification covers the principles and practical application of Value Added Tax. It ensures you understand the regulations, compliance requirements, and reporting standards essential for businesses.",
+                "AUDIENCE": "Tax professionals, accountants, compliance officers, and business owners.",
+                "REQ": "Varies by specific certification body. Generally requires basic accounting knowledge.",
+                "TOPICS": [
+                    "VAT Law and Regulations",
+                    "Input and Output Tax",
+                    "Place of Supply Rules",
+                    "VAT Registration and Deregistration",
+                    "Filing VAT Returns",
+                    "Penalties and Audits"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose VAT?",
+                    "SUBTITLE": "Tax Compliance Expert",
+                    "FEATURES": [
+                        { "TITLE": "Regulatory Compliance", "SUBTITLE": "Avoid Penalties", "DESC": "Ensure accurate VAT filing and strict adherence to local tax laws." },
+                        { "TITLE": "Business Essential", "SUBTITLE": "High Demand", "DESC": "Every business needs VAT expertise to operate legally and efficiently." },
+                        { "TITLE": "Specialized Role", "SUBTITLE": "Tax Focus", "DESC": "Become a key advisor on tax structuring and compliance matters." }
+                    ]
+                }
+            },
+            "FFE": {
+                "TITLE": "Forensic Finance Expert (FFE)",
+                "SUBTITLE": "Uncover Financial Truths",
+                "DESC": "Specialized training in financial investigation, dispute resolution, and fraud detection. This certification equips you with the skills to identify financial discrepancies and provide evidence for legal proceedings.",
+                "AUDIENCE": "Forensic accountants, internal auditors, investigators, and legal consultants.",
+                "REQ": "Experience in finance, accounting, or law enforcement is typically required.",
+                "TOPICS": [
+                    "Fraud Investigation Techniques",
+                    "Legal Aspects of Forensic Accounting",
+                    "Digital Forensics",
+                    "Asset Tracing and Recovery",
+                    "Money Laundering",
+                    "Expert Witness Testimony"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose FFE?",
+                    "SUBTITLE": "Uncover the Truth",
+                    "FEATURES": [
+                        { "TITLE": "Investigative Skills", "SUBTITLE": "Sherlock of Finance", "DESC": "Learn advanced techniques to detect, prevent, and investigate financial crimes." },
+                        { "TITLE": "Legal Impact", "SUBTITLE": "Expert Witness", "DESC": "Provide crucial evidence and testimony in complex legal financial disputes." },
+                        { "TITLE": "High Value", "SUBTITLE": "Asset Protection", "DESC": "Protect organizations from fraud and recover misappropriated assets." }
+                    ]
+                }
+            },
+            "PMP": {
+                "TITLE": "Project Management Professional (PMP)",
+                "SUBTITLE": "The Global Standard in Project Management",
+                "DESC": "The Project Management Professional (PMP) is the world's leading project management certification. It proves you have the project leadership skills to drive business results and validates your expertise in people, process, and business environment.",
+                "AUDIENCE": "Project managers, team leads, and anyone who wishes to demonstrate their project management expertise.",
+                "REQ": "Foundational education (degree/diploma) + 36-60 months of project management experience + 35 hours of project management education.",
+                "TOPICS": [
+                    "People: Leading and motivating teams",
+                    "Process: Predictive, agile, and hybrid approaches",
+                    "Business Environment: Aligning projects with strategy"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose PMP?",
+                    "SUBTITLE": "Lead Projects Effectively",
+                    "FEATURES": [
+                        { "TITLE": "Global Leadership", "SUBTITLE": "Project Mastery", "DESC": "Manage projects across any industry and location with a globally accepted methodology." },
+                        { "TITLE": "Salary Increase", "SUBTITLE": "Higher Pay", "DESC": "PMP holders earn significantly higher salaries than non-certified project managers." },
+                        { "TITLE": "Methodology Agnostic", "SUBTITLE": "Versatile", "DESC": "Works efficiently with agile, hybrid, and predictive project management approaches." }
+                    ]
+                }
+            },
+            "CFE": {
+                "TITLE": "Certified Fraud Examiner (CFE)",
+                "SUBTITLE": "The Gold Standard in Fraud Examination",
+                "DESC": "The Certified Fraud Examiner (CFE) credential denotes proven expertise in fraud prevention, detection, and deterrence. CFEs are trained to identify the warning signs and red flags that indicate evidence of fraud and fraud risk.",
+                "AUDIENCE": "Auditors, investigators, law enforcement, loss prevention specialists, and risk managers.",
+                "REQ": "A mix of academic and professional requirements, evaluated via a points system.",
+                "TOPICS": [
+                    "Financial Transactions and Fraud Schemes",
+                    "Law related to Fraud",
+                    "Investigation",
+                    "Fraud Prevention and Deterrence"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CFE?",
+                    "SUBTITLE": "Fight Fraud",
+                    "FEATURES": [
+                        { "TITLE": "Anti-Fraud Gold Standard", "SUBTITLE": "Global Recognition", "DESC": "The premier certification for fraud fighters worldwide." },
+                        { "TITLE": "Career Niches", "SUBTITLE": "Specialized Roles", "DESC": "Access specialized opportunities in compliance, investigation, and corporate security." },
+                        { "TITLE": "Network", "SUBTITLE": "ACFE Access", "DESC": "Join the world's largest anti-fraud organization and network with experts." }
+                    ]
+                }
+            },
+            "CISA": {
+                "TITLE": "Certified Information Systems Auditor (CISA)",
+                "SUBTITLE": "World-Class Standard for IT Audit",
+                "DESC": "The CISA designation is a globally recognized certification for IS audit control, assurance, and security professionals. It validates your expertise in auditing, controlling, monitoring, and assessing an organization’s information technology and business systems.",
+                "AUDIENCE": "IS/IT auditors, consultants, security professionals, and IT managers.",
+                "REQ": "At least 5 years of professional experience in information systems auditing, control, or security.",
+                "TOPICS": [
+                    "Information Systems Auditing Process",
+                    "Governance and Management of IT",
+                    "Information Systems Acquisition, Development, and Implementation",
+                    "Information Systems Operations and Business Resilience",
+                    "Protection of Information Assets"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose CISA?",
+                    "SUBTITLE": "Master IT Audit",
+                    "FEATURES": [
+                        { "TITLE": "IT Security Focus", "SUBTITLE": "Cyber Defense", "DESC": "Play a crucial role in protecting organizational assets and data integrity." },
+                        { "TITLE": "High Demand", "SUBTITLE": "Tech Growth", "DESC": "Rapidly growing demand for IT audit professionals in a digital-first world." },
+                        { "TITLE": "Credibility", "SUBTITLE": "Expert Status", "DESC": "Instant credibility and proof of your expertise in IS audit and control." }
+                    ]
+                }
+            },
+            "IFRS_CERT": {
+                "TITLE": "IFRS Certificate",
+                "SUBTITLE": "International Financial Reporting Standards",
+                "DESC": "The IFRS Certificate offers a comprehensive guide to International Financial Reporting Standards. It is designed to give you a solid grounding in the principles and application of IFRS.",
+                "AUDIENCE": "Accountants, finance managers, and analysts seeking to update their IFRS knowledge.",
+                "REQ": "No formal prerequisites. Ideal for those with a basic understanding of financial reporting.",
+                "TOPICS": [
+                    "Introduction to IFRS framework",
+                    "Applying specific IFRS standards",
+                    "Financial Statement Presentation",
+                    "Consolidated Financial Statements"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose IFRS Certificate?",
+                    "SUBTITLE": "Global Reporting",
+                    "FEATURES": [
+                        { "TITLE": "Global Standard", "SUBTITLE": "Universal", "DESC": "Essential knowledge for international business reporting and analysis." },
+                        { "TITLE": "Career Update", "SUBTITLE": "Stay Current", "DESC": "Keep up with the latest international standards and amendments." },
+                        { "TITLE": "Practicality", "SUBTITLE": "Real World", "DESC": "Directly applicable to daily accounting tasks and financial reporting." }
+                    ]
+                }
+            },
+            "PFA": {
+                "TITLE": "Professional Financial Accountant (PFA)",
+                "SUBTITLE": "Practical Accounting Skills",
+                "DESC": "The PFA designation focuses on the practical application of accounting principles. It bridges the gap between academic theory and the daily realities of professional accounting work.",
+                "AUDIENCE": "Fresh graduates, junior accountants, and non-accounting professionals.",
+                "REQ": "Degree in commerce or related field is often preferred.",
+                "TOPICS": [
+                    "Advanced Financial Accounting",
+                    "Financial Statement Analysis",
+                    "Taxation Principles",
+                    "Cost Accounting Applications"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose PFA?",
+                    "SUBTITLE": "Practical Accounting",
+                    "FEATURES": [
+                        { "TITLE": "Hands-on Skills", "SUBTITLE": "Job Ready", "DESC": "Focus on the practical skills actually needed in the modern workplace." },
+                        { "TITLE": "Recognition", "SUBTITLE": "Professional", "DESC": "A recognized certification that validates your competence to employers." },
+                        { "TITLE": "Career Boost", "SUBTITLE": "Promotion", "DESC": "Accelerate your climb up the corporate ladder with proven practical skills." }
+                    ]
+                }
+            },
+            "IAP": {
+                "TITLE": "Internal Audit Practitioner (IAP)",
+                "SUBTITLE": "First Step to Internal Auditing",
+                "DESC": "The Internal Audit Practitioner (IAP) designation is designed for students and new internal auditors. It demonstrates that you possess the fundamental knowledge and aptitude for the internal audit profession.",
+                "AUDIENCE": "University students and new internal auditors with less than 6 months of experience.",
+                "REQ": "No experience required. Just pass the Internal Audit Practitioner exam.",
+                "TOPICS": [
+                    "Internal Audit Basics",
+                    "International Standards for the Professional Practice of Internal Auditing",
+                    "Governance, Risk, and Control",
+                    "Conducting the Audit Engagement"
+                ],
+                "IMAGE": "/imgs/img mealify2.jfif",
+                "WHY_CHOOSE": {
+                    "TITLE": "Why Choose IAP?",
+                    "SUBTITLE": "Start Audit Career",
+                    "FEATURES": [
+                        { "TITLE": "Entry Point", "SUBTITLE": "Gateway", "DESC": "The perfect first step into the internal audit profession for beginners." },
+                        { "TITLE": "Quick Win", "SUBTITLE": "Fast Track", "DESC": "Demonstrate competence quickly to prospective employers." },
+                        { "TITLE": "Pathway to CIA", "SUBTITLE": "Foundation", "DESC": "Builds confidence and foundational knowledge for the future CIA exam." }
+                    ]
+                }
+            }
         }
     },
     "ASSIGN_CONTENT": {
