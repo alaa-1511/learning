@@ -4,13 +4,13 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificationService, Certificate } from '../../core/service/certification.service';
+import { ExamService, Exam } from '../../core/service/exam.service';
 import { CourseService, Course } from '../../core/service/course.service';
 import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-
 
 @Component({
   selector: 'app-certifications',
@@ -23,7 +23,6 @@ import { InputTextModule } from 'primeng/inputtext';
     DialogModule,
     ButtonModule,
     InputTextModule,
-    
 ],
   templateUrl: './certifications.html'
 })
@@ -36,6 +35,9 @@ export class CertificationsComponent implements OnInit {
   searchId: string = '';
   certificate: Certificate | null = null;
   availableCourses: Course[] = []; // List for public display
+  private rawCourses: Course[] = [];
+  private rawExams: Exam[] = [];
+
   error: string | null = null;
   loading: boolean = false;
 
@@ -49,6 +51,7 @@ export class CertificationsComponent implements OnInit {
     private router: Router,
     private certService: CertificationService,
     private courseService: CourseService,
+    private examService: ExamService,
     private ngZone: NgZone,
     private cd: ChangeDetectorRef
   ) {}
@@ -60,9 +63,16 @@ export class CertificationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Load all courses for display
+    // Load all courses
     this.courseService.courses$.subscribe(courses => {
-        this.availableCourses = courses;
+        this.rawCourses = courses;
+        this.combineContent();
+    });
+
+    // Load exams (Test Bank)
+    this.examService.exams$.subscribe(exams => {
+        this.rawExams = exams;
+        this.combineContent();
     });
 
     // Check if ID is in URL query params
@@ -72,6 +82,24 @@ export class CertificationsComponent implements OnInit {
             this.verifyCertificate();
         }
     });
+  }
+
+  combineContent() {
+      const examCourses: Course[] = this.rawExams.map(e => ({
+          id: e.id, 
+          title: e.title,
+          category: 'Test Bank',
+          level: e.level || 'Intermediate',
+          image: e.image || '',
+          description: e.description || '',
+          rating: 5,
+          students: 0,
+          price: 0,
+          details: '',
+          type: 'exam'
+      }));
+
+      this.availableCourses = [...this.rawCourses, ...examCourses];
   }
 
   openVerificationDialog() {

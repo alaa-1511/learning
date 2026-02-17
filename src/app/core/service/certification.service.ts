@@ -6,12 +6,13 @@ import { ToastrService } from 'ngx-toastr';
 export interface Certificate {
   id: string; 
   studentName: string;
-  courseId: number;
+  courseId?: number; // Made optional
+  examId?: number;   // Added
   courseName: string;
   issueDate: Date;
   expiryDate?: Date;
   status: 'Active' | 'Revoked' | 'Pending';
-  templateId?: number; // link to a design template if needed
+  templateId?: number;
 }
 
 @Injectable({
@@ -46,6 +47,7 @@ export class CertificationService {
                   id: data.certificate_id,
                   studentName: data.student_name,
                   courseId: data.course_id,
+                  examId: data.exam_id, // Map from DB
                   courseName: data.course_name,
                   issueDate: new Date(data.issue_date),
                   expiryDate: data.expiry_date ? new Date(data.expiry_date) : undefined,
@@ -77,6 +79,7 @@ export class CertificationService {
         id: c.certificate_id,
         studentName: c.student_name,
         courseId: c.course_id,
+        examId: c.exam_id, // Map from DB
         courseName: c.course_name,
         issueDate: new Date(c.issue_date),
         expiryDate: c.expiry_date ? new Date(c.expiry_date) : undefined,
@@ -90,7 +93,8 @@ export class CertificationService {
   async issueCertificate(cert: Omit<Certificate, 'id' | 'status'>) {
       const dbCert = {
           student_name: cert.studentName,
-          course_id: cert.courseId,
+          course_id: cert.courseId || null, // Handle null
+          exam_id: cert.examId || null,     // Handle exam_id
           course_name: cert.courseName,
           issue_date: cert.issueDate,
           expiry_date: cert.expiryDate,
@@ -115,6 +119,7 @@ export class CertificationService {
           id: data.certificate_id,
           studentName: data.student_name,
           courseId: data.course_id,
+          examId: data.exam_id,
           courseName: data.course_name,
           issueDate: new Date(data.issue_date),
           expiryDate: data.expiry_date ? new Date(data.expiry_date) : undefined,
@@ -130,7 +135,8 @@ export class CertificationService {
   async updateCertificate(cert: Certificate) {
       const dbCert = {
           student_name: cert.studentName,
-          course_id: cert.courseId,
+          course_id: cert.courseId || null,
+          exam_id: cert.examId || null,
           course_name: cert.courseName,
           issue_date: cert.issueDate,
           expiry_date: cert.expiryDate,
@@ -188,3 +194,5 @@ export class CertificationService {
     return this.certificatesSubject.value;
   }
 }
+
+

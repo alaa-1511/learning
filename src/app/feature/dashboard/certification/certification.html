@@ -118,7 +118,7 @@
             <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'DASHBOARD_CERTIFICATION.COURSE' | translate }}</label>
              <select formControlName="courseId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 <option [ngValue]="null" disabled>{{ 'DASHBOARD_CERTIFICATION.SELECT_COURSE' | translate }}</option>
-                <option *ngFor="let course of courses" [value]="course.id">{{course.title}}</option>
+                <option *ngFor="let course of courses" [value]="course.value">{{course.title}}</option>
             </select>
         </div>
 
