@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -57,6 +57,7 @@ export class FreeTrail implements OnInit, OnDestroy {
     private questionService: QuestionService, 
     private examService: ExamService,
     private router: Router,
+    private route: ActivatedRoute, // Inject ActivatedRoute
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer
   ) {}
@@ -90,6 +91,37 @@ export class FreeTrail implements OnInit, OnDestroy {
            this.extractCategories();
            this.filteredExams = this.exams;
            this.currentView = 'list';
+
+           // Handle Query Params
+           this.route.queryParams.subscribe(params => {
+               const categoryParam = params['category'];
+               if (categoryParam) {
+                   const paramLower = categoryParam.toLowerCase();
+
+                   // 1. Try exact Title match
+                   const exactTitleMatch = this.exams.find(e => e.title.toLowerCase() === paramLower);
+                   if (exactTitleMatch) {
+                       this.selectExam(exactTitleMatch);
+                       this.cd.markForCheck(); // Force update
+                       return;
+                   }
+
+                   // 2. Try Category match
+                   const categoryExams = this.exams.filter(e => e.category?.toLowerCase() === paramLower);
+                   if (categoryExams.length > 0) {
+                       if (categoryExams.length === 1) {
+                           // Only one exam in this category, go directly
+                           this.selectExam(categoryExams[0]);
+                       } else {
+                           // Multiple exams, show filter list
+                           this.selectCategory(categoryExams[0].category!);
+                       }
+                       this.cd.markForCheck(); // Force update
+                       return;
+                   }
+               }
+               this.cd.markForCheck(); // Force update for list view
+           });
        });
     });
   }

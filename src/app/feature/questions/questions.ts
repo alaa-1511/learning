@@ -8,7 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SupabaseService } from '../../core/service/supabase.service'; // Added import
 
 import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 
 interface ExamQuestion extends Question {
@@ -75,6 +75,7 @@ export class Questions implements OnInit {
     private questionService: QuestionService, 
     private examService: ExamService,
     private router: Router,
+    private route: ActivatedRoute, // Re-inject ActivatedRoute
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private supabaseService: SupabaseService
@@ -101,42 +102,78 @@ export class Questions implements OnInit {
       }
 
       // 3. Combine Streams
+      // 3. Combine Streams
       combineLatest([
         this.questionService.questions$,
-        this.examService.exams$
-      ]).subscribe(([questions, exams]) => {
+        this.examService.exams$,
+        this.route.queryParams 
+      ]).subscribe(([questions, exams, params]) => {
+          if (!questions || !exams) return;
+
           // Filter for Active, Testbank Questions
-          const testbankQuestions = questions
+          const testbankQuestions = (questions as any[])
             .filter(q => q.status === 'Active' && (!q.targetPage || q.targetPage === 'testbank'))
             .map(q => ({
                 ...q,
                 type: q.type.toLowerCase() as any
             })) as ExamQuestion[];
 
-          this.exams = exams.map(exam => ({
-               id: exam.id,
-               title: exam.title,
-               category: exam.level || 'General',
-               description: exam.description || '',
-               image: exam.image || '',
-               part: 'All Parts', 
-               config: this.questionService.getExamConfig(exam.id),
-               questions: testbankQuestions.filter(q => q.examId === exam.id),
-               partCount: new Set(testbankQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
-           }));
+          this.exams = (exams as any[]).map(exam => ({
+              id: exam.id,
+              title: exam.title,
+              category: exam.level || 'General', 
+              description: exam.description || '',
+              image: exam.image || '',
+              part: 'All Parts', 
+              config: this.questionService.getExamConfig(exam.id),
+              questions: testbankQuestions.filter(q => q.examId === exam.id),
+              partCount: new Set(testbankQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
+          }));
+          
+          this.exams = this.exams.filter(e => (e.questions?.length || 0) > 0);
+          
+          // Filter Exams: Show assigned ones if user has assignments
+          let visibleExams = this.exams;
+          if (this.currentUser && this.userAssignments.length > 0) {
+              const assignedCourseIds = new Set(this.userAssignments.map(a => a.course_id));
+              visibleExams = this.exams.filter(e => assignedCourseIds.has(e.id));
+          }
+          this.exams = visibleExams;
+           
+          this.extractCategories();
+          
+          this.filteredExams = this.exams;
+          this.currentView = 'list';
 
-           // Filter Exams: Show assigned ones if user has assignments
-           let visibleExams = this.exams;
-           if (this.currentUser && this.userAssignments.length > 0) {
-               const assignedCourseIds = new Set(this.userAssignments.map(a => a.course_id));
-               visibleExams = this.exams.filter(e => assignedCourseIds.has(e.id));
+           // Handle Query Params (Deep Linking)
+           const categoryParam = (params as any)['category'];
+           if (categoryParam) {
+               const paramLower = categoryParam.toLowerCase();
+
+               // 1. Try exact Title match
+               const exactTitleMatch = this.exams.find(e => e.title.toLowerCase() === paramLower);
+               if (exactTitleMatch) {
+                   this.selectExam(exactTitleMatch); // Removed await
+                   this.cd.markForCheck(); // Force update
+                   return;
+               }
+
+               // 2. Try Category match
+               const categoryExams = this.exams.filter(e => e.category?.toLowerCase() === paramLower);
+               if (categoryExams.length > 0) {
+                   if (categoryExams.length === 1) {
+                       // Only one exam in this category, go directly
+                       this.selectExam(categoryExams[0]); // Removed await
+                   } else {
+                       // Multiple exams (e.g. Parts), show the list filtered by category
+                       this.selectCategory(categoryExams[0].category!);
+                   }
+                   this.cd.markForCheck(); // Force update
+                   return;
+               }
            }
-           this.exams = visibleExams;
            
-           this.extractCategories();
-           
-           this.filteredExams = this.exams;
-           this.currentView = 'list';
+           this.cd.markForCheck(); // Force update for list view
       });
   }
   

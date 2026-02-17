@@ -15,6 +15,7 @@ export class CertificateLayoutComponent {
   @Input() description: string = '';
   @Input() targetAudience: string = '';
   @Input() requirements: string = '';
+  @Input() category: string = ''; // New Input for linking
   _topics: string[] = [];
   @Input() set topics(value: any) {
     if (Array.isArray(value)) {

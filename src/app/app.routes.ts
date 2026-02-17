@@ -4,30 +4,11 @@ import { Login } from './core/auth/login/login';
 import { Register } from './core/auth/register/register';
 // import { mainGuard } from './core/guards/main-guard';
 import { Main } from './core/layout/main/main';
-import { Landing } from './feature/landing/landing';
 
-import { Courses } from './feature/courses/courses';
-import { Questions } from './feature/questions/questions';
 import { mainguardGuard } from './core/guards/mainguard-guard';
 import { authguardGuard } from './core/guards/authguard-guard';
 import { subscriptionGuard } from './core/guards/subscription-guard';
 import { adminGuard } from './core/guards/admin-guard';
-import { Dashboard } from './feature/dashboard/dashboard';
-import { Articles } from './feature/articles/articles';
-import { WhoAre } from './feature/who-are/who-are';
-import { Scopa } from './feature/scopa/scopa';
-import { FreeTrail } from './feature/free-trail/free-trail';
-import { CAT } from './feature/contact/cat/cat';
-import { CertIFR } from './feature/contact/cert-ifr/cert-ifr';
-import { CertIA } from './feature/contact/cert-ia/cert-ia';
-import { CFA } from './feature/contact/cfa/cfa';
-import { CIA } from './feature/contact/cia/cia';
-import { CMA } from './feature/contact/cma/cma';
-import { CME } from './feature/contact/cme/cme';
-import { CPA } from './feature/contact/cpa/cpa';
-import { DIPIFRS } from './feature/contact/dipifrs/dipifrs';
-import { STEP } from './feature/contact/step/step';
-import { SOCPACE } from './feature/contact/socpa/socpa';
 
 
 
@@ -37,26 +18,27 @@ export const routes: Routes = [
   {path: '', redirectTo: 'landing', pathMatch: 'full' },
   {path: '', component: Main,
     children: [
-      {path:'landing', component: Landing},
-      {path:'courses', component: Courses},
+      {path:'landing', loadComponent: () => import('./feature/landing/landing').then(m => m.Landing)},
+      {path:'courses', loadComponent: () => import('./feature/courses/courses').then(m => m.Courses)},
       {path:'course-details/:type/:id', loadComponent: () => import('./feature/course-details/course-details').then(m => m.CourseDetails)},
-      {path:'questions', component: Questions, canActivate: [subscriptionGuard]},
-      {path:'articles', component: Articles},
+      {path:'questions', loadComponent: () => import('./feature/questions/questions').then(m => m.Questions), canActivate: [subscriptionGuard]},
+      {path:'articles', loadComponent: () => import('./feature/articles/articles').then(m => m.Articles)},
       {path:'article/:id', loadComponent: () => import('./feature/article-details/article-details').then(m => m.ArticleDetails) },
-      {path:'who-are', component: WhoAre},
-      {path:'scopa', component: Scopa},
-      {path:'free-trail', component: FreeTrail},
-      {path:'cat', component: CAT},
-      {path:'cert-ifr', component: CertIFR},
-      {path:'cert-ia', component: CertIA },
-      {path:'cfa', component: CFA},
-      {path:'cia', component: CIA},
-      {path:'cma', component: CMA},
-      {path:'cme', component: CME},
-      {path:'cpa', component: CPA},
-      {path:'dipifrs', component: DIPIFRS},
-      {path:'socpa', component: SOCPACE},
-      {path:'step', component: STEP},
+      {path:'who-are', loadComponent: () => import('./feature/who-are/who-are').then(m => m.WhoAre)},
+      {path:'scopa', loadComponent: () => import('./feature/scopa/scopa').then(m => m.Scopa)},
+      {path:'free-trail', loadComponent: () => import('./feature/free-trail/free-trail').then(m => m.FreeTrail)},
+      {path:'contact', loadComponent: () => import('./feature/contact/contact').then(m => m.Contact)},
+      {path:'cat', loadComponent: () => import('./feature/contact/cat/cat').then(m => m.CAT)},
+      {path:'cert-ifr', loadComponent: () => import('./feature/contact/cert-ifr/cert-ifr').then(m => m.CertIFR)},
+      {path:'cert-ia', loadComponent: () => import('./feature/contact/cert-ia/cert-ia').then(m => m.CertIA)},
+      {path:'cfa', loadComponent: () => import('./feature/contact/cfa/cfa').then(m => m.CFA)},
+      {path:'cia', loadComponent: () => import('./feature/contact/cia/cia').then(m => m.CIA)},
+      {path:'cma', loadComponent: () => import('./feature/contact/cma/cma').then(m => m.CMA)},
+      {path:'cme', loadComponent: () => import('./feature/contact/cme/cme').then(m => m.CME)},
+      {path:'cpa', loadComponent: () => import('./feature/contact/cpa/cpa').then(m => m.CPA)},
+      {path:'dipifrs', loadComponent: () => import('./feature/contact/dipifrs/dipifrs').then(m => m.DIPIFRS)},
+      {path:'socpa', loadComponent: () => import('./feature/contact/socpa/socpa').then(m => m.SOCPACE)},
+      {path:'step', loadComponent: () => import('./feature/contact/step/step').then(m => m.STEP)},
       {
         path: 'fmva',
         loadComponent: () => import('./feature/contact/fmva/fmva').then(m => m.FMVA)
