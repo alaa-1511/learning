@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificationService, Certificate } from '../../../core/service/certification.service';
@@ -7,6 +7,8 @@ import { ExamService, Exam } from '../../../core/service/exam.service';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { Button } from "primeng/button";
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-certification',
@@ -14,8 +16,9 @@ import { Button } from "primeng/button";
   imports: [CommonModule, TranslateModule, FormsModule, ReactiveFormsModule, DialogModule],
   templateUrl: './certification.html',
   styleUrl: './certification.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Certification implements OnInit {
+export class Certification implements OnInit, OnDestroy {
   stats = {
     totalIssued: 0,
     activeTemplates: 0,
@@ -31,12 +34,15 @@ export class Certification implements OnInit {
   issueDialog: boolean = false;
   editingId: string | null = null;
   issueForm: FormGroup;
+  
+  private destroy$ = new Subject<void>();
 
   constructor(
     private certService: CertificationService,
     private courseService: CourseService,
     private examService: ExamService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cd: ChangeDetectorRef
   ) {
       this.issueForm = this.fb.group({
           studentName: ['', Validators.required],
@@ -46,20 +52,26 @@ export class Certification implements OnInit {
   }
 
   ngOnInit() {
-      this.certService.certificates$.subscribe(certs => {
+      combineLatest([
+        this.certService.certificates$,
+        this.courseService.courses$,
+        this.examService.exams$
+      ]).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(([certs, courses, exams]) => {
           this.certificates = certs;
-          this.calculateStats();
-      });
-
-      this.courseService.courses$.subscribe(courses => {
           this.rawCourses = courses;
-          this.combineResources();
-      });
-
-      this.examService.exams$.subscribe(exams => {
           this.rawExams = exams;
+          
+          this.calculateStats();
           this.combineResources();
+          this.cd.markForCheck();
       });
+  }
+
+  ngOnDestroy() {
+      this.destroy$.next();
+      this.destroy$.complete();
   }
 
   combineResources() {
@@ -167,7 +179,6 @@ export class Certification implements OnInit {
                   await this.certService.issueCertificate(certPayload);
               }
           } catch (error) {
-              console.error('Error saving certificate:', error);
               // If error, maybe reopen? For now, we rely on Toastr in service
           }
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { CourseService, Course } from '../../../core/service/course.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-courses',
@@ -20,9 +22,10 @@ import { CourseService, Course } from '../../../core/service/course.service';
     DialogModule
   ],
   templateUrl: './courses.html',
-  styleUrls: ['./courses.css']
+  styleUrls: ['./courses.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CoursesManagement implements OnInit {
+export class CoursesManagement implements OnInit, OnDestroy {
   courses: Course[] = [];
   courses2: Course[] = []; // New list
   filteredCourses: Course[] = [];
@@ -49,6 +52,8 @@ export class CoursesManagement implements OnInit {
   alertDialogVisible: boolean = false;
   alertMessage: string = '';
   alertHeader: string = 'Notification';
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private courseService: CourseService,
@@ -92,17 +97,22 @@ export class CoursesManagement implements OnInit {
   }
 
   ngOnInit() {
-    this.courseService.courses$.subscribe(data => {
+    this.courseService.courses$.pipe(takeUntil(this.destroy$)).subscribe(data => {
       this.courses = data.filter(c => c.type !== 'exam');
       if (this.activeTab === 'courses') this.applyFilters();
       this.cdr.markForCheck(); // Ensure UI updates
     });
 
-    this.courseService.courses2$.subscribe(data => {
+    this.courseService.courses2$.pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.courses2 = data;
         if (this.activeTab === 'courses_2') this.applyFilters();
         this.cdr.markForCheck(); // Ensure UI updates
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSearch(event: any) {
@@ -172,7 +182,6 @@ export class CoursesManagement implements OnInit {
             this.deleteDialog = false;
             this.courseToDelete = null;
         } catch (error) {
-            console.error('Error deleting course:', error);
             this.showAlert('Failed to delete course (check network).', 'Error');
         } finally {
             this.isLoading = false;
@@ -226,7 +235,6 @@ export class CoursesManagement implements OnInit {
         this.courseDialog = false;
 
     } catch (error: any) {
-        console.error('Error saving course:', error);
         const msg = error.message || error.error_description || error.details || JSON.stringify(error);
         this.showAlert('Failed to save course (check network): ' + msg, 'Error');
     } finally {

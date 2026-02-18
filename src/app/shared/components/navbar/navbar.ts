@@ -58,6 +58,17 @@ isLogin = signal<boolean>(false);
     this.specialEmail.isAllowedUser().then(allowed => {
       this.isAdmin.set(allowed);
     });
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    this.authService.currentUser.subscribe((user) => {
+      if (user.data.user) {
+        this.isLogin.set(true);
+      } else {
+        this.isLogin.set(false);
+      }
+    });
   }
 
  

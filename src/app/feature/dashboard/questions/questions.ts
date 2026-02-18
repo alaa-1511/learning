@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../../core/service/question.service';
@@ -8,6 +8,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-questions',
@@ -22,9 +24,10 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule
   ],
   templateUrl: './questions.html',
-  styleUrls: ['./questions.css']
+  styleUrls: ['./questions.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionsManagement implements OnInit {
+export class QuestionsManagement implements OnInit, OnDestroy {
   questions: Question[] = [];
   filteredQuestions: Question[] = [];
   exams: Exam[] = [];
@@ -90,6 +93,8 @@ export class QuestionsManagement implements OnInit {
       { label: 'Archived', value: 'Archived' }
   ];
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private questionService: QuestionService,
     private examService: ExamService,
@@ -109,13 +114,22 @@ export class QuestionsManagement implements OnInit {
   }
 
   ngOnInit() {
-    this.questionService.questions$.subscribe(data => {
-      this.questions = data;
+    combineLatest([
+      this.questionService.questions$,
+      this.examService.exams$
+    ]).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(([questions, exams]) => {
+      this.questions = questions;
+      this.exams = exams;
       this.applyFilters();
+      this.cd.markForCheck();
     });
-    this.examService.exams$.subscribe(data => {
-        this.exams = data;
-    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   createForm(): FormGroup {
@@ -137,7 +151,9 @@ export class QuestionsManagement implements OnInit {
     });
 
     // Listen to type changes to handle validation
-    form.get('type')?.valueChanges.subscribe(type => {
+    form.get('type')?.valueChanges.pipe(
+        takeUntil(this.destroy$)
+    ).subscribe(type => {
         this.updateValidatorsForType(type || 'multiple-choice', form);
     });
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Translate } from '../../core/service/translate';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Dashboard {
   private readonly translateService = inject(Translate);

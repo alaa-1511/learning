@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,8 @@ import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number;
@@ -19,6 +21,7 @@ interface ExamQuestion extends Question {
   imports: [CommonModule, TranslateModule, FormsModule, DialogModule ,RouterLink],
   templateUrl: './free-trail.html',
   styleUrl: './free-trail.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FreeTrail implements OnInit, OnDestroy {
    @Input() minii: boolean = false;
@@ -53,6 +56,8 @@ export class FreeTrail implements OnInit, OnDestroy {
   alertMessage: string = '';
   alertHeader: string = 'Notification';
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private questionService: QuestionService, 
     private examService: ExamService,
@@ -67,62 +72,66 @@ export class FreeTrail implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.questionService.questions$.subscribe(questions => {
+    combineLatest([
+      this.questionService.questions$,
+      this.examService.exams$,
+      this.route.queryParams
+    ]).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(([questions, exams, params]) => {
+       if (!questions || !exams) return;
+
        const freeQuestions = questions.filter(q => q.status === 'Active' && q.targetPage === 'free-trial').map(q => ({
            ...q,
            type: q.type.toLowerCase() as any
        })) as ExamQuestion[];
 
-       this.examService.exams$.subscribe(exams => {
-           this.exams = exams.map(exam => ({
-               id: exam.id,
-               title: exam.title,
-               category: exam.level || 'General', 
-               description: exam.description || '',
-               image: exam.image || '',
-               part: 'All Parts', 
-               config: this.questionService.getExamConfig(exam.id),
-               questions: freeQuestions.filter(q => q.examId === exam.id),
-               partCount: new Set(freeQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
-           }));
-           
-           this.exams = this.exams.filter(e => (e.questions?.length || 0) > 0);
-           
-           this.extractCategories();
-           this.filteredExams = this.exams;
-           this.currentView = 'list';
+       this.exams = exams.map(exam => ({
+           id: exam.id,
+           title: exam.title,
+           category: exam.level || 'General', 
+           description: exam.description || '',
+           image: exam.image || '',
+           part: 'All Parts', 
+           config: this.questionService.getExamConfig(exam.id),
+           questions: freeQuestions.filter(q => q.examId === exam.id),
+           partCount: new Set(freeQuestions.filter(q => q.examId === exam.id).map(q => q.partId || 'orphan')).size
+       }));
+       
+       this.exams = this.exams.filter(e => (e.questions?.length || 0) > 0);
+       
+       this.extractCategories();
+       this.filteredExams = this.exams;
+       this.currentView = 'list';
 
-           // Handle Query Params
-           this.route.queryParams.subscribe(params => {
-               const categoryParam = params['category'];
-               if (categoryParam) {
-                   const paramLower = categoryParam.toLowerCase();
+       // Handle Query Params
+       const categoryParam = params['category'];
+       if (categoryParam) {
+           const paramLower = categoryParam.toLowerCase();
 
-                   // 1. Try exact Title match
-                   const exactTitleMatch = this.exams.find(e => e.title.toLowerCase() === paramLower);
-                   if (exactTitleMatch) {
-                       this.selectExam(exactTitleMatch);
-                       this.cd.markForCheck(); // Force update
-                       return;
-                   }
+           // 1. Try exact Title match
+           const exactTitleMatch = this.exams.find(e => e.title.toLowerCase() === paramLower);
+           if (exactTitleMatch) {
+               this.selectExam(exactTitleMatch);
+               this.cd.markForCheck(); // Force update
+               return;
+           }
 
-                   // 2. Try Category match
-                   const categoryExams = this.exams.filter(e => e.category?.toLowerCase() === paramLower);
-                   if (categoryExams.length > 0) {
-                       if (categoryExams.length === 1) {
-                           // Only one exam in this category, go directly
-                           this.selectExam(categoryExams[0]);
-                       } else {
-                           // Multiple exams, show filter list
-                           this.selectCategory(categoryExams[0].category!);
-                       }
-                       this.cd.markForCheck(); // Force update
-                       return;
-                   }
+           // 2. Try Category match
+           const categoryExams = this.exams.filter(e => e.category?.toLowerCase() === paramLower);
+           if (categoryExams.length > 0) {
+               if (categoryExams.length === 1) {
+                   // Only one exam in this category, go directly
+                   this.selectExam(categoryExams[0]);
+               } else {
+                   // Multiple exams, show filter list
+                   this.selectCategory(categoryExams[0].category!);
                }
-               this.cd.markForCheck(); // Force update for list view
-           });
-       });
+               this.cd.markForCheck(); // Force update
+               return;
+           }
+       }
+       this.cd.markForCheck(); // Force update for list view
     });
   }
 
@@ -151,7 +160,13 @@ export class FreeTrail implements OnInit, OnDestroy {
 
   ngOnDestroy() {
       this.stopTimer();
+      this.destroy$.next();
+      this.destroy$.complete();
   }
+
+
+
+
 
   enroll(exam: Exam) {
       this.router.navigate(['/free-trial']);

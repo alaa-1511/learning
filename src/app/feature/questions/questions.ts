@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
@@ -23,8 +24,9 @@ interface ExamQuestion extends Question {
   imports: [CommonModule, TranslateModule, FormsModule, RouterModule, DialogModule],
   templateUrl: './questions.html',
   styleUrl: './questions.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Questions implements OnInit {
+export class Questions implements OnInit, OnDestroy {
   // State: 'categories' | 'list' | 'parts' | 'exam' | 'result'
   currentView: 'categories' | 'list' | 'parts' | 'exam' | 'result' = 'list';
     @Input() mini: boolean = false;
@@ -71,6 +73,8 @@ export class Questions implements OnInit {
   // configShowFeedbackImmediate: boolean = false; // FINALLY REMOVED/DISABLED for strict mode
   maxQuestionsAvailable: number = 0;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private questionService: QuestionService, 
     private examService: ExamService,
@@ -98,16 +102,17 @@ export class Questions implements OnInit {
       if (this.currentUser && this.currentUser.email) {
           const assignments = await this.examService.getStudentAssignments(this.currentUser.email);
           this.userAssignments = assignments || [];
-          console.log('User Assignments:', this.userAssignments);
+
       }
 
-      // 3. Combine Streams
       // 3. Combine Streams
       combineLatest([
         this.questionService.questions$,
         this.examService.exams$,
         this.route.queryParams 
-      ]).subscribe(([questions, exams, params]) => {
+      ]).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(([questions, exams, params]) => {
           if (!questions || !exams) return;
 
           // Filter for Active, Testbank Questions
@@ -202,6 +207,8 @@ export class Questions implements OnInit {
 
   ngOnDestroy() {
       this.stopTimer();
+      this.destroy$.next();
+      this.destroy$.complete();
   }
 
   // Navigation Logic

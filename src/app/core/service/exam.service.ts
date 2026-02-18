@@ -134,6 +134,30 @@ export class ExamService {
   }
 
   async deleteExam(id: number): Promise<void> {
+    // 1. Delete associated Questions
+    const { error: qError } = await this.supabaseService.client
+      .from('questions')
+      .delete()
+      .eq('exam_id', id);
+
+    if (qError) {
+      console.error('Error deleting exam questions:', qError);
+      // We might continue or stop? Usually stop if strict.
+      // But if questions are protected, we can't proceed.
+      // Assuming we want to force delete.
+    }
+
+    // 2. Delete associated Parts
+    const { error: pError } = await this.supabaseService.client
+      .from('exam_parts')
+      .delete()
+      .eq('exam_id', id);
+
+    if (pError) {
+       console.error('Error deleting exam parts:', pError);
+    }
+
+    // 3. Delete the Exam itself
     const { error } = await this.supabaseService.client
       .from('exams')
       .delete()

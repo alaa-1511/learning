@@ -7,7 +7,6 @@
         "FREE-TRAIL": "Free Trial",
         "WHO_WE_ARE": "About Us",
         "SIGNUP": "Sign Up",
-        "LOGIN": "Login",
         "LOGOUT": "Logout",
         "DASHBOARD": "Dashboard",
         "OVERVIEW": "Overview",
@@ -446,7 +445,7 @@
         "ABOUT": {
             "LABEL": "About Us",
             "TITLE_BR": " Instructor Moamen Zakaria ",
-            "DESC_1": "Instructor Moamen Zakaria holds the American CPA fellowship, is a member of the American Institute of Certified Public Accountants (AICPA), holds the Certified Internal Auditor (CIA) and International Standards (IFRS) certificates, and has experience teaching professional accounting certifications.",
+            "DESC_1": "Dr. Moamen Zakaria is a lecturer and accounting professional, holder of the American Accounting Association Fellowship, member of the American Institute of Certified Public Accountants (AICPA), the Institute of Management Accountants (IMA), and the Association of Chartered Certified Accountants (ACCA). He is a Certified Management Accountant (CMA), Certified Internal Auditor (CIA), and holder of the International Financial Reporting Standards (IFRS) certification, with extensive experience in teaching professional accounting certifications.",
             "CERTIFIED_EXPERTS": "Certified Experts",
             "CERTIFIED_EXPERTS_DESC": "Learn from the best in the field",
             "UPDATED_CONTENT": "Updated Content",
