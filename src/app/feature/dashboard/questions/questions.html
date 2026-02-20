@@ -406,7 +406,7 @@
 
 <!-- QUESTION MODAL (Existing logic, updated validation/fields) -->
 <p-dialog [(visible)]="questionDialog" 
-          [style]="{width: '900px'}" 
+          [style]="{width: '100vw', height: '100vh', maxHeight: '100vh'}" 
           [header]="isEditMode ? 'Edit Question' : 'New Question'" 
           [modal]="true" 
           styleClass="p-fluid">
