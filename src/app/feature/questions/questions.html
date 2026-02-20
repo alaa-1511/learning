@@ -113,7 +113,37 @@
                          </div>
                      </div>
 
-                     <!-- 2. Settings Grid -->
+                     <!-- 2. Settings -->
+                     <div class="space-y-6">
+                         <!-- Practice Mode -->
+                         <div class="space-y-3">
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Practice Mode</label>
+                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 <label class="border p-4 rounded-xl cursor-pointer transition-all"
+                                        [class.border-blue-500]="configMode === 'tutor'"
+                                        [class.bg-blue-50]="configMode === 'tutor'"
+                                        [class.border-gray-200]="configMode !== 'tutor'">
+                                     <div class="flex items-center gap-2 mb-1">
+                                         <input type="radio" value="tutor" [(ngModel)]="configMode" class="text-blue-600 focus:ring-blue-500 w-4 h-4">
+                                         <span class="font-bold text-gray-800 text-base">Tutor Mode</span>
+                                     </div>
+                                     <p class="text-xs text-gray-500 ml-6">Answers and explanations are shown immediately after each question.</p>
+                                 </label>
+                                 <label class="border p-4 rounded-xl cursor-pointer transition-all"
+                                        [class.border-blue-500]="configMode === 'exam'"
+                                        [class.bg-blue-50]="configMode === 'exam'"
+                                        [class.border-gray-200]="configMode !== 'exam'">
+                                     <div class="flex items-center gap-2 mb-1">
+                                         <input type="radio" value="exam" [(ngModel)]="configMode" class="text-blue-600 focus:ring-blue-500 w-4 h-4">
+                                         <span class="font-bold text-gray-800 text-base">Exam Mode</span>
+                                     </div>
+                                     <p class="text-xs text-gray-500 ml-6">Answers and explanations are only shown at the end of the exam.</p>
+                                 </label>
+                             </div>
+                         </div>
+                     </div>
+
+                     <!-- 3. Settings Grid -->
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <!-- Question Count -->
                          <div class="space-y-3">
@@ -271,7 +301,11 @@
                      [class.cursor-not-allowed]="!reviewMode && q.selectedAnswer === undefined && i > currentQuestionIndex"
                      class="w-10 h-10 rounded-lg font-bold text-sm transition-all border border-transparent flex items-center justify-center relative">
                  {{ i + 1 }}
-                 <div *ngIf="q.selectedAnswer !== undefined" class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                 <div *ngIf="q.selectedAnswer !== undefined" 
+                      class="absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white"
+                      [class.bg-green-500]="(!reviewMode && !tutorMode) || ((reviewMode || tutorMode) && q.selectedAnswer === q.correctAnswer)"
+                      [class.bg-red-500]="(reviewMode || tutorMode) && q.selectedAnswer !== q.correctAnswer">
+                 </div>
              </button>
          </div>
        </div>
@@ -295,16 +329,30 @@
              <div class="space-y-3">
                  <div *ngFor="let option of filteredQuestions[currentQuestionIndex].options; let i = index" 
                       (click)="selectAnswer(i)"
-                      [class.border-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                      [class.bg-blue-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                      [class.ring-1]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                      [class.ring-blue-500]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.border-blue-500]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.bg-blue-50]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-1]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      [class.ring-blue-500]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                      
+                      [class.border-green-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                      [class.bg-green-50]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                      
+                      [class.border-red-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                      [class.bg-red-50]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
+
+                      [class.opacity-50]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && i !== filteredQuestions[currentQuestionIndex].correctAnswer && filteredQuestions[currentQuestionIndex].selectedAnswer !== i"
+                      [class.cursor-default]="tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined"
+                      
                       class="group relative border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-300 hover:bg-gray-50 transition-all duration-200">
                      
                      <div class="flex items-start gap-3">
                          <!-- Radio Circle -->
-                         <div [class.bg-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
-                              [class.border-blue-600]="filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                         <div [class.bg-blue-600]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              [class.border-blue-600]="(!reviewMode && (!tutorMode || filteredQuestions[currentQuestionIndex].selectedAnswer === undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i"
+                              [class.bg-green-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                              [class.border-green-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && i === filteredQuestions[currentQuestionIndex].correctAnswer"
+                              [class.bg-red-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
+                              [class.border-red-500]="(reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)) && filteredQuestions[currentQuestionIndex].selectedAnswer === i && i !== filteredQuestions[currentQuestionIndex].correctAnswer"
                               class="mt-1 w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0 transition-all group-hover:border-blue-400">
                              <div class="w-2 h-2 bg-white rounded-full"></div>
                          </div>
@@ -317,8 +365,8 @@
                  </div>
              </div>
 
-             <!-- IMMEDIATE FEEDBACK REMOVED/HIDDEN during exam. ONLY SHOWN IN REVIEW MODE -->
-             <div *ngIf="reviewMode" class="mt-8 animate-fade-in">
+             <!-- IMMEDIATE FEEDBACK REMOVED/HIDDEN during exam. ONLY SHOWN IN REVIEW MODE OR TUTOR MODE -->
+             <div *ngIf="reviewMode || (tutorMode && filteredQuestions[currentQuestionIndex].selectedAnswer !== undefined)" class="mt-8 animate-fade-in">
                   
                   <div [class.bg-green-50]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"
                        [class.border-green-200]="filteredQuestions[currentQuestionIndex].selectedAnswer === filteredQuestions[currentQuestionIndex].correctAnswer"

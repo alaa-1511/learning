@@ -70,7 +70,8 @@ export class Questions implements OnInit, OnDestroy {
   selectedTopics: Set<string> = new Set();
   configQuestionCount: number = 10;
   configTimerEnabled: boolean = false;
-  // configShowFeedbackImmediate: boolean = false; // FINALLY REMOVED/DISABLED for strict mode
+  configMode: 'tutor' | 'exam' = 'exam';
+  tutorMode: boolean = false;
   maxQuestionsAvailable: number = 0;
 
   private destroy$ = new Subject<void>();
@@ -389,6 +390,7 @@ export class Questions implements OnInit, OnDestroy {
       sessionQuestions = sessionQuestions.slice(0, this.configQuestionCount);
 
       this.configView = false;
+      this.tutorMode = this.configMode === 'tutor';
       this.startExam(sessionQuestions);
   }
 
@@ -469,6 +471,9 @@ export class Questions implements OnInit, OnDestroy {
 
   selectAnswer(optionIndex: number) {
     if (!this.reviewMode && this.filteredQuestions.length > 0) {
+      if (this.tutorMode && this.filteredQuestions[this.currentQuestionIndex].selectedAnswer !== undefined) {
+         return; // Lock answer in tutor mode
+      }
       this.filteredQuestions[this.currentQuestionIndex].selectedAnswer = optionIndex;
     }
   }
