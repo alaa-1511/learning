@@ -301,6 +301,8 @@
         "COURSES": "الدورات",
         "ARTICLES": "المقالات",
         "SETTINGS": "الإعدادات",
+        "REPORTS": "التقارير",
+        "ASSIGN_CONTENT": "تعيين المحتوى",
         "LOGOUT": "تسجيل الخروج"
     },
     "MANAGE_QUESTIONS": {

@@ -155,6 +155,10 @@ export const routes: Routes = [
                 path: 'assign-content',
                 loadComponent: () => import('./feature/dashboard/assign-content/assign-content').then(m => m.AssignContentComponent)
             },
+            {
+                path: 'reports',
+                loadComponent: () => import('./feature/dashboard/reports/reports').then(m => m.Reports)
+            },
             { path: '', redirectTo: 'questions', pathMatch: 'full' }
         ]
       }

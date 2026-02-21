@@ -291,6 +291,8 @@
         "COURSES": "Courses",
         "ARTICLES": "Articles",
         "SETTINGS": "Settings",
+        "REPORTS": "Reports",
+        "ASSIGN_CONTENT": "Assign Content",
         "LOGOUT": "Logout"
     },
     "MANAGE_QUESTIONS": {

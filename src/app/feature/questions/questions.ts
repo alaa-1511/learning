@@ -11,6 +11,7 @@ import { SupabaseService } from '../../core/service/supabase.service'; // Added 
 import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
+import { ReportService, StudentReport } from '../../core/service/report.service';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
@@ -83,7 +84,8 @@ export class Questions implements OnInit, OnDestroy {
     private route: ActivatedRoute, // Re-inject ActivatedRoute
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private reportService: ReportService
   ) {}
 
   safeHtml(content: string | undefined): SafeHtml {
@@ -543,6 +545,37 @@ export class Questions implements OnInit, OnDestroy {
     this.percentage = Math.round((correctCount / this.filteredQuestions.length) * 100);
     this.passed = this.percentage >= 70; 
     this.currentView = 'result';
+    
+    // Save Report to Database
+    this.saveReport();
+  }
+
+  saveReport() {
+    if (!this.currentUser) return; // Only save if user is logged in
+
+    // Build the string of parts practiced
+    let practicedPartsDetails = 'All Parts';
+    if (this.selectedParts.size > 0 && this.selectedParts.size !== this.parts.length) {
+        const practicedTitles = this.parts
+            .filter(p => this.selectedParts.has(p.id))
+            .map(p => p.title);
+        practicedPartsDetails = practicedTitles.join(', ');
+    } else if (this.selectedTopics.size > 0 && this.selectedTopics.size !== this.availableTopics.length) {
+        practicedPartsDetails = `Filtered Topics: ${Array.from(this.selectedTopics).join(', ')}`;
+    }
+
+    const report: StudentReport = {
+      student_email: this.currentUser.email,
+      student_name: this.currentUser.user_metadata?.full_name || this.currentUser.email.split('@')[0],
+      exam_title: this.selectedExam?.title || 'Unknown Exam',
+      parts_practiced: practicedPartsDetails,
+      questions_solved: this.filteredQuestions.length,
+      score: this.score,
+      percentage: this.percentage,
+      practice_mode: this.reviewMode ? 'Review' : (this.tutorMode ? 'Tutor' : 'Exam')
+    };
+
+    this.reportService.saveReport(report);
   }
 
   startReview() {
