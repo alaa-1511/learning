@@ -134,6 +134,26 @@ export class ExamService {
   }
 
   async deleteExam(id: number): Promise<void> {
+    // 0. Find parts associated with this exam so we can delete their student_assignments
+    const { data: partsData } = await this.supabaseService.client
+      .from('exam_parts')
+      .select('id')
+      .eq('exam_id', id);
+
+    if (partsData && partsData.length > 0) {
+        const partIds = partsData.map(p => p.id);
+        
+        // Delete student assignments for all parts in this exam
+        const { error: saError } = await this.supabaseService.client
+          .from('student_assignments')
+          .delete()
+          .in('part_id', partIds);
+
+        if (saError) {
+             console.error('Error deleting exam student assignments:', saError);
+        }
+    }
+
     // 1. Delete associated Questions
     const { error: qError } = await this.supabaseService.client
       .from('questions')
@@ -279,6 +299,21 @@ export class ExamService {
   }
 
   async deletePart(id: number): Promise<void> {
+      // 1. Delete associated student assignments to avoid FK constraint
+      const { error: saError } = await this.supabaseService.client
+        .from('student_assignments')
+        .delete()
+        .eq('part_id', id);
+
+      if (saError) {
+          console.error('Error deleting student assignments for part:', saError);
+          // If we can't delete assignments, we probably can't delete the part.
+          // Decide whether to throw or continue. Throwing is safer to avoid orphaned state.
+          // this.toastr.error('Failed to delete associated assignments');
+          // throw saError;
+      }
+
+      // 2. Delete the part
       const { error } = await this.supabaseService.client
         .from('exam_parts')
         .delete()

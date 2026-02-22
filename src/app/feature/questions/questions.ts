@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetection
 import { CommonModule } from '@angular/common';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ReportService, StudentReport } from '../../core/service/report.service';
+import { ContactService } from '../../core/service/contact';
 
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
@@ -85,7 +86,9 @@ export class Questions implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private supabaseService: SupabaseService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private contactService: ContactService,
+    private translate: TranslateService
   ) {}
 
   safeHtml(content: string | undefined): SafeHtml {
@@ -96,7 +99,12 @@ export class Questions implements OnInit, OnDestroy {
     this.loadData();
   }
 
+  expirationTimeouts: any[] = []; // Array to store timeout references
+  sessionWarningsShown: Set<number> = new Set(); // Prevent spamming alerts in one session
+
   async loadData() {
+      this.clearExpirationTimeouts(); // Clear old timeouts before reloading
+
       // 1. Get Current User (Local Session is faster/no spinner)
       const { data: { session } } = await this.supabaseService.client.auth.getSession();
       this.currentUser = session?.user || null;
@@ -105,7 +113,8 @@ export class Questions implements OnInit, OnDestroy {
       if (this.currentUser && this.currentUser.email) {
           const assignments = await this.examService.getStudentAssignments(this.currentUser.email);
           this.userAssignments = assignments || [];
-
+          
+          this.setupRealtimeSubscription(this.currentUser.email);
       }
 
       // 3. Combine Streams
@@ -140,18 +149,7 @@ export class Questions implements OnInit, OnDestroy {
           
           this.exams = this.exams.filter(e => (e.questions?.length || 0) > 0);
           
-          // Filter Exams: Show assigned ones if user has assignments
-          let visibleExams = this.exams;
-          if (this.currentUser && this.userAssignments.length > 0) {
-              const assignedCourseIds = new Set(this.userAssignments.map(a => a.course_id));
-              visibleExams = this.exams.filter(e => assignedCourseIds.has(e.id));
-          }
-          this.exams = visibleExams;
-           
-          this.extractCategories();
-          
-          this.filteredExams = this.exams;
-          this.currentView = 'list';
+          this.processAssignmentsAndFilterExams();
 
            // Handle Query Params (Deep Linking)
            const categoryParam = (params as any)['category'];
@@ -184,6 +182,143 @@ export class Questions implements OnInit, OnDestroy {
            this.cd.markForCheck(); // Force update for list view
       });
   }
+
+  private processAssignmentsAndFilterExams() {
+      // Filter Exams: Show assigned ones if user has assignments
+      let visibleExams = this.exams;
+      if (this.currentUser && this.userAssignments.length > 0) {
+          const now = new Date();
+          
+          this.clearExpirationTimeouts(); // Clear before setting new ones
+          
+          // Filter out expired assignments and set timeouts for upcoming expirations
+          this.userAssignments = this.userAssignments.filter(a => {
+              if (!a.expires_at) return true;
+              
+              const expirationDate = new Date(a.expires_at);
+              if (expirationDate > now) {
+                  const msUntilExpiration = expirationDate.getTime() - now.getTime();
+                  const daysUntilExpiration = msUntilExpiration / (1000 * 60 * 60 * 24);
+
+                  // Set a timeout to instantly hide this when time rests
+                  // Only set timeout if it's within the maximum integer size for setTimeout (~24.8 days)
+                  if (msUntilExpiration <= 2147483647) {
+                       const timeout = setTimeout(() => {
+                           console.log(`Assignment expired locally: Course ${a.course_id}`);
+                           // Re-evaluate assignments after one expires
+                           // Invalidate this particular assignment locally
+                           this.userAssignments = this.userAssignments.filter(ua => ua.id !== a.id);
+                           this.processAssignmentsAndFilterExams(); 
+                       }, msUntilExpiration);
+                       this.expirationTimeouts.push(timeout);
+                  }
+
+                  // 7-day warning logic
+                  if (daysUntilExpiration <= 7) {
+                      const courseName = this.exams.find(e => Number(e.id) === Number(a.course_id))?.title || a.course_id;
+                      
+                      // 1. Show Website Alert once per session for expiring
+                      if (!this.sessionWarningsShown.has(a.id)) {
+                          const msg = this.translate.instant('QUESTIONS.ALERTS.EXPIRING_SOON_MSG', { courseName: courseName });
+                          const title = this.translate.instant('QUESTIONS.ALERTS.EXPIRING_SOON_TITLE');
+                          this.showAlert(msg, title);
+                          this.sessionWarningsShown.add(a.id);
+                      }
+
+                      // 2. Send Email Warning (Only if not already sent in DB)
+                      if (!a.warning_email_sent) {
+                          this.sendExpirationEmailWarning(a, courseName);
+                      }
+                  }
+
+                  return true; 
+              }
+              return false; // Expired
+          });
+
+          const assignedCourseIds = new Set(this.userAssignments.map(a => a.course_id));
+          visibleExams = this.exams.filter(e => assignedCourseIds.has(e.id));
+          
+          // If User is currently viewing a specific category/list, we should also check if the selected
+          // course or parts suddenly became unavailable.
+          if (this.selectedExam && !assignedCourseIds.has(this.selectedExam.id)) {
+              this.showAlert(this.translate.instant('QUESTIONS.ALERTS.EXPIRED_MSG'), this.translate.instant('QUESTIONS.ALERTS.EXPIRED_TITLE'));
+              this.backToExams();
+          }
+      } else if (this.currentUser) {
+           // Logged in but no assignments
+           visibleExams = [];
+           if (this.currentView === 'parts' || this.currentView === 'exam') {
+               this.showAlert(this.translate.instant('QUESTIONS.ALERTS.EXPIRED_MSG'), this.translate.instant('QUESTIONS.ALERTS.EXPIRED_TITLE'));
+               this.backToExams();
+           }
+      }
+      this.filteredExams = visibleExams;
+      this.extractCategories();
+      
+      // Keep category filter active if assigned
+      if (this.selectedCategory) {
+          this.filteredExams = this.filteredExams.filter(e => e.category === this.selectedCategory);
+      }
+
+      this.cd.detectChanges();
+  }
+
+  private setupRealtimeSubscription(email: string) {
+       // Subscribe to inserts and deletes on 'student_assignments' for this user
+       this.supabaseService.client
+         .channel('public:student_assignments')
+         .on(
+           'postgres_changes',
+           { event: '*', schema: 'public', table: 'student_assignments', filter: `student_email=eq.${email}` },
+           async (payload) => {
+               console.log('Realtime assignment change received:', payload);
+               this.examService.clearAssignmentCache(); // MUST call to get fresh data
+               // Re-fetch everything safely
+               const assignments = await this.examService.getStudentAssignments(email);
+               this.userAssignments = assignments || [];
+               // Re-process view
+               this.processAssignmentsAndFilterExams();
+           }
+         )
+         .subscribe();
+  }
+
+  private async sendExpirationEmailWarning(assignment: any, courseName: string) {
+      if (!this.currentUser || !this.currentUser.email) return;
+
+      const templateParams = {
+          to_name: this.currentUser.user_metadata?.full_name || 'طالبنا العزيز',
+          to_email: this.currentUser.email,
+          course_id: courseName, // Pass the course name using the course_id field or rename later if needed
+          message: this.translate.instant('QUESTIONS.ALERTS.WARNING_EMAIL_MSG')
+      };
+
+      try {
+          // 1. Send Email using Contact Service with the specific student template
+          await this.contactService.sendEmail(templateParams, 'template_tvbr4vz');
+          
+          // 2. Mark as sent in DB to prevent duplicate emails
+          const { error } = await this.supabaseService.client
+              .from('student_assignments')
+              .update({ warning_email_sent: true })
+              .eq('id', assignment.id);
+              
+          if (error) {
+              console.error('Failed to update warning_email_sent flag in Supabase:', error);
+          } else {
+              // Update local state so it doesn't trigger again before refresh
+              assignment.warning_email_sent = true;
+          }
+      } catch (err) {
+          console.error('Failed to send expiration warning email:', err);
+      }
+  }
+
+  private clearExpirationTimeouts() {
+      this.expirationTimeouts.forEach(t => clearTimeout(t));
+      this.expirationTimeouts = [];
+  }
   
   extractCategories() {
       const catMap = new Map<string, number>();
@@ -210,6 +345,9 @@ export class Questions implements OnInit, OnDestroy {
 
   ngOnDestroy() {
       this.stopTimer();
+      this.clearExpirationTimeouts();
+      // Supabase channels clean themselves up generally on reload, but good practice
+      this.supabaseService.client.removeAllChannels(); 
       this.destroy$.next();
       this.destroy$.complete();
   }

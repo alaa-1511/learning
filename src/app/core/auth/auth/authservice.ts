@@ -3,6 +3,7 @@ import { from, Observable, tap } from 'rxjs';
 import { SupabaseService } from '../../service/supabase.service';
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import emailjs from '@emailjs/browser';
+import { ExamService } from '../../service/exam.service';
 
 @Injectable({
   providedIn: 'root',
@@ -83,7 +84,10 @@ export class Authservice {
     );
   }
   
+  private examService = inject(ExamService);
+
   async signOut(): Promise<void> {
+    this.examService.clearAssignmentCache();
     await this.supabase.auth.signOut();
   }
 

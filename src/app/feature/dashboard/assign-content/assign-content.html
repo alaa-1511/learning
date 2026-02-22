@@ -40,7 +40,7 @@
             </div>
             
             <div *ngIf="selectedStudents.length === 0" class="text-sm text-gray-500 italic">
-                No students selected.
+                {{ 'ASSIGN_CONTENT.NO_STUDENTS' | translate }}
             </div>
         </div>
       </div>
@@ -103,6 +103,17 @@
                     </div>
                 </div>
              </div>
+        </div>
+      </div>
+
+      <!-- Expiration Date (Optional) -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'ASSIGN_CONTENT.EXPIRATION_DATE_LABEL' | translate }}</label>
+        <p class="text-xs text-gray-500 mb-4">{{ 'ASSIGN_CONTENT.EXPIRATION_DATE_DESC' | translate }}</p>
+        <div class="max-w-md">
+            <input type="datetime-local" 
+                   [(ngModel)]="expirationDate"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all" />
         </div>
       </div>
 

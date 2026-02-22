@@ -22,7 +22,8 @@ export class ContactService {
     return await this.supabase.from('contacts').insert([data]);
   }
 
-  async sendEmail(data: any) {
-    return await emailjs.send(this.serviceID, this.templateID, data, this.publicKey);
+  async sendEmail(data: any, customTemplateId?: string) {
+    const templateToUse = customTemplateId || this.templateID;
+    return await emailjs.send(this.serviceID, templateToUse, data, this.publicKey);
   }
 }

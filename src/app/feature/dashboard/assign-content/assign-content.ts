@@ -31,6 +31,7 @@ export class AssignContentComponent implements OnInit {
     selectedCourses: Exam[] = [];
     partsByCourse: Record<number, ExamPart[]> = {}; 
     selectedParts: number[] = []; // IDs of selected parts
+    expirationDate: string | null = null;
     
     constructor() {}
 
@@ -184,7 +185,8 @@ export class AssignContentComponent implements OnInit {
                          student_email: student.email,
                          course_id: courseId,
                          part_id: part.id,
-                         assigned_at: new Date()
+                         assigned_at: new Date(),
+                         expires_at: this.expirationDate ? new Date(this.expirationDate).toISOString() : null
                      });
                  }
              }
@@ -207,6 +209,7 @@ export class AssignContentComponent implements OnInit {
                 this.toastr.error(this.translate.instant('ASSIGN_CONTENT.MESSAGES.ASSIGN_ERROR'));
             }
         } else {
+            this.examService.clearAssignmentCache(); // Invalidate cache so it shows up for student if checked on the same device
             this.toastr.success(this.translate.instant('ASSIGN_CONTENT.MESSAGES.SUCCESS', { count: assignments.length }));
             this.resetSelection();
         }
@@ -217,5 +220,6 @@ export class AssignContentComponent implements OnInit {
         this.partsByCourse = {};
         this.selectedParts = [];
         this.selectedStudents = [];
+        this.expirationDate = null;
     }
 }
