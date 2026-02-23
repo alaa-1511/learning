@@ -1,105 +1,128 @@
-<section>
-  <div class="bg-black/5 bg-blend-multiply bg-cover bg-center bg-no-repeat" style="background-image: url('/imgs/img\ mealify3.jfif')">
-    <div class="container mx-auto py-5">
-      <div class="grid grid-cols-1 lg:grid-cols-2  gap-4">
-          <div class="flex flex-col justify-center ">
-        <div class=" mb-10  ">
-          <h1 class="text-6xl font-black text-primary mb-4">{{ 'CONTACT.CERTIFICATES_TITLE_MAIN' | translate }}</h1>
-          <h2 class="text-4xl font-black  text-primary ">{{ 'CONTACT.CERTIFICATES_TITLE_SUB' | translate }}</h2>
+<section class="relative  py-16 lg:py-4 overflow-hidden">
+  <!-- Subtle Background Pattern -->
+  <div class="absolute inset-0 w-full h-full">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed opacity-90 bg-blend-multiply bg-black/5" style="background-image: url('/imgs/img\ mealify3.jfif')"></div>
+    <div class="absolute inset-0 bg-transparent backdrop-blur-[5px]  "></div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center w-full">
+      
+      <!-- Left Column: Titles & Grid -->
+      <div class="w-full pb-10 lg:pb-0 lg:w-3/5 flex flex-col">
+        <div class="mb-10 text-center lg:text-start">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-primary mb-0 tracking-tight leading-tight">
+            {{ 'CONTACT.CERTIFICATES_TITLE_MAIN' | translate }}
+          </h1>
+          <h2 class="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            {{ 'CONTACT.CERTIFICATES_TITLE_SUB' | translate }}
+          </h2>
+          <div class="mt-4 w-20 h-1.5 bg-primary mx-auto lg:mx-0 rounded-full"></div>
         </div>
-        <div class="grid grid-cols-5 gap-3 mb-0 content-center">
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 custom-scrollbar max-h-screen lg:max-h-full ">
           <!-- Row 1 -->
-          <button routerLinkActive="bg-secondary" routerLink="/cpa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CPA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cfa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CFA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cma" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CMA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cpa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CPA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cfa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CFA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cma" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CMA' | translate }} </button>
           
           <!-- Row 2 -->
-          <button routerLinkActive="bg-secondary" routerLink="/cia" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CIA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/fmva" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.FMVA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/socpa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.SOCPA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cia" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CIA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/fmva" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.FMVA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/socpa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.SOCPA' | translate }} </button>
           
           <!-- Row 3 -->
-          <button routerLinkActive="bg-secondary" routerLink="/cia-challenge" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CIA_CHALLENGE' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/ea" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.EA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/fmaa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.FMAA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cia-challenge" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-[13px]"> {{ 'CONTACT.CERTIFICATES.CIA_CHALLENGE' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/ea" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.EA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/fmaa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.FMAA' | translate }} </button>
           
           <!-- Row 4 -->
-          <button routerLinkActive="bg-secondary" routerLink="/frm" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.FRM' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/prm" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.PRM' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cfte" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CFTE' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/frm" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.FRM' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/prm" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.PRM' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cfte" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CFTE' | translate }} </button>
           
           <!-- Row 5 -->
-          <button routerLinkActive="bg-secondary" routerLink="/dipifrs" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.DIPIFRS' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cert-ifr" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CERT_IFR' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cert-ia" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CERT_IA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/dipifrs" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.DIPIFRS' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cert-ifr" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CERT_IFR' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cert-ia" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CERT_IA' | translate }} </button>
           
           <!-- Row 6 -->
-          <button routerLinkActive="bg-secondary" routerLink="/ipsas" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.IPSAS' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/vat" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.VAT' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cat" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CAT' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/ipsas" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.IPSAS' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/vat" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.VAT' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cat" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CAT' | translate }} </button>
           
           <!-- Row 7 -->
-          <button routerLinkActive="bg-secondary" routerLink="/cme" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CME' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/ffe" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.FFE' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/step" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.STEP' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cme" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CME' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/ffe" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.FFE' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/step" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.STEP' | translate }} </button>
           
           <!-- Row 8 -->
-          <button routerLinkActive="bg-secondary" routerLink="/pmp" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.PMP' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cfe" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CFE' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/cisa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.CISA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/pmp" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.PMP' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cfe" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CFE' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/cisa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.CISA' | translate }} </button>
           
           <!-- Row 9 -->
-          <button routerLinkActive="bg-secondary" routerLink="/ifrs" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.IFRS_CERT' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/pfa" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.PFA' | translate }} </button>
-          <button routerLinkActive="bg-secondary" routerLink="/iap" class="cursor-pointer bg-primary hover:bg-secondary/80 text-white font-bold py-2 rounded-full focus:outline-none focus:shadow-outline transition duration-300"> {{ 'CONTACT.CERTIFICATES.IAP' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/ifrs" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.IFRS_CERT' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/pfa" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.PFA' | translate }} </button>
+          <button routerLinkActive="bg-secondary shadow-lg scale-105" routerLink="/iap" class="flex flex-col items-center justify-center bg-primary hover:bg-secondary text-white font-semibold py-3 px-2 rounded-xl border border-primary/20 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md text-center text-sm"> {{ 'CONTACT.CERTIFICATES.IAP' | translate }} </button>
         </div>
       </div>
-        <div class="w-full max-w-lg mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
-          <h2 class="text-3xl font-bold mb-4 text-center  text-primary">{{ 'CONTACT.TITLE' | translate }}</h2>
-          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-1">
-            <app-input
-              [typeInput]="'text'"
-            [labelInput]="'AUTH.FIRST_NAME'"
-            [idInput]="'firstName'"
-            [placeholderInput]="'AUTH.FIRST_NAME'"
-            [controlInput]="contactForm.get('firstName')"
-          ></app-input>
 
-          <app-input
-            [typeInput]="'email'"
-            [labelInput]="'AUTH.EMAIL'"
-            [idInput]="'email'"
-            [controlInput]="contactForm.get('email')"
-            [placeholderInput]="'AUTH.EMAIL'"
-          ></app-input>
-
-          <app-input
-            [typeInput]="'tel'"
-            [labelInput]="'AUTH.PHONE'"
-            [idInput]="'phone'"
-            [controlInput]="contactForm.get('phone')"
-            [placeholderInput]="'AUTH.PHONE'"
-          ></app-input>
-
-          <div class="flex flex-col gap-1">
-            <label for="message" class="block text-gray-700 font-bold mb-2">{{ 'CONTACT.MESSAGE' | translate }}</label>
-            <textarea
-              name="message"
-              id="message"
-              rows="4"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              [formControlName]="'message'"
-              [placeholder]="'CONTACT.MESSAGE_PLACEHOLDER' | translate"
-            ></textarea>
+      <!-- Right Column: Form -->
+      <div class="w-full lg:w-2/5">
+        <div class="w-full max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+          <div class="mb-8 text-center">
+             <h2 class="text-3xl font-bold text-gray-800 tracking-tight">{{ 'CONTACT.TITLE' | translate }}</h2>
+             <div class="w-12 h-1 bg-secondary mx-auto mt-3 rounded-full"></div>
           </div>
 
-          <button type="submit" class="bg-primary hover:bg-primary/80 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 mt-3 ">
-            {{ 'CONTACT.SUBMIT' | translate }}
-          </button>
-        </form>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+            <app-input
+              [typeInput]="'text'"
+              [labelInput]="'AUTH.FIRST_NAME'"
+              [idInput]="'firstName'"
+              [placeholderInput]="'AUTH.FIRST_NAME'"
+              [controlInput]="contactForm.get('firstName')"
+            ></app-input>
+
+            <app-input
+              [typeInput]="'email'"
+              [labelInput]="'AUTH.EMAIL'"
+              [idInput]="'email'"
+              [controlInput]="contactForm.get('email')"
+              [placeholderInput]="'AUTH.EMAIL'"
+            ></app-input>
+
+            <app-input
+              [typeInput]="'tel'"
+              [labelInput]="'AUTH.PHONE'"
+              [idInput]="'phone'"
+              [controlInput]="contactForm.get('phone')"
+              [placeholderInput]="'AUTH.PHONE'"
+            ></app-input>
+
+            <div class="flex flex-col gap-1.5 pt-1">
+              <label for="message" class="block text-sm font-semibold text-gray-700">{{ 'CONTACT.MESSAGE' | translate }}</label>
+              <textarea
+                name="message"
+                id="message"
+                rows="4"
+                class="appearance-none border border-gray-300 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors resize-none shadow-sm text-sm"
+                [formControlName]="'message'"
+                [placeholder]="'CONTACT.MESSAGE_PLACEHOLDER' | translate"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300 mt-2 transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+              <span>{{ 'CONTACT.SUBMIT' | translate }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rtl:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </form>
+        </div>
       </div>
-    
-      </div>
+      
     </div>
   </div>
 </section>
