@@ -5,12 +5,16 @@
             <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
                 {{ viewMode === 'exams' ? 'Exam Management' : 
                    viewMode === 'parts' ? (selectedExam?.title || 'Exam') + ' - Parts' : 
+                   viewMode === 'sections' ? (selectedPart?.title || 'Part') + ' - Sections' : 
+                   viewMode === 'lessons' ? (selectedSection?.title || 'Section') + ' - Lessons' : 
                    'Question Bank' }}
             </h2>
             <p class="text-gray-500 text-sm mt-1">
                 {{ viewMode === 'exams' ? 'Manage your certification exams and structure' : 
                    viewMode === 'parts' ? 'Organize parts for ' + selectedExam?.title : 
-                   'Manage questions for ' + selectedPart?.title }}
+                   viewMode === 'sections' ? 'Organize sections for ' + selectedPart?.title : 
+                   viewMode === 'lessons' ? 'Organize lessons for ' + selectedSection?.title : 
+                   'Manage questions for ' + (selectedLesson?.title || selectedPart?.title) }}
             </p>
         </div>
         
@@ -30,6 +34,20 @@
                 <span>Add Part</span>
             </button>
             
+            <button *ngIf="viewMode === 'sections'" 
+                    (click)="openAddSection()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 font-medium">
+                <i class="pi pi-plus"></i>
+                <span>Add Section</span>
+            </button>
+
+            <button *ngIf="viewMode === 'lessons'" 
+                    (click)="openAddLesson()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 font-medium">
+                <i class="pi pi-plus"></i>
+                <span>Add Lesson</span>
+            </button>
+            
             <button *ngIf="viewMode === 'questions'" 
                     (click)="openNew()"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 font-medium">
@@ -40,25 +58,49 @@
     </div>
 
     <!-- Breadcrumbs -->
-    <div *ngIf="viewMode !== 'exams'" class="flex items-center gap-2 text-sm text-gray-600 bg-white p-3 rounded-lg border border-gray-100 shadow-sm animate-fade-in">
-        <button (click)="backToExams()" class="hover:text-blue-600 font-medium transition-colors">
+    <div *ngIf="viewMode !== 'exams'" class="flex flex-wrap items-center gap-2 text-sm text-gray-600 bg-white p-3 rounded-lg border border-gray-100 shadow-sm animate-fade-in">
+        <button (click)="backToExams()" class="hover:text-blue-600 font-medium transition-colors whitespace-nowrap">
             <i class="pi pi-graduation-cap"></i> Exams
         </button>
         <span class="text-gray-400">/</span>
-        <button *ngIf="selectedExam && viewMode === 'questions'" (click)="backToParts()" class="hover:text-blue-600 font-medium transition-colors">
+        
+        <button *ngIf="selectedExam && viewMode !== 'parts'" (click)="backToParts()" class="hover:text-blue-600 font-medium transition-colors whitespace-nowrap">
             {{selectedExam.title}}
         </button>
-        <span *ngIf="selectedExam && viewMode !== 'questions'" class="font-semibold text-gray-800">
+        <span *ngIf="selectedExam && viewMode === 'parts'" class="font-semibold text-gray-800 whitespace-nowrap">
             {{selectedExam.title}}
         </span>
-        <span *ngIf="selectedPart && viewMode === 'questions'" class="text-gray-400">/</span>
-        <span *ngIf="selectedPart && viewMode === 'questions'" class="font-semibold text-gray-800">
-            {{selectedPart.title}}
-        </span>
+        
+        <ng-container *ngIf="selectedPart">
+            <span class="text-gray-400">/</span>
+            <button *ngIf="viewMode !== 'sections'" (click)="backToSections()" class="hover:text-blue-600 font-medium transition-colors whitespace-nowrap">
+                {{selectedPart.title}}
+            </button>
+            <span *ngIf="viewMode === 'sections'" class="font-semibold text-gray-800 whitespace-nowrap">
+                {{selectedPart.title}}
+            </span>
+        </ng-container>
+
+        <ng-container *ngIf="selectedSection">
+            <span class="text-gray-400">/</span>
+            <button *ngIf="viewMode !== 'lessons'" (click)="backToLessons()" class="hover:text-blue-600 font-medium transition-colors whitespace-nowrap">
+                {{selectedSection.title}}
+            </button>
+            <span *ngIf="viewMode === 'lessons'" class="font-semibold text-gray-800 whitespace-nowrap">
+                {{selectedSection.title}}
+            </span>
+        </ng-container>
+
+        <ng-container *ngIf="selectedLesson">
+            <span class="text-gray-400">/</span>
+            <span class="font-semibold text-gray-800 whitespace-nowrap">
+                {{selectedLesson.title}}
+            </span>
+        </ng-container>
     </div>
 
     <!-- VIEW 1: EXAMS LIST (Cards) -->
-    <div *ngIf="viewMode === 'exams'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+    <div *ngIf="viewMode === 'exams'" cdkDropList (cdkDropListDropped)="dropExam($event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
         <!-- Empty State -->
         <div *ngIf="exams.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
             <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4 text-blue-500 text-2xl">
@@ -71,9 +113,10 @@
             </button>
         </div>
 
-        <div *ngFor="let exam of exams" 
+        <div *ngFor="let exam of exams" cdkDrag
              (click)="selectExam(exam)"
-             class="group bg-white rounded-xl border border-gray-200 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden flex flex-col">
+             class="group bg-white rounded-xl border border-gray-200 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 cursor-move overflow-hidden flex flex-col">
+            <div class="cdk-drag-placeholder opacity-50 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl" *cdkDragPlaceholder></div>
             <!-- Card Image -->
             <div class="h-40 bg-gray-100 relative overflow-hidden">
                 <img [src]="exam.image || 'assets/images/default-course.jpg'" 
@@ -136,8 +179,8 @@
         </div>
     </div>
 
-    <!-- VIEW 2: PARTS LIST (Cards) -->
-    <div *ngIf="viewMode === 'parts'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+    <!-- VIEW 2: PARTS LIST (Cards) w/ DragDrop -->
+    <div *ngIf="viewMode === 'parts'" cdkDropList (cdkDropListDropped)="dropPart($event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
         <!-- Empty State -->
         <div *ngIf="parts.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
              <p class="text-gray-500 mb-4">No parts defined for this exam yet.</p>
@@ -146,11 +189,12 @@
              </button>
         </div>
 
-        <div *ngFor="let part of parts" 
-             class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col">
+        <div *ngFor="let part of parts" cdkDrag
+             class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col cursor-move">
+            <div class="cdk-drag-placeholder opacity-50 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl" *cdkDragPlaceholder></div>
             
             <div class="flex items-start gap-4 mb-4">
-                 <div class="w-16 h-16 rounded-lg bg-gray-50 border border-gray-100 flex-shrink-0 overflow-hidden">
+                 <div class="w-16 h-16 rounded-lg bg-gray-50 border border-gray-100 shrink-0 overflow-hidden">
                      <img [src]="part.image || 'assets/images/placeholder-part.png'" 
                           class="w-full h-full object-cover opacity-80"
                           alt="Part Icon">
@@ -192,7 +236,95 @@
 
 
 
-    <!-- VIEW 3: QUESTIONS TABLE (Existing Logic) -->
+    <!-- VIEW 3: SECTIONS LIST (Cards) w/ DragDrop -->
+    <div *ngIf="viewMode === 'sections'" cdkDropList (cdkDropListDropped)="dropSection($event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+        <!-- Empty State -->
+        <div *ngIf="sections.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+             <p class="text-gray-500 mb-4">No sections defined for this part yet.</p>
+             <button (click)="openAddSection()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                Add First Section
+             </button>
+        </div>
+
+        <div *ngFor="let section of sections" cdkDrag
+             class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col cursor-move">
+            <div class="cdk-drag-placeholder opacity-50 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl" *cdkDragPlaceholder></div>
+            
+            <div class="flex items-start gap-4 mb-4">
+                 <div class="w-12 h-12 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                     <i class="pi pi-folder text-blue-500 text-xl"></i>
+                 </div>
+                 <div>
+                     <h3 class="font-bold text-gray-800 text-lg leading-tight mb-1">{{section.title}}</h3>
+                     <p class="text-xs text-gray-500">{{getSectionQuestionCount(section.id)}} questions</p>
+                 </div>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-4 flex-1 line-clamp-3">
+                {{section.description || 'Manage lessons for this section.'}}
+            </p>
+
+            <div class="flex gap-2 mt-auto">
+                <button (click)="selectSection(section)" 
+                        class="flex-1 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                    Manage Lessons
+                </button>
+                <button (click)="editSection(section)" class="px-3 py-2 text-gray-400 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <i class="pi pi-pencil"></i>
+                </button>
+                <button (click)="confirmDeleteSection(section)" class="px-3 py-2 text-gray-400 hover:text-red-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- VIEW 4: LESSONS LIST (Cards) w/ DragDrop -->
+    <div *ngIf="viewMode === 'lessons'" cdkDropList (cdkDropListDropped)="dropLesson($event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+        <!-- Empty State -->
+        <div *ngIf="lessons.length === 0" class="col-span-full flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+             <p class="text-gray-500 mb-4">No lessons defined for this section yet.</p>
+             <button (click)="openAddLesson()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                Add First Lesson
+             </button>
+        </div>
+
+        <div *ngFor="let lesson of lessons" cdkDrag
+             class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-all duration-300 flex flex-col cursor-move">
+            <div class="cdk-drag-placeholder opacity-50 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl" *cdkDragPlaceholder></div>
+            
+            <div class="flex items-start gap-4 mb-4">
+                 <div class="w-12 h-12 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center shrink-0">
+                     <i class="pi pi-file text-green-500 text-xl"></i>
+                 </div>
+                 <div>
+                     <h3 class="font-bold text-gray-800 text-lg leading-tight mb-1">{{lesson.title}}</h3>
+                     <p class="text-xs text-gray-500">{{getLessonQuestionCount(lesson.id)}} questions</p>
+                 </div>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-4 flex-1 line-clamp-3">
+                {{lesson.description || 'Manage specific questions for this lesson.'}}
+            </p>
+
+            <div class="flex gap-2 mt-auto">
+                <button (click)="selectLesson(lesson)" 
+                        class="flex-1 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                    Manage Questions
+                </button>
+                <button (click)="editLesson(lesson)" class="px-3 py-2 text-gray-400 hover:text-green-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <i class="pi pi-pencil"></i>
+                </button>
+                <button (click)="confirmDeleteLesson(lesson)" class="px-3 py-2 text-gray-400 hover:text-red-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- VIEW 5: QUESTIONS TABLE (Existing Logic) -->
     <div *ngIf="viewMode === 'questions'" class="animate-fade-in bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         
         <!-- TABS -->
@@ -226,7 +358,7 @@
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 <input type="text" 
                        (input)="onSearch($event)" 
-                       placeholder="Search questions by text or lesson..." 
+                       placeholder="Search questions by text or old topic..." 
                        class="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-all shadow-sm">
             </div>
             
@@ -243,10 +375,9 @@
                 <thead class="bg-gray-50 text-gray-600 text-xs uppercase font-semibold tracking-wider">
                     <tr>
                         <th class="p-4 border-b border-gray-200 w-1/2">Question Text</th>
-                        <th class="p-4 border-b border-gray-200">Lesson</th>
+                        <th class="p-4 border-b border-gray-200">Old Topic (Legacy)</th>
                         <th class="p-4 border-b border-gray-200">Type</th>
                         <th class="p-4 border-b border-gray-200 text-center">Difficulty</th>
-                        <th class="p-4 border-b border-gray-200 text-center">Status</th>
                         <th class="p-4 border-b border-gray-200 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -277,15 +408,9 @@
                                 {{question.difficulty}}
                             </span>
                         </td>
-                        <td class="p-4 text-center">
-                            <span [ngClass]="{
-                                'bg-emerald-100 text-emerald-800': question.status === 'Active',
-                                'bg-gray-100 text-gray-800': question.status === 'Draft',
-                                'bg-orange-100 text-orange-800': question.status === 'Archived'
-                            }" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                                {{question.status}}
-                            </span>
-                        </td>
+                        <!-- Removed Status Badge Since the column was dropped from DB/Model but kept in UI if needed -->
+                        <!-- If user wanted it dropping entirely, skipping it -->
+                        <!-- <td class="p-4 text-center"> ... </td> -->
                         <td class="p-4 text-right">
                             <div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                 <button (click)="editQuestion(question)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
@@ -400,6 +525,59 @@
     <ng-template pTemplate="footer">
         <button (click)="partDialog=false" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
         <button (click)="savePart()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Part</button>
+    </ng-template>
+</p-dialog>
+
+<!-- ADD/EDIT SECTION MODAL -->
+<p-dialog [(visible)]="sectionDialog" 
+          [style]="{width: '500px'}" 
+          [header]="isEditMode ? 'Edit Section' : 'Add New Section'" 
+          [modal]="true" 
+          styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="sectionForm" class="space-y-4 pt-2">
+            <div class="field">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                <input type="text" formControlName="title" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="e.g. Section A: Financial Reporting">
+                <small *ngIf="submitted && sectionForm.get('title')?.invalid" class="text-red-500 text-xs">Title is required.</small>
+            </div>
+            
+            <div class="field">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea formControlName="description" rows="3" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+            </div>
+        </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button (click)="sectionDialog=false" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+        <button (click)="saveSection()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Section</button>
+    </ng-template>
+</p-dialog>
+
+
+<!-- ADD/EDIT LESSON MODAL -->
+<p-dialog [(visible)]="lessonDialog" 
+          [style]="{width: '500px'}" 
+          [header]="isEditMode ? 'Edit Lesson' : 'Add New Lesson'" 
+          [modal]="true" 
+          styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="lessonForm" class="space-y-4 pt-2">
+            <div class="field">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Lesson Title</label>
+                <input type="text" formControlName="title" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="e.g. Inventory Valuation">
+                <small *ngIf="submitted && lessonForm.get('title')?.invalid" class="text-red-500 text-xs">Title is required.</small>
+            </div>
+            
+            <div class="field">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea formControlName="description" rows="3" class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+            </div>
+        </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button (click)="lessonDialog=false" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+        <button (click)="saveLesson()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Lesson</button>
     </ng-template>
 </p-dialog>
 

@@ -94,21 +94,54 @@
                      <!-- 1. Topic Selection -->
                      <div class="space-y-3">
                          <div class="flex items-center justify-between">
-                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Select Lessons</label>
+                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wide">Select Content</label>
                              <button (click)="selectAllTopics()" class="text-xs text-blue-600 hover:underline font-medium bg-transparent border-0 cursor-pointer">Select All</button>
                          </div>
-                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                             <div *ngFor="let topic of availableTopics" 
-                                  (click)="toggleTopic(topic)"
-                                  [class.border-blue-500]="selectedTopics.has(topic)"
-                                  [class.bg-blue-50]="selectedTopics.has(topic)"
-                                  class="cursor-pointer border border-gray-200 rounded-lg p-3 flex items-center justify-between hover:border-blue-300 transition-all">
-                                  <span class="text-sm text-gray-700 font-medium">{{topic}}</span>
-                                  <div [class.bg-blue-500]="selectedTopics.has(topic)"
-                                       [class.border-blue-500]="selectedTopics.has(topic)" 
-                                       class="w-5 h-5 rounded border border-gray-300 flex items-center justify-center transition-colors">
-                                      <i *ngIf="selectedTopics.has(topic)" class="fas fa-check text-white text-xs"></i>
-                                  </div>
+                         
+                         <div class="space-y-4">
+                             <div *ngFor="let part of availableTopics" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                                 <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between cursor-pointer" (click)="togglePart(part)">
+                                      <div class="flex items-center gap-3">
+                                          <div class="w-5 h-5 rounded border border-gray-300 flex items-center justify-center transition-colors"
+                                               [class.bg-blue-500]="isPartSelected(part)"
+                                               [class.border-blue-500]="isPartSelected(part) || isPartIndeterminate(part)"
+                                               [class.bg-blue-200]="!isPartSelected(part) && isPartIndeterminate(part)">
+                                              <i *ngIf="isPartSelected(part)" class="fas fa-check text-white text-[10px]"></i>
+                                              <i *ngIf="!isPartSelected(part) && isPartIndeterminate(part)" class="fas fa-minus text-white text-[10px]"></i>
+                                          </div>
+                                          <h4 class="font-bold text-base text-gray-800">{{part.partName}}</h4>
+                                      </div>
+                                 </div>
+                                 
+                                 <div class="p-4 space-y-5">
+                                     <div *ngFor="let section of $any(part).sections">
+                                         <div class="flex items-center gap-3 mb-3 cursor-pointer select-none" (click)="toggleSection(section)">
+                                              <div class="w-4 h-4 rounded border border-gray-300 flex items-center justify-center transition-colors"
+                                                   [class.bg-blue-500]="isSectionSelected(section)"
+                                                   [class.border-blue-500]="isSectionSelected(section) || isSectionIndeterminate(section)"
+                                                   [class.bg-blue-200]="!isSectionSelected(section) && isSectionIndeterminate(section)">
+                                                  <i *ngIf="isSectionSelected(section)" class="fas fa-check text-white text-[9px]"></i>
+                                                  <i *ngIf="!isSectionSelected(section) && isSectionIndeterminate(section)" class="fas fa-minus text-white text-[9px]"></i>
+                                              </div>
+                                              <h5 class="font-bold text-[13px] text-gray-600 uppercase tracking-wider">{{section.sectionName}}</h5>
+                                         </div>
+                                         
+                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-7">
+                                             <div *ngFor="let topic of $any(section).topics" 
+                                                  (click)="toggleTopic(topic)"
+                                                  [class.border-blue-500]="selectedTopics.has($any(topic).key)"
+                                                  [class.bg-blue-50]="selectedTopics.has($any(topic).key)"
+                                                  class="cursor-pointer border border-gray-200 rounded-lg p-2.5 flex items-center justify-between hover:border-blue-300 transition-all">
+                                                  <span class="text-sm text-gray-700 font-medium line-clamp-1 truncate" [title]="$any(topic).label">{{$any(topic).label}}</span>
+                                                  <div [class.bg-blue-500]="selectedTopics.has($any(topic).key)"
+                                                       [class.border-blue-500]="selectedTopics.has($any(topic).key)" 
+                                                       class="w-4 h-4 rounded border border-gray-300 flex items-center justify-center shrink-0 transition-colors ml-2">
+                                                      <i *ngIf="selectedTopics.has($any(topic).key)" class="fas fa-check text-white text-[9px]"></i>
+                                                  </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
                              </div>
                          </div>
                      </div>

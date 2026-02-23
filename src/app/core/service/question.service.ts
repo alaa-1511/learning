@@ -12,10 +12,11 @@ export interface Question {
   answerExplanation?: string; 
   topic: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
-  status: 'Active' | 'Draft' | 'Archived';
   // New Exam Entity Links
   examId?: number; 
   partId?: number; 
+  lessonId?: number;
+  order_index?: number;
   
   targetPage?: 'testbank' | 'free-trial';
   
@@ -69,11 +70,11 @@ export class QuestionService {
     const mappedQuestions: Question[] = data.map((q: any) => ({
       ...q,
       correctAnswer: q.correct_answer,
-      answerExplanation: q.answer_explanation,
-      ciaPart: q.cia_part, // if column exists, or ignore
       courseId: q.course_id,
       examId: q.exam_id, // New
       partId: q.part_id, 
+      lessonId: q.lesson_id,
+      order_index: q.order_index,
       targetPage: q.target_page,
       // options comes as JSON array, automatically parsed by Supabase JS client usually
       options: q.options || [] 
@@ -95,10 +96,11 @@ export class QuestionService {
       answer_explanation: question.answerExplanation,
       topic: question.topic,
       difficulty: question.difficulty,
-      status: question.status,
       // Link to Exam
       exam_id: question.examId,
       part_id: question.partId,
+      lesson_id: question.lessonId,
+      order_index: question.order_index || 0,
       
       target_page: question.targetPage,
       // Legacy or Optional
@@ -121,9 +123,10 @@ export class QuestionService {
     const newQuestion: Question = {
         ...data,
         correctAnswer: data.correct_answer,
-        answerExplanation: data.answer_explanation,
         examId: data.exam_id,
         partId: data.part_id,
+        lessonId: data.lesson_id,
+        order_index: data.order_index,
         courseId: data.course_id,
         targetPage: data.target_page,
         options: data.options
@@ -143,9 +146,10 @@ export class QuestionService {
       answer_explanation: updatedQuestion.answerExplanation,
       topic: updatedQuestion.topic,
       difficulty: updatedQuestion.difficulty,
-      status: updatedQuestion.status,
       exam_id: updatedQuestion.examId,
       part_id: updatedQuestion.partId,
+      lesson_id: updatedQuestion.lessonId,
+      order_index: updatedQuestion.order_index,
       course_id: updatedQuestion.courseId,
       target_page: updatedQuestion.targetPage
     };

@@ -86,21 +86,58 @@
                  {{ 'ASSIGN_CONTENT.NO_PARTS' | translate }}
              </div>
 
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div *ngFor="let part of partsByCourse[course.id]" 
-                     (click)="togglePartSelection(part.id)"
-                     [class.border-blue-500]="selectedParts.includes(part.id)"
-                     [class.bg-blue-50]="selectedParts.includes(part.id)"
-                     class="cursor-pointer flex items-start p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-all">
-                    <div class="flex items-center h-5">
-                        <input type="checkbox" 
-                               [checked]="selectedParts.includes(part.id)"
-                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 pointer-events-none">
-                    </div>
-                    <div class="ml-3 select-none">
-                        <h4 class="text-sm font-medium text-gray-900">{{ part.title }}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{{ part.description }}</p>
-                    </div>
+             <div class="space-y-4">
+                <div *ngFor="let part of partsByCourse[course.id]" class="border border-gray-200 rounded-lg p-4 bg-gray-50/50">
+                     <!-- Part Header -->
+                     <div (click)="togglePartSelection(part.id)"
+                          [class.text-blue-700]="selectedParts.includes(part.id)"
+                          class="cursor-pointer flex items-center mb-3 group">
+                         <div class="flex items-center h-5">
+                             <input type="checkbox" 
+                                    [checked]="selectedParts.includes(part.id)"
+                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 pointer-events-none">
+                         </div>
+                         <div class="ml-3 select-none flex-1">
+                             <h4 class="text-base font-bold group-hover:text-blue-600 transition-colors">{{ part.title }}</h4>
+                         </div>
+                     </div>
+
+                     <!-- Sections List (only show if Part is selected and has sections) -->
+                     <div *ngIf="selectedParts.includes(part.id) && sectionsByPart[part.id] && sectionsByPart[part.id].length > 0" class="ml-7 border-l-2 border-gray-200 pl-4 space-y-4 mt-2">
+                         <div *ngFor="let section of sectionsByPart[part.id]" class="bg-white border text-sm border-gray-200 rounded-lg p-3">
+                             
+                             <!-- Section Header -->
+                             <div (click)="toggleSectionSelection(section.id)"
+                                  [class.text-blue-700]="selectedSections.includes(section.id)"
+                                  class="cursor-pointer flex items-center group">
+                                  <div class="flex items-center h-5">
+                                      <input type="checkbox" 
+                                             [checked]="selectedSections.includes(section.id)"
+                                             class="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 pointer-events-none">
+                                  </div>
+                                  <div class="ml-3 select-none flex-1">
+                                      <h5 class="font-semibold group-hover:text-blue-600 transition-colors">{{ section.title }}</h5>
+                                  </div>
+                             </div>
+
+                             <!-- Lessons List (only show if Section is selected and has lessons) -->
+                             <div *ngIf="selectedSections.includes(section.id) && lessonsBySection[section.id] && lessonsBySection[section.id].length > 0" class="ml-7 mt-3 space-y-2">
+                                  <div *ngFor="let lesson of lessonsBySection[section.id]"
+                                       (click)="toggleLessonSelection(lesson.id)"
+                                       [class.bg-blue-50]="selectedLessons.includes(lesson.id)"
+                                       [class.border-blue-200]="selectedLessons.includes(lesson.id)"
+                                       class="cursor-pointer flex items-center p-2 border border-gray-100 rounded bg-gray-50 hover:bg-gray-100 transition-colors">
+                                       <div class="flex items-center h-5">
+                                           <input type="checkbox" 
+                                                  [checked]="selectedLessons.includes(lesson.id)"
+                                                  class="w-3.5 h-3.5 text-blue-400 border-gray-300 rounded focus:ring-blue-500 pointer-events-none">
+                                       </div>
+                                       <span class="ml-3 text-xs text-gray-700 select-none">{{ lesson.title }}</span>
+                                  </div>
+                             </div>
+
+                         </div>
+                     </div>
                 </div>
              </div>
         </div>

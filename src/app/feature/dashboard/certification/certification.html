@@ -122,6 +122,32 @@
             </select>
         </div>
 
+        <ng-container *ngIf="issueForm.get('courseId')?.value?.startsWith('exam-') && partsByExam[issueForm.get('courseId')?.value?.split('-')[1]]?.length">
+            <div>
+                <label class="block mb-1 text-sm font-medium text-gray-700">Part (Optional)</label>
+                 <select formControlName="partId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option [ngValue]="null">Select Part</option>
+                    <option *ngFor="let part of partsByExam[issueForm.get('courseId')?.value?.split('-')[1]]" [ngValue]="part.id">{{part.title}}</option>
+                </select>
+            </div>
+            
+            <div *ngIf="issueForm.get('partId')?.value && sectionsByPart[issueForm.get('partId')?.value]?.length">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Section (Optional)</label>
+                 <select formControlName="sectionId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option [ngValue]="null">Select Section</option>
+                    <option *ngFor="let section of sectionsByPart[issueForm.get('partId')?.value]" [ngValue]="section.id">{{section.title}}</option>
+                </select>
+            </div>
+
+            <div *ngIf="issueForm.get('sectionId')?.value && lessonsBySection[issueForm.get('sectionId')?.value]?.length">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Lesson (Optional)</label>
+                 <select formControlName="lessonId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option [ngValue]="null">Select Lesson</option>
+                    <option *ngFor="let lesson of lessonsBySection[issueForm.get('sectionId')?.value]" [ngValue]="lesson.id">{{lesson.title}}</option>
+                </select>
+            </div>
+        </ng-container>
+
         <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">{{ 'DASHBOARD_CERTIFICATION.ISSUE_DATE' | translate }}</label>
             <input type="date" formControlName="issueDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />

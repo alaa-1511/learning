@@ -6,9 +6,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { SupabaseService } from '../../core/service/supabase.service'; // Added import
+import { SupabaseService } from '../../core/service/supabase.service';
 
-import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
+import { ExamService, ExamPart, Exam, ExamSection, ExamLesson } from '../../core/service/exam.service';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ReportService, StudentReport } from '../../core/service/report.service';
@@ -17,6 +17,7 @@ import { ContactService } from '../../core/service/contact';
 interface ExamQuestion extends Question {
   selectedAnswer?: number; // User's selected option index
   studentAnswer?: string; // For Essay questions
+  computedTopicKey?: string; // Appended for mapping topic to lesson
 }
 
 
@@ -43,8 +44,10 @@ export class Questions implements OnInit, OnDestroy {
   
   // Multi-select parts
   selectedParts: Set<number> = new Set(); 
-  // We still keep selectedPart for single-part logic or just as a reference, 
-  // but main logic will shift to selectedParts.
+  
+  // Loaded hierarchy for selected exam
+  allSections: ExamSection[] = [];
+  allLessons: ExamLesson[] = [];
 
   filteredQuestions: ExamQuestion[] = []; // Questions for the selected part(s)
 
@@ -68,7 +71,7 @@ export class Questions implements OnInit, OnDestroy {
 
   // Practice Mode Config State
   configView: boolean = false;
-  availableTopics: string[] = [];
+  availableTopics: any[] = [];
   selectedTopics: Set<string> = new Set();
   configQuestionCount: number = 10;
   configTimerEnabled: boolean = false;
@@ -400,6 +403,20 @@ export class Questions implements OnInit, OnDestroy {
         }
     }
     
+    // Fetch all sections and lessons for the parts
+    this.allSections = [];
+    this.allLessons = [];
+    for (const part of this.parts) {
+        if (part.id !== -1) {
+             const sections = await this.examService.getSections(part.id);
+             this.allSections.push(...sections);
+             for (const section of sections) {
+                 const lessons = await this.examService.getLessons(section.id);
+                 this.allLessons.push(...lessons);
+             }
+        }
+    }
+    
     // Check for orphaned questions (no part) in this exam
     const currentQuestions = exam.questions || [];
     const orphans = currentQuestions.filter((q: any) => !q.partId);
@@ -482,27 +499,120 @@ export class Questions implements OnInit, OnDestroy {
       this.selectAllTopics();
   }
 
-  extractTopics() {
-      const topics = new Set(this.filteredQuestions.map(q => q.topic || 'General').filter(t => t));
-      this.availableTopics = Array.from(topics).sort();
+  isPartSelected(part: any): boolean {
+      if (!part.sections || part.sections.length === 0) return false;
+      return part.sections.every((s: any) => this.isSectionSelected(s));
   }
 
-  toggleTopic(topic: string) {
-      if (this.selectedTopics.has(topic)) {
-          this.selectedTopics.delete(topic);
+  isPartIndeterminate(part: any): boolean {
+      if (!part.sections || part.sections.length === 0) return false;
+      const allTopics = part.sections.flatMap((s: any) => s.topics);
+      const selectedCount = allTopics.filter((t: any) => this.selectedTopics.has(t.key)).length;
+      return selectedCount > 0 && selectedCount < allTopics.length;
+  }
+
+  togglePart(part: any) {
+      if (this.isPartSelected(part)) {
+          part.sections.forEach((s: any) => {
+              s.topics.forEach((t: any) => this.selectedTopics.delete(t.key));
+          });
       } else {
-          this.selectedTopics.add(topic);
+          part.sections.forEach((s: any) => {
+              s.topics.forEach((t: any) => this.selectedTopics.add(t.key));
+          });
+      }
+      this.updateMaxQuestions();
+  }
+
+  isSectionSelected(section: any): boolean {
+      if (!section.topics || section.topics.length === 0) return false;
+      return section.topics.every((t: any) => this.selectedTopics.has(t.key));
+  }
+
+  isSectionIndeterminate(section: any): boolean {
+      if (!section.topics || section.topics.length === 0) return false;
+      const selectedCount = section.topics.filter((t: any) => this.selectedTopics.has(t.key)).length;
+      return selectedCount > 0 && selectedCount < section.topics.length;
+  }
+
+  toggleSection(section: any) {
+      if (this.isSectionSelected(section)) {
+          section.topics.forEach((t: any) => this.selectedTopics.delete(t.key));
+      } else {
+          section.topics.forEach((t: any) => this.selectedTopics.add(t.key));
+      }
+      this.updateMaxQuestions();
+  }
+
+  extractTopics() {
+      const hierarchy = new Map<string, Map<string, Map<string, string>>>();
+      
+      this.filteredQuestions.forEach(q => {
+          let partName = 'General';
+          let sectionName = 'Other';
+          let topicKey = 'General';
+          let topicLabel = 'General Review';
+          
+          const effectivePartId = q.partId ? q.partId : -1;
+          const part = this.parts.find(p => p.id === effectivePartId);
+          if (part) partName = part.title;
+
+          if (q.lessonId) {
+             const lesson = this.allLessons.find(l => l.id === q.lessonId);
+             if (lesson) {
+                 topicKey = `lesson_${lesson.id}`;
+                 topicLabel = lesson.title;
+                 const section = this.allSections.find(s => s.id === lesson.sectionId);
+                 if (section) sectionName = section.title;
+             }
+          } else if (q.topic) {
+             topicKey = q.topic;
+             topicLabel = q.topic;
+          }
+          
+          q['computedTopicKey'] = topicKey; // Store for filtering later
+          
+          if (!hierarchy.has(partName)) hierarchy.set(partName, new Map());
+          const partMap = hierarchy.get(partName)!;
+          
+          if (!partMap.has(sectionName)) partMap.set(sectionName, new Map());
+          partMap.get(sectionName)!.set(topicKey, topicLabel);
+      });
+      
+      this.availableTopics = Array.from(hierarchy.entries()).map(([partName, sectionsMap]) => ({
+          partName,
+          sections: Array.from(sectionsMap.entries()).map(([sectionName, topicsMap]) => ({
+              sectionName,
+              topics: Array.from(topicsMap.entries()).map(([key, label]) => ({ key, label }))
+          }))
+      })) as any; 
+  }
+
+  toggleTopic(topicObj: any) {
+      const key = topicObj.key || topicObj;
+      if (this.selectedTopics.has(key)) {
+          this.selectedTopics.delete(key);
+      } else {
+          this.selectedTopics.add(key);
       }
       this.updateMaxQuestions();
   }
 
   selectAllTopics() {
-      this.selectedTopics = new Set(this.availableTopics);
+      const allKeys: string[] = [];
+      for (const part of this.availableTopics as any[]) {
+          for (const section of part.sections) {
+              for (const t of section.topics) {
+                  allKeys.push(t.key);
+              }
+          }
+      }
+      this.selectedTopics = new Set(allKeys);
       this.updateMaxQuestions();
   }
 
   updateMaxQuestions() {
-      const count = this.filteredQuestions.filter(q => this.selectedTopics.has(q.topic || 'General')).length;
+      const count = this.filteredQuestions.filter(q => this.selectedTopics.has(q.computedTopicKey || 'General')).length;
       this.maxQuestionsAvailable = count;
       if (this.configQuestionCount > count) {
           this.configQuestionCount = count;
@@ -511,7 +621,7 @@ export class Questions implements OnInit, OnDestroy {
 
   startCustomPractice() {
       if (this.selectedTopics.size === 0) {
-          this.showAlert('Please select at least one topic.');
+          this.showAlert('Please select at least one topic/lesson.');
           return;
       }
 
@@ -520,8 +630,8 @@ export class Questions implements OnInit, OnDestroy {
           return;
       }
 
-      // Filter by Topic
-      let sessionQuestions = this.filteredQuestions.filter(q => this.selectedTopics.has(q.topic || 'General'));
+      // Filter by Topic/Lesson Key
+      let sessionQuestions = this.filteredQuestions.filter(q => this.selectedTopics.has(q.computedTopicKey || 'General'));
 
       // Shuffle (Simple Fisher-Yates or Sort)
       sessionQuestions = sessionQuestions.sort(() => Math.random() - 0.5);

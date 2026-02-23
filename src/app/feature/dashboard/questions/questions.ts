@@ -3,8 +3,10 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrateg
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../../core/service/question.service';
-import { ExamService, Exam, ExamPart } from '../../../core/service/exam.service';
+import { ExamService, Exam, ExamPart, ExamSection, ExamLesson } from '../../../core/service/exam.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, DragDropModule } from '@angular/cdk/drag-drop';
+import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
@@ -21,7 +23,8 @@ import { takeUntil } from 'rxjs/operators';
     NgxPaginationModule,
     TranslateModule,
     EditorModule,
-    DialogModule
+    DialogModule,
+    DragDropModule
   ],
   templateUrl: './questions.html',
   styleUrls: ['./questions.css'],
@@ -32,11 +35,15 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   filteredQuestions: Question[] = [];
   exams: Exam[] = [];
   parts: ExamPart[] = [];
+  sections: ExamSection[] = [];
+  lessons: ExamLesson[] = [];
   
   // View State
-  viewMode: 'exams' | 'parts' | 'questions' = 'exams';
+  viewMode: 'exams' | 'parts' | 'sections' | 'lessons' | 'questions' = 'exams';
   selectedExam: Exam | null = null;
   selectedPart: ExamPart | null = null;
+  selectedSection: ExamSection | null = null;
+  selectedLesson: ExamLesson | null = null;
 
   // Modals state
   questionDialog: boolean = false;
@@ -46,9 +53,15 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   examSettingsDialog: boolean = false;
   deleteExamDialog: boolean = false;
   deletePartDialog: boolean = false;
+  sectionDialog: boolean = false;
+  deleteSectionDialog: boolean = false;
+  lessonDialog: boolean = false;
+  deleteLessonDialog: boolean = false;
 
   questionToDelete: Question | null = null;
   partToDelete: ExamPart | null = null;
+  sectionToDelete: ExamSection | null = null;
+  lessonToDelete: ExamLesson | null = null;
   
   // Alert Modal State
   alertDialogVisible: boolean = false;
@@ -57,6 +70,8 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   
   questionForm: FormGroup;
   partForm: FormGroup;
+  sectionForm: FormGroup;
+  lessonForm: FormGroup;
   examForm: FormGroup;
   examSettingsForm: FormGroup;
 
@@ -64,6 +79,8 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   currentQuestionId: number | null = null;
   currentPartId: number | null = null;
+  currentSectionId: number | null = null;
+  currentLessonId: number | null = null;
   
   // Pagination
   p: number = 1;
@@ -99,10 +116,13 @@ export class QuestionsManagement implements OnInit, OnDestroy {
     private questionService: QuestionService,
     private examService: ExamService,
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toastr: ToastrService
   ) {
     this.questionForm = this.createForm();
     this.partForm = this.createPartForm();
+    this.sectionForm = this.createSectionForm();
+    this.lessonForm = this.createLessonForm();
     this.examForm = this.createExamForm();
     this.examSettingsForm = this.createExamSettingsForm();
   }
@@ -169,6 +189,20 @@ export class QuestionsManagement implements OnInit, OnDestroy {
       });
   }
 
+  createSectionForm(): FormGroup {
+      return this.fb.group({
+          title: ['', Validators.required],
+          description: ['']
+      });
+  }
+
+  createLessonForm(): FormGroup {
+      return this.fb.group({
+          title: ['', Validators.required],
+          description: ['']
+      });
+  }
+
   createExamForm(): FormGroup {
       return this.fb.group({
           title: ['', Validators.required],
@@ -228,10 +262,22 @@ export class QuestionsManagement implements OnInit, OnDestroy {
     this.filteredQuestions = this.questions.filter(q => {
         const matchSearch = !this.currentSearch || 
             q.text.toLowerCase().includes(this.currentSearch) || 
-            q.topic.toLowerCase().includes(this.currentSearch);
+            (q.topic && q.topic.toLowerCase().includes(this.currentSearch));
         
         // Filter by strict hierarchy
-        const matchPart = this.selectedPart ? q.partId === this.selectedPart.id : false;
+        let matchHierarchy = false;
+        if (this.selectedLesson) {
+             matchHierarchy = q.lessonId === this.selectedLesson.id;
+        } else if (this.selectedSection) {
+             // If we want to show all questions in a section (orphans or all lessons)
+             matchHierarchy = q.partId === this.selectedPart?.id && q.lessonId == null; // Placeholder logic until defined
+             // actually, it's better to only show questions WHEN in lessons view or an orphan.
+             // We will stick to strict matching for now: only show if they match the current deepest selected level.
+        } else if (this.selectedPart) {
+             matchHierarchy = q.partId === this.selectedPart.id;
+        } else {
+             matchHierarchy = true;
+        }
         
         // Special case for General component (orphan questions within an exam)
         const matchExam = this.selectedExam && !this.selectedPart ? q.examId === this.selectedExam.id : true; 
@@ -245,9 +291,14 @@ export class QuestionsManagement implements OnInit, OnDestroy {
         } else if (this.currentTab === 'free-trial') {
             matchTab = q.targetPage === 'free-trial';
         }
-        
-        // Show questions only if a part is selected
-        return this.selectedPart ? (matchSearch && matchPart && matchDiff && matchTab) : false;
+        // Show questions only if a part/lesson is selected
+        if (this.selectedLesson) {
+             return matchSearch && matchHierarchy && matchDiff && matchTab;
+        } else if (this.selectedPart && this.selectedPart.id === -1) {
+             // General Questions part -> directly shows questions
+             return matchSearch && matchHierarchy && matchDiff && matchTab;
+        }
+        return false;
     });
     this.p = 1; 
   }
@@ -480,6 +531,156 @@ export class QuestionsManagement implements OnInit, OnDestroy {
       }
   }
 
+  // --- Section Management ---
+  async loadSections(partId: number) {
+      if (partId === -1) {
+          this.sections = [];
+          return;
+      }
+      this.sections = await this.examService.getSections(partId);
+  }
+
+  openAddSection() {
+      this.sectionForm.reset();
+      this.isEditMode = false;
+      this.currentSectionId = null;
+      this.sectionDialog = true;
+      this.submitted = false;
+  }
+
+  editSection(section: ExamSection) {
+      this.sectionForm.patchValue({
+          title: section.title,
+          description: section.description
+      });
+      this.isEditMode = true;
+      this.currentSectionId = section.id;
+      this.sectionDialog = true;
+  }
+
+  async saveSection() {
+      this.submitted = true;
+      if (this.sectionForm.invalid) return;
+      if (!this.selectedPart) return;
+
+      const formValue = this.sectionForm.value;
+      
+      try {
+          if (this.isEditMode && this.currentSectionId) {
+             const updatedSection: ExamSection = {
+                 id: this.currentSectionId,
+                 partId: this.selectedPart.id,
+                 title: formValue.title,
+                 description: formValue.description,
+                 order_index: this.sections.find(s => s.id === this.currentSectionId)?.order_index
+             };
+             await this.examService.updateSection(updatedSection);
+          } else {
+             const newSection: Omit<ExamSection, 'id'> = {
+                 partId: this.selectedPart.id,
+                 title: formValue.title,
+                 description: formValue.description,
+                 order_index: this.sections.length
+             };
+             await this.examService.addSection(newSection);
+          }
+          await this.loadSections(this.selectedPart.id);
+          this.sectionDialog = false;
+          this.cd.markForCheck();
+      } catch (err) {
+          console.error(err);
+          this.showAlert('Failed to save section.');
+      }
+  }
+
+  confirmDeleteSection(section: ExamSection) {
+      this.sectionToDelete = section;
+      this.deleteSectionDialog = true;
+  }
+
+  async deleteSection() {
+      if (this.sectionToDelete && this.selectedPart) {
+          await this.examService.deleteSection(this.sectionToDelete.id);
+          await this.loadSections(this.selectedPart.id);
+          this.deleteSectionDialog = false;
+          this.sectionToDelete = null;
+          this.cd.markForCheck();
+      }
+  }
+
+  // --- Lesson Management ---
+  async loadLessons(sectionId: number) {
+      this.lessons = await this.examService.getLessons(sectionId);
+  }
+
+  openAddLesson() {
+      this.lessonForm.reset();
+      this.isEditMode = false;
+      this.currentLessonId = null;
+      this.lessonDialog = true;
+      this.submitted = false;
+  }
+
+  editLesson(lesson: ExamLesson) {
+      this.lessonForm.patchValue({
+          title: lesson.title,
+          description: lesson.description
+      });
+      this.isEditMode = true;
+      this.currentLessonId = lesson.id;
+      this.lessonDialog = true;
+  }
+
+  async saveLesson() {
+      this.submitted = true;
+      if (this.lessonForm.invalid) return;
+      if (!this.selectedSection) return;
+
+      const formValue = this.lessonForm.value;
+      
+      try {
+          if (this.isEditMode && this.currentLessonId) {
+             const updatedLesson: ExamLesson = {
+                 id: this.currentLessonId,
+                 sectionId: this.selectedSection.id,
+                 title: formValue.title,
+                 description: formValue.description,
+                 order_index: this.lessons.find(l => l.id === this.currentLessonId)?.order_index
+             };
+             await this.examService.updateLesson(updatedLesson);
+          } else {
+             const newLesson: Omit<ExamLesson, 'id'> = {
+                 sectionId: this.selectedSection.id,
+                 title: formValue.title,
+                 description: formValue.description,
+                 order_index: this.lessons.length
+             };
+             await this.examService.addLesson(newLesson);
+          }
+          await this.loadLessons(this.selectedSection.id);
+          this.lessonDialog = false;
+          this.cd.markForCheck();
+      } catch (err) {
+          console.error(err);
+          this.showAlert('Failed to save lesson.');
+      }
+  }
+
+  confirmDeleteLesson(lesson: ExamLesson) {
+      this.lessonToDelete = lesson;
+      this.deleteLessonDialog = true;
+  }
+
+  async deleteLesson() {
+      if (this.lessonToDelete && this.selectedSection) {
+          await this.examService.deleteLesson(this.lessonToDelete.id);
+          await this.loadLessons(this.selectedSection.id);
+          this.deleteLessonDialog = false;
+          this.lessonToDelete = null;
+          this.cd.markForCheck();
+      }
+  }
+
 
   // --- Questions Management ---
 
@@ -515,7 +716,6 @@ export class QuestionsManagement implements OnInit, OnDestroy {
         type: question.type,
         topic: question.topic,
         difficulty: question.difficulty,
-        status: question.status,
         correctAnswer: question.correctAnswer,
         answerExplanation: question.answerExplanation,
         targetPage: question.targetPage || 'testbank'
@@ -584,11 +784,11 @@ export class QuestionsManagement implements OnInit, OnDestroy {
       correctAnswer: formValue.type === 'essay' ? -1 : formValue.correctAnswer,
       topic: formValue.topic,
       difficulty: formValue.difficulty,
-      status: formValue.status,
       answerExplanation: formValue.answerExplanation,
       targetPage: formValue.targetPage,
       examId: this.selectedExam.id,
-      partId: finalPartId
+      partId: finalPartId,
+      lessonId: this.selectedLesson ? this.selectedLesson.id : undefined
     };
 
     try {
@@ -667,12 +867,35 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   async selectExam(exam: Exam) {
       this.selectedExam = exam;
       this.selectedPart = null;
+      this.selectedSection = null;
+      this.selectedLesson = null;
       await this.loadParts(exam.id);
       this.viewMode = 'parts';
   }
 
-  selectPart(part: ExamPart) {
+  async selectPart(part: ExamPart) {
       this.selectedPart = part;
+      this.selectedSection = null;
+      this.selectedLesson = null;
+      if (part.id === -1) {
+          // General Questions (Legacy)
+          this.viewMode = 'questions';
+          this.applyFilters();
+      } else {
+          await this.loadSections(part.id);
+          this.viewMode = 'sections';
+      }
+  }
+
+  async selectSection(section: ExamSection) {
+      this.selectedSection = section;
+      this.selectedLesson = null;
+      await this.loadLessons(section.id);
+      this.viewMode = 'lessons';
+  }
+
+  selectLesson(lesson: ExamLesson) {
+      this.selectedLesson = lesson;
       this.viewMode = 'questions';
       this.applyFilters();
   }
@@ -680,12 +903,84 @@ export class QuestionsManagement implements OnInit, OnDestroy {
   backToExams() {
       this.selectedExam = null;
       this.selectedPart = null;
+      this.selectedSection = null;
+      this.selectedLesson = null;
       this.viewMode = 'exams';
   }
 
   backToParts() {
       this.selectedPart = null;
+      this.selectedSection = null;
+      this.selectedLesson = null;
       this.viewMode = 'parts';
+  }
+
+  backToSections() {
+      this.selectedSection = null;
+      this.selectedLesson = null;
+      this.viewMode = 'sections';
+  }
+
+  backToLessons() {
+      this.selectedLesson = null;
+      this.viewMode = 'lessons';
+  }
+
+  // --- Drag and Drop Logic ---
+  
+  dropExam(event: CdkDragDrop<Exam[]>) {
+      moveItemInArray(this.exams, event.previousIndex, event.currentIndex);
+      this.updateExamsOrder();
+  }
+
+  async updateExamsOrder() {
+      for (let i = 0; i < this.exams.length; i++) {
+          this.exams[i].order_index = i;
+          await this.examService.updateExam(this.exams[i]);
+      }
+      this.toastr.success('Exams reordered successfully');
+  }
+
+  dropPart(event: CdkDragDrop<ExamPart[]>) {
+      moveItemInArray(this.parts, event.previousIndex, event.currentIndex);
+      this.updatePartsOrder();
+  }
+
+  async updatePartsOrder() {
+      // Simplistic approach: update all parts with their new index
+      for (let i = 0; i < this.parts.length; i++) {
+          if(this.parts[i].id !== -1) { // Skip virtual
+             this.parts[i].order_index = i;
+             await this.examService.updatePart(this.parts[i]);
+          }
+      }
+      this.toastr.success('Parts reordered successfully');
+  }
+
+  dropSection(event: CdkDragDrop<ExamSection[]>) {
+      moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
+      this.updateSectionsOrder();
+  }
+
+  async updateSectionsOrder() {
+      for (let i = 0; i < this.sections.length; i++) {
+          this.sections[i].order_index = i;
+          await this.examService.updateSection(this.sections[i]);
+      }
+      this.toastr.success('Sections reordered successfully');
+  }
+
+  dropLesson(event: CdkDragDrop<ExamLesson[]>) {
+      moveItemInArray(this.lessons, event.previousIndex, event.currentIndex);
+      this.updateLessonsOrder();
+  }
+
+  async updateLessonsOrder() {
+      for (let i = 0; i < this.lessons.length; i++) {
+          this.lessons[i].order_index = i;
+          await this.examService.updateLesson(this.lessons[i]);
+      }
+      this.toastr.success('Lessons reordered successfully');
   }
 
   getQuestionCount(examId: number): number {
@@ -697,5 +992,16 @@ export class QuestionsManagement implements OnInit, OnDestroy {
           return this.questions.filter(q => q.examId === this.selectedExam?.id && !q.partId).length;
       }
       return this.questions.filter(q => q.partId === partId).length;
+  }
+  
+  getSectionQuestionCount(sectionId: number): number {
+      // Find all lessons for this section
+      // In a real optimized system, this should be pre-calculated by backend.
+      // For now, doing simple matching if lessons are loaded.
+      return this.questions.filter(q => this.lessons.find(l => l.sectionId === sectionId && l.id === q.lessonId)).length;
+  }
+  
+  getLessonQuestionCount(lessonId: number): number {
+      return this.questions.filter(q => q.lessonId === lessonId).length;
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService, Question, ExamConfig } from '../../core/service/question.service';
-import { ExamService, ExamPart, Exam } from '../../core/service/exam.service';
+import { ExamService, ExamPart, Exam, ExamSection, ExamLesson } from '../../core/service/exam.service';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -56,6 +56,20 @@ export class FreeTrail implements OnInit, OnDestroy {
   alertMessage: string = '';
   alertHeader: string = 'Notification';
 
+  // Loaded hierarchy for selected exam
+  allSections: ExamSection[] = [];
+  allLessons: ExamLesson[] = [];
+
+  // Practice Mode Config State
+  configView: boolean = false;
+  availableTopics: any[] = [];
+  selectedTopics: Set<string> = new Set();
+  configQuestionCount: number = 10;
+  maxQuestionsAvailable: number = 0;
+  configTimerEnabled: boolean = false;
+  configMode: 'tutor' | 'exam' = 'exam';
+  tutorMode: boolean = false;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -81,7 +95,7 @@ export class FreeTrail implements OnInit, OnDestroy {
     ).subscribe(([questions, exams, params]) => {
        if (!questions || !exams) return;
 
-       const freeQuestions = questions.filter(q => q.status === 'Active' && q.targetPage === 'free-trial').map(q => ({
+       const freeQuestions = questions.filter(q => q.targetPage === 'free-trial').map(q => ({
            ...q,
            type: q.type.toLowerCase() as any
        })) as ExamQuestion[];
@@ -198,6 +212,20 @@ export class FreeTrail implements OnInit, OnDestroy {
     this.selectedExam = exam;
     this.selectedParts.clear(); // Clear previous selections
     this.parts = await this.examService.getParts(exam.id);
+
+    // Fetch all sections and lessons for the parts
+    this.allSections = [];
+    this.allLessons = [];
+    for (const part of this.parts) {
+        if (part.id !== -1) {
+             const sections = await this.examService.getSections(part.id);
+             this.allSections.push(...sections);
+             for (const section of sections) {
+                 const lessons = await this.examService.getLessons(section.id);
+                 this.allLessons.push(...lessons);
+             }
+        }
+    }
     
     const currentQuestions = exam.questions || [];
     const orphans = currentQuestions.filter((q: any) => !q.partId);
@@ -249,27 +277,176 @@ export class FreeTrail implements OnInit, OnDestroy {
       }
   }
 
-  proceedToExam() {
+  proceedToConfig() {
       if(this.selectedParts.size === 0) {
           this.showAlert('Please select at least one part to start.', 'Selection Required');
           return;
       }
       
-      const allSelectedQuestions: ExamQuestion[] = [];
       const examQuestions = this.selectedExam?.questions || [];
+      this.filteredQuestions = examQuestions.filter(q => {
+          const pId = q.partId || -1; 
+          const effectivePartId = q.partId ? q.partId : -1; 
+          return this.selectedParts.has(effectivePartId);
+      });
 
-      this.selectedParts.forEach(partId => {
-          let questionsForPart = [];
-          if(partId === -1) {
-               questionsForPart = examQuestions.filter((q: any) => !q.partId);
-          } else {
-               questionsForPart = examQuestions.filter((q: any) => q.partId === partId);
+      if (this.filteredQuestions.length === 0) {
+          this.showAlert('No questions available in the selected parts.', 'Empty Selection');
+          return;
+      }
+
+      this.extractTopics();
+      this.configView = true;
+      this.currentView = 'parts';
+      this.maxQuestionsAvailable = this.filteredQuestions.length;
+      this.configQuestionCount = Math.min(10, this.maxQuestionsAvailable);
+      this.selectAllTopics();
+  }
+
+  isPartSelected(part: any): boolean {
+      if (!part.sections || part.sections.length === 0) return false;
+      return part.sections.every((s: any) => this.isSectionSelected(s));
+  }
+
+  isPartIndeterminate(part: any): boolean {
+      if (!part.sections || part.sections.length === 0) return false;
+      const allTopics = part.sections.flatMap((s: any) => s.topics);
+      const selectedCount = allTopics.filter((t: any) => this.selectedTopics.has(t.key)).length;
+      return selectedCount > 0 && selectedCount < allTopics.length;
+  }
+
+  togglePart(part: any) {
+      if (this.isPartSelected(part)) {
+          part.sections.forEach((s: any) => {
+              s.topics.forEach((t: any) => this.selectedTopics.delete(t.key));
+          });
+      } else {
+          part.sections.forEach((s: any) => {
+              s.topics.forEach((t: any) => this.selectedTopics.add(t.key));
+          });
+      }
+      this.updateMaxQuestions();
+  }
+
+  isSectionSelected(section: any): boolean {
+      if (!section.topics || section.topics.length === 0) return false;
+      return section.topics.every((t: any) => this.selectedTopics.has(t.key));
+  }
+
+  isSectionIndeterminate(section: any): boolean {
+      if (!section.topics || section.topics.length === 0) return false;
+      const selectedCount = section.topics.filter((t: any) => this.selectedTopics.has(t.key)).length;
+      return selectedCount > 0 && selectedCount < section.topics.length;
+  }
+
+  toggleSection(section: any) {
+      if (this.isSectionSelected(section)) {
+          section.topics.forEach((t: any) => this.selectedTopics.delete(t.key));
+      } else {
+          section.topics.forEach((t: any) => this.selectedTopics.add(t.key));
+      }
+      this.updateMaxQuestions();
+  }
+
+  extractTopics() {
+      const hierarchy = new Map<string, Map<string, Map<string, string>>>();
+      
+      this.filteredQuestions.forEach(q => {
+          let partName = 'General';
+          let sectionName = 'Other';
+          let topicKey = 'General';
+          let topicLabel = 'General Review';
+          
+          const effectivePartId = q.partId ? q.partId : -1;
+          const part = this.parts.find(p => p.id === effectivePartId);
+          if (part) partName = part.title;
+
+          if (q.lessonId) {
+             const lesson = this.allLessons.find(l => l.id === q.lessonId);
+             if (lesson) {
+                 topicKey = `lesson_${lesson.id}`;
+                 topicLabel = lesson.title;
+                 const section = this.allSections.find(s => s.id === lesson.sectionId);
+                 if (section) sectionName = section.title;
+             }
+          } else if (q.topic) {
+             topicKey = q.topic;
+             topicLabel = q.topic;
           }
-          allSelectedQuestions.push(...questionsForPart);
+          
+          Object.assign(q, { computedTopicKey: topicKey });
+          
+          if (!hierarchy.has(partName)) hierarchy.set(partName, new Map());
+          const partMap = hierarchy.get(partName)!;
+          
+          if (!partMap.has(sectionName)) partMap.set(sectionName, new Map());
+          partMap.get(sectionName)!.set(topicKey, topicLabel);
       });
       
-      this.startExam(allSelectedQuestions);
+      this.availableTopics = Array.from(hierarchy.entries()).map(([partName, sectionsMap]) => ({
+          partName,
+          sections: Array.from(sectionsMap.entries()).map(([sectionName, topicsMap]) => ({
+              sectionName,
+              topics: Array.from(topicsMap.entries()).map(([key, label]) => ({ key, label }))
+          }))
+      })); 
   }
+
+  toggleTopic(topicObj: any) {
+      const key = topicObj.key || topicObj;
+      if (this.selectedTopics.has(key)) {
+          this.selectedTopics.delete(key);
+      } else {
+          this.selectedTopics.add(key);
+      }
+      this.updateMaxQuestions();
+  }
+
+  selectAllTopics() {
+      const allKeys: string[] = [];
+      for (const part of this.availableTopics) {
+          for (const section of part.sections) {
+              for (const t of section.topics) {
+                  allKeys.push(t.key);
+              }
+          }
+      }
+      this.selectedTopics = new Set(allKeys);
+      this.updateMaxQuestions();
+  }
+
+  updateMaxQuestions() {
+      const count = this.filteredQuestions.filter((q: any) => this.selectedTopics.has(q.computedTopicKey || 'General')).length;
+      this.maxQuestionsAvailable = count;
+      if (this.configQuestionCount > count) {
+          this.configQuestionCount = count;
+      }
+  }
+
+  startCustomPractice() {
+      if (this.selectedTopics.size === 0) {
+          this.showAlert('Please select at least one topic/lesson.');
+          return;
+      }
+
+      if (this.configQuestionCount < 1) {
+          this.showAlert('Please select at least one question.');
+          return;
+      }
+
+      let sessionQuestions = this.filteredQuestions.filter((q: any) => this.selectedTopics.has(q.computedTopicKey || 'General'));
+      sessionQuestions = sessionQuestions.sort(() => Math.random() - 0.5);
+      sessionQuestions = sessionQuestions.slice(0, this.configQuestionCount);
+
+      this.configView = false;
+      this.tutorMode = this.configMode === 'tutor';
+      this.startExam(sessionQuestions);
+  }
+
+  cancelConfig() {
+      this.configView = false;
+  }
+
 
   // Legacy support if selectPart is called directly from template (though updated template should use toggle)
   selectPart(part: ExamPart) {
@@ -304,22 +481,23 @@ export class FreeTrail implements OnInit, OnDestroy {
       
       this.filteredQuestions.forEach(q => q.selectedAnswer = undefined);
   
-      // Calculate total duration based on selected parts
-      let totalDuration = 0;
-
-      this.selectedParts.forEach(partId => {
-          const part = this.parts.find(p => p.id === partId);
-          if (part && part.duration && part.duration > 0) {
-              totalDuration += Number(part.duration);
-          } else {
-              // Fallback per part question count if no duration set on that part
-              const pCount = this.parts.find(p => p.id === partId)?.questionCount || 0;
-              totalDuration += Math.ceil(pCount * 1.5);
-          }
-      });
-
-      this.remainingTime = totalDuration * 60;
-      this.startTimer();
+      if (this.configTimerEnabled) {
+          let totalDuration = 0;
+          this.selectedParts.forEach(partId => {
+              const part = this.parts.find(p => p.id === partId);
+              if (part && part.duration && part.duration > 0) {
+                  totalDuration += Number(part.duration);
+              } else {
+                  const pCount = this.parts.find(p => p.id === partId)?.questionCount || 0;
+                  totalDuration += Math.ceil(pCount * 1.5);
+              }
+          });
+          this.remainingTime = totalDuration * 60;
+          this.startTimer();
+      } else {
+          this.stopTimer();
+          this.remainingTime = 0;
+      }
     }
 
   startTimer() {
@@ -349,6 +527,9 @@ export class FreeTrail implements OnInit, OnDestroy {
 
   selectAnswer(optionIndex: number) {
     if (!this.reviewMode && this.filteredQuestions.length > 0) {
+      if (this.tutorMode && this.filteredQuestions[this.currentQuestionIndex].selectedAnswer !== undefined) {
+         return; // Lock answer in tutor mode
+      }
       this.filteredQuestions[this.currentQuestionIndex].selectedAnswer = optionIndex;
     }
   }

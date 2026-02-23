@@ -3,7 +3,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
-import { ExamService, Exam, ExamPart } from '../../../core/service/exam.service';
+import { ExamService, Exam, ExamPart, ExamSection, ExamLesson } from '../../../core/service/exam.service';
 import { SupabaseService } from '../../../core/service/supabase.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -27,10 +27,17 @@ export class AssignContentComponent implements OnInit {
     selectedStudents: any[] = [];
     selectedStudentToAdd: any = null;
     
-    // Multi-selection support
+    // Multi-selection support for Parts, Sections, and Lessons
     selectedCourses: Exam[] = [];
     partsByCourse: Record<number, ExamPart[]> = {}; 
     selectedParts: number[] = []; // IDs of selected parts
+    
+    sectionsByPart: Record<number, ExamSection[]> = {};
+    selectedSections: number[] = [];
+
+    lessonsBySection: Record<number, ExamLesson[]> = {};
+    selectedLessons: number[] = [];
+
     expirationDate: string | null = null;
     
     constructor() {}
@@ -147,8 +154,53 @@ export class AssignContentComponent implements OnInit {
         const index = this.selectedParts.indexOf(partId);
         if (index > -1) {
             this.selectedParts.splice(index, 1);
+            delete this.sectionsByPart[partId];
         } else {
             this.selectedParts.push(partId);
+            this.loadSectionsForPart(partId);
+        }
+    }
+
+    async loadSectionsForPart(partId: number) {
+        if (partId === -1) return; // General Review part doesn't have sections
+        try {
+            const fetchedSections = await this.examService.getSections(partId);
+            this.sectionsByPart[partId] = fetchedSections;
+            this.cdr.detectChanges(); 
+        } catch (err) {
+            console.error('Error fetching sections:', err);
+            this.toastr.error('Could not load sections for selected part');
+        }
+    }
+
+    toggleSectionSelection(sectionId: number) {
+        const index = this.selectedSections.indexOf(sectionId);
+        if (index > -1) {
+            this.selectedSections.splice(index, 1);
+            delete this.lessonsBySection[sectionId];
+        } else {
+            this.selectedSections.push(sectionId);
+            this.loadLessonsForSection(sectionId);
+        }
+    }
+
+    async loadLessonsForSection(sectionId: number) {
+        try {
+            const fetchedLessons = await this.examService.getLessons(sectionId);
+            this.lessonsBySection[sectionId] = fetchedLessons;
+            this.cdr.detectChanges(); 
+        } catch (err) {
+             console.error('Error fetching lessons:', err);
+             this.toastr.error('Could not load lessons for selected section');
+        }
+    }
+
+    toggleLessonSelection(lessonId: number) {
+        const index = this.selectedLessons.indexOf(lessonId);
+        if (index > -1) {
+            this.selectedLessons.splice(index, 1);
+        } else {
+            this.selectedLessons.push(lessonId);
         }
     }
 
@@ -181,13 +233,55 @@ export class AssignContentComponent implements OnInit {
                  const partsToAssign = parts.filter(p => this.selectedParts.includes(p.id));
                  
                  for (const part of partsToAssign) {
-                     assignments.push({
-                         student_email: student.email,
-                         course_id: courseId,
-                         part_id: part.id,
-                         assigned_at: new Date(),
-                         expires_at: this.expirationDate ? new Date(this.expirationDate).toISOString() : null
-                     });
+                      
+                      // Check for specific sections assigned in this part
+                      const sectionsInPart = this.sectionsByPart[part.id] || [];
+                      const sectionsToAssign = sectionsInPart.filter(s => this.selectedSections.includes(s.id));
+
+                      if (sectionsToAssign.length > 0) {
+                          // Iterate through assigned sections to check for lessons
+                          for (const section of sectionsToAssign) {
+                              const lessonsInSection = this.lessonsBySection[section.id] || [];
+                              const lessonsToAssign = lessonsInSection.filter(l => this.selectedLessons.includes(l.id));
+
+                              if (lessonsToAssign.length > 0) {
+                                  // Assign Specific Lessons
+                                  for (const lesson of lessonsToAssign) {
+                                      assignments.push({
+                                          student_email: student.email,
+                                          course_id: courseId,
+                                          part_id: part.id,
+                                          section_id: section.id,
+                                          lesson_id: lesson.id,
+                                          assigned_at: new Date(),
+                                          expires_at: this.expirationDate ? new Date(this.expirationDate).toISOString() : null
+                                      });
+                                  }
+                              } else {
+                                  // Assign Entire Section
+                                  assignments.push({
+                                      student_email: student.email,
+                                      course_id: courseId,
+                                      part_id: part.id,
+                                      section_id: section.id,
+                                      lesson_id: null,
+                                      assigned_at: new Date(),
+                                      expires_at: this.expirationDate ? new Date(this.expirationDate).toISOString() : null
+                                  });
+                              }
+                          }
+                      } else {
+                         // Assign Entire Part
+                         assignments.push({
+                             student_email: student.email,
+                             course_id: courseId,
+                             part_id: part.id,
+                             section_id: null,
+                             lesson_id: null,
+                             assigned_at: new Date(),
+                             expires_at: this.expirationDate ? new Date(this.expirationDate).toISOString() : null
+                         });
+                      }
                  }
              }
         }
@@ -219,6 +313,10 @@ export class AssignContentComponent implements OnInit {
         this.selectedCourses = [];
         this.partsByCourse = {};
         this.selectedParts = [];
+        this.sectionsByPart = {};
+        this.selectedSections = [];
+        this.lessonsBySection = {};
+        this.selectedLessons = [];
         this.selectedStudents = [];
         this.expirationDate = null;
     }

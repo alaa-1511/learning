@@ -4,12 +4,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ArticleService, Article } from '../../../core/service/article.service';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
-import { Button } from "primeng/button";
 
 @Component({
   selector: 'app-articles-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, ReactiveFormsModule, DialogModule, Button],
+  imports: [CommonModule, TranslateModule, FormsModule, ReactiveFormsModule, DialogModule],
   templateUrl: './articles.html'
 })
 export class Articles implements OnInit {

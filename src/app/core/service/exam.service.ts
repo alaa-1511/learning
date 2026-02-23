@@ -10,6 +10,7 @@ export interface Exam {
   image?: string;
   level?: string;
   created_at?: string;
+  order_index?: number;
   // View/Computed Properties
   partCount?: number;
   questions?: any[];
@@ -27,6 +28,28 @@ export interface ExamPart {
   questionCount?: number;
   durationLabel?: string;
   duration?: number;
+  order_index?: number;
+}
+
+export interface ExamSection {
+  id: number;
+  partId: number;
+  title: string;
+  description?: string;
+  order_index?: number;
+  // Computed
+  questionCount?: number;
+  lessonCount?: number;
+}
+
+export interface ExamLesson {
+  id: number;
+  sectionId: number;
+  title: string;
+  description?: string;
+  order_index?: number;
+  // Computed
+  questionCount?: number;
 }
 
 @Injectable({
@@ -47,6 +70,7 @@ export class ExamService {
     const { data, error } = await this.supabaseService.client
       .from('exams')
       .select('*, exam_parts(count)')
+      .order('order_index', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -62,6 +86,7 @@ export class ExamService {
       image: e.image,
       level: e.level,
       created_at: e.created_at,
+      order_index: e.order_index,
       partCount: e.exam_parts ? e.exam_parts[0]?.count : 0
     }));
 
@@ -75,7 +100,8 @@ export class ExamService {
       title: exam.title,
       description: exam.description,
       image: exam.image,
-      level: exam.level
+      level: exam.level,
+      order_index: exam.order_index || 0
     };
 
     const { data, error } = await this.supabaseService.client
@@ -96,6 +122,7 @@ export class ExamService {
       description: data.description,
       image: data.image,
       level: data.level,
+      order_index: data.order_index,
       created_at: data.created_at
     };
 
@@ -110,7 +137,8 @@ export class ExamService {
       title: exam.title,
       description: exam.description,
       image: exam.image,
-      level: exam.level
+      level: exam.level,
+      order_index: exam.order_index
     };
 
     const { error } = await this.supabaseService.client
@@ -212,7 +240,8 @@ export class ExamService {
           title: data.title,
           description: data.description,
           image: data.image,
-          level: data.level
+          level: data.level,
+          order_index: data.order_index
       };
   }
 
@@ -250,7 +279,8 @@ export class ExamService {
       title: part.title,
       description: part.description,
       image: part.image,
-      duration: part.duration ? Number(part.duration) : null
+      duration: part.duration ? Number(part.duration) : null,
+      order_index: part.order_index || 0
     };
 
     const { data, error } = await this.supabaseService.client
@@ -269,20 +299,22 @@ export class ExamService {
 
     return {
       id: data.id,
-      examId: data.exam_id,
-      title: data.title,
-      description: data.description,
-      image: data.image,
-      duration: data.duration ? Number(data.duration) : 0
-    };
-  }
+          examId: data.exam_id,
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          duration: data.duration ? Number(data.duration) : 0,
+          order_index: data.order_index
+        };
+      }
 
   async updatePart(part: ExamPart): Promise<void> {
       const dbPart = {
           title: part.title,
           description: part.description,
           image: part.image,
-          duration: part.duration ? Number(part.duration) : null
+          duration: part.duration ? Number(part.duration) : null,
+          order_index: part.order_index
       };
 
       const { error } = await this.supabaseService.client
@@ -326,6 +358,187 @@ export class ExamService {
       }
       this.toastr.success('Exam part deleted successfully');
   }
+
+  // --- Section CRUD ---
+
+  async getSections(partId: number): Promise<ExamSection[]> {
+    const { data, error } = await this.supabaseService.client
+      .from('exam_sections')
+      .select('*')
+      .eq('part_id', partId)
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true });
+
+    if (error) {
+       console.error('Error loading exam sections:', error);
+       this.toastr.error('Failed to load sections');
+       return [];
+    }
+
+    return data.map((s: any) => ({
+      id: s.id,
+      partId: s.part_id,
+      title: s.title,
+      description: s.description,
+      order_index: s.order_index
+    }));
+  }
+
+  async addSection(section: Omit<ExamSection, 'id'>): Promise<ExamSection> {
+    const dbSection = {
+      part_id: section.partId,
+      title: section.title,
+      description: section.description,
+      order_index: section.order_index || 0
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('exam_sections')
+      .insert(dbSection)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding section:', error);
+      this.toastr.error('Failed to add section');
+      throw error;
+    }
+
+    this.toastr.success('Section added successfully');
+    return {
+      id: data.id,
+      partId: data.part_id,
+      title: data.title,
+      description: data.description,
+      order_index: data.order_index
+    };
+  }
+
+  async updateSection(section: ExamSection): Promise<void> {
+      const dbSection = {
+          part_id: section.partId, // allow moving between parts
+          title: section.title,
+          description: section.description,
+          order_index: section.order_index
+      };
+
+      const { error } = await this.supabaseService.client
+        .from('exam_sections')
+        .update(dbSection)
+        .eq('id', section.id);
+
+      if (error) {
+          console.error('Error updating section:', error);
+          this.toastr.error('Failed to update section');
+          throw error;
+      }
+      this.toastr.success('Section updated successfully');
+  }
+
+  async deleteSection(id: number): Promise<void> {
+      const { error } = await this.supabaseService.client
+        .from('exam_sections')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+          console.error('Error deleting section:', error);
+          this.toastr.error('Failed to delete section');
+          throw error;
+      }
+      this.toastr.success('Section deleted successfully');
+  }
+
+  // --- Lesson CRUD ---
+
+  async getLessons(sectionId: number): Promise<ExamLesson[]> {
+    const { data, error } = await this.supabaseService.client
+      .from('exam_lessons')
+      .select('*')
+      .eq('section_id', sectionId)
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true });
+
+    if (error) {
+       console.error('Error loading lessons:', error);
+       this.toastr.error('Failed to load lessons');
+       return [];
+    }
+
+    return data.map((l: any) => ({
+      id: l.id,
+      sectionId: l.section_id,
+      title: l.title,
+      description: l.description,
+      order_index: l.order_index
+    }));
+  }
+
+  async addLesson(lesson: Omit<ExamLesson, 'id'>): Promise<ExamLesson> {
+    const dbLesson = {
+      section_id: lesson.sectionId,
+      title: lesson.title,
+      description: lesson.description,
+      order_index: lesson.order_index || 0
+    };
+
+    const { data, error } = await this.supabaseService.client
+      .from('exam_lessons')
+      .insert(dbLesson)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding lesson:', error);
+      this.toastr.error('Failed to add lesson');
+      throw error;
+    }
+
+    this.toastr.success('Lesson added successfully');
+    return {
+      id: data.id,
+      sectionId: data.section_id,
+      title: data.title,
+      description: data.description,
+      order_index: data.order_index
+    };
+  }
+
+  async updateLesson(lesson: ExamLesson): Promise<void> {
+      const dbLesson = {
+          section_id: lesson.sectionId, // allow moving between sections
+          title: lesson.title,
+          description: lesson.description,
+          order_index: lesson.order_index
+      };
+
+      const { error } = await this.supabaseService.client
+        .from('exam_lessons')
+        .update(dbLesson)
+        .eq('id', lesson.id);
+
+      if (error) {
+          console.error('Error updating lesson:', error);
+          this.toastr.error('Failed to update lesson');
+          throw error;
+      }
+      this.toastr.success('Lesson updated successfully');
+  }
+
+  async deleteLesson(id: number): Promise<void> {
+      const { error } = await this.supabaseService.client
+        .from('exam_lessons')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+          console.error('Error deleting lesson:', error);
+          this.toastr.error('Failed to delete lesson');
+          throw error;
+      }
+      this.toastr.success('Lesson deleted successfully');
+  }
+
 
   // --- Assignments ---
 

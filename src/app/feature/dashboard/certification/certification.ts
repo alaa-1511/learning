@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { CertificationService, Certificate } from '../../../core/service/certification.service';
 import { CourseService, Course } from '../../../core/service/course.service';
-import { ExamService, Exam } from '../../../core/service/exam.service';
+import { ExamService, Exam, ExamPart, ExamSection, ExamLesson } from '../../../core/service/exam.service';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { Button } from "primeng/button";
@@ -30,6 +30,16 @@ export class Certification implements OnInit, OnDestroy {
   rawCourses: Course[] = []; // Keep track of standard courses
   rawExams: Exam[] = []; // Keep track of exams
   
+  // Hierarchical Data for Exams
+  partsByExam: Record<number, ExamPart[]> = {};
+  sectionsByPart: Record<number, ExamSection[]> = {};
+  lessonsBySection: Record<number, ExamLesson[]> = {};
+  
+  // Selected state for hierarchy (we only allow single selection for certificates unlike assign-course)
+  selectedPartId: number | null = null;
+  selectedSectionId: number | null = null;
+  selectedLessonId: number | null = null;
+  
   // Modal State
   issueDialog: boolean = false;
   editingId: string | null = null;
@@ -47,7 +57,23 @@ export class Certification implements OnInit, OnDestroy {
       this.issueForm = this.fb.group({
           studentName: ['', Validators.required],
           courseId: [null, Validators.required],
+          partId: [null],
+          sectionId: [null],
+          lessonId: [null],
           issueDate: [new Date().toISOString().split('T')[0], Validators.required]
+      });
+      
+      // Watch course selection to load parts if it's an exam
+      this.issueForm.get('courseId')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(val => {
+          this.onCourseChange(val);
+      });
+      // Watch part selection to load sections
+      this.issueForm.get('partId')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(val => {
+          this.onPartChange(val);
+      });
+      // Watch section selection to load lessons
+      this.issueForm.get('sectionId')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(val => {
+          this.onSectionChange(val);
       });
   }
 
@@ -106,8 +132,62 @@ export class Certification implements OnInit, OnDestroy {
       this.editingId = null;
       this.issueForm.reset({
           issueDate: new Date().toISOString().split('T')[0],
-          courseId: null // Reset to null or appropriate default
+          courseId: null, // Reset to null or appropriate default
+          partId: null,
+          sectionId: null,
+          lessonId: null
       });
+      this.resetHierarchy();
+  }
+
+  resetHierarchy() {
+      this.selectedPartId = null;
+      this.selectedSectionId = null;
+      this.selectedLessonId = null;
+      this.partsByExam = {};
+      this.sectionsByPart = {};
+      this.lessonsBySection = {};
+  }
+
+  async onCourseChange(courseValue: string) {
+      this.resetHierarchy();
+      this.issueForm.patchValue({ partId: null, sectionId: null, lessonId: null }, { emitEvent: false });
+      this.cd.detectChanges();
+
+      if (!courseValue || !courseValue.startsWith('exam-')) return;
+      const examId = parseInt(courseValue.replace('exam-', ''), 10);
+      try {
+          const parts = await this.examService.getParts(examId);
+          this.partsByExam[examId] = parts;
+          this.cd.detectChanges();
+      } catch (err) { }
+  }
+
+  async onPartChange(partId: number) {
+      this.selectedSectionId = null;
+      this.selectedLessonId = null;
+      this.issueForm.patchValue({ sectionId: null, lessonId: null }, { emitEvent: false });
+      this.cd.detectChanges();
+
+      if (!partId || partId === -1) return;
+      try {
+          const sections = await this.examService.getSections(partId);
+          this.sectionsByPart[partId] = sections;
+          this.cd.detectChanges();
+      } catch (err) { }
+  }
+
+  async onSectionChange(sectionId: number) {
+      this.selectedLessonId = null;
+      this.issueForm.patchValue({ lessonId: null }, { emitEvent: false });
+      this.cd.detectChanges();
+
+      if (!sectionId) return;
+      try {
+          const lessons = await this.examService.getLessons(sectionId);
+          this.lessonsBySection[sectionId] = lessons;
+          this.cd.detectChanges();
+      } catch (err) { }
   }
 
   openEditDialog(cert: Certificate) {
@@ -156,13 +236,39 @@ export class Certification implements OnInit, OnDestroy {
               const name = selectedOption ? selectedOption.title : 'Unknown Course';
               const type = selectedOption ? selectedOption.type : 'Course'; // 'Course' or 'Exam'
               
+              let finalCourseName = name;
+
+              if (type === 'Exam') {
+                  if (val.partId && this.partsByExam[numericId]) {
+                      const part = this.partsByExam[numericId].find(p => p.id === val.partId);
+                      if (part) {
+                          finalCourseName += ' - ' + part.title;
+                      }
+                  }
+                  if (val.sectionId && this.sectionsByPart[val.partId]) {
+                      const section = this.sectionsByPart[val.partId].find(s => s.id === val.sectionId);
+                      if (section) {
+                          finalCourseName += ' - ' + section.title;
+                      }
+                  }
+                  if (val.lessonId && this.lessonsBySection[val.sectionId]) {
+                      const lesson = this.lessonsBySection[val.sectionId].find(l => l.id === val.lessonId);
+                      if (lesson) {
+                          finalCourseName += ' - ' + lesson.title;
+                      }
+                  }
+              }
+              
               const certPayload: any = {
                   studentName: val.studentName,
-                  courseName: name,
+                  courseName: finalCourseName,
                   issueDate: new Date(val.issueDate),
                   expiryDate: undefined,
                   courseId: type === 'Course' ? numericId : undefined,
-                  examId: type === 'Exam' ? numericId : undefined
+                  examId: type === 'Exam' ? numericId : undefined,
+                  part_id: val.partId,
+                  section_id: val.sectionId,
+                  lesson_id: val.lessonId
               };
 
               if (this.editingId) {
