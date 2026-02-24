@@ -9,20 +9,20 @@
       <!-- Text Content -->
       <div class="col-span-1 lg:col-span-8 order-2 lg:order-1">
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-6 leading-tight">
-          Your Path to Accounting and Finance Certification Starts with <span class="text-secondary">UWorld</span>
+          {{ 'LANDING.HERO2_TITLE_PREFIX' | translate }}<span class="text-secondary">{{ 'LANDING.HERO2_TITLE_SUFFIX' | translate }}</span>
         </h2>
         
         <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-          When you prepare for a high-stakes accounting or finance exam with UWorld, you partner with a team of experts who have been where you are, understand what it takes to pass, and are dedicated to your success.
+          {{ 'LANDING.HERO2_DESC' | translate }}
         </p>
         
-        <p class="text-lg text-gray-600 mb-8 leading-relaxed border-l-4 border-secondary pl-4 bg-gray-50 py-2 italic rounded-r-lg">
-          We're here to help you take the next step in your career.
+        <p class="text-lg text-gray-600 mb-8 leading-relaxed ltr:border-l-4 rtl:border-r-4 border-secondary ltr:pl-4 rtl:pr-4 bg-gray-50 py-2 italic ltr:rounded-r-lg rtl:rounded-l-lg">
+          {{ 'LANDING.HERO2_QUOTE' | translate }}
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4">
            <a routerLink="/courses" class="inline-flex justify-center items-center px-8 py-3.5 bg-secondary text-white font-semibold rounded-xl hover:bg-secondary/90 transition shadow-lg shadow-secondary/20 hover:-translate-y-1 duration-300">
-             Explore Courses
+             {{ 'LANDING.EXPLORE_COURSES' | translate }}
            </a>
         </div>
       </div>
@@ -44,8 +44,8 @@
                   <i class="pi pi-check-circle text-xl"></i>
                </div>
                <div>
-                  <p class="text-xs text-gray-500 font-semibold uppercase">Trusted By</p>
-                  <p class="text-primary font-bold">Industry Experts</p>
+                  <p class="text-xs text-gray-500 font-semibold uppercase">{{ 'LANDING.TRUSTED_BY' | translate }}</p>
+                  <p class="text-primary font-bold">{{ 'LANDING.INDUSTRY_EXPERTS' | translate }}</p>
                </div>
             </div>
          </div>
@@ -54,13 +54,13 @@
     </div>
   </div>
 </section>
-
+<!-- 
 <section class="relative pb-16   overflow-hidden bg-gray-50">
   
   <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-3xl -z-10"></div>
   <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl -z-10"></div>
 
-  <!-- <div class="container mx-auto px-6">
+  <div class="container mx-auto px-6">
     <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
       
    
@@ -110,8 +110,8 @@
       </div>
       
     </div>
-  </div> -->
-</section> 
+  </div>
+</section>  -->
 
 
 
@@ -196,8 +196,7 @@
     </div>
 
   </div>
-</section>
-
+</section> 
 
 <section class="bg-gray-50 py-10">
   <div class="max-w-7xl mx-auto px-6">
